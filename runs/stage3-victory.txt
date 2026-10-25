@@ -1,0 +1,65 @@
+no
+seat C2
+seat C1
+wait
+wait
+no
+wait
+wait
+wait
+no
+wait
+wait
+wait
+no
+seat C2
+order C1
+cook C1
+no
+wait
+order C2
+cook C1
+no
+wait
+wait
+cook C1
+no
+wait
+serve C1
+cook C2
+no
+wait
+wait
+cook C2
+no
+wait
+wait
+cook C2
+yes
+seat C3
+serve C2
+wait
+wait
+order C3
+cook C3
+wait
+serve C3
+wait
+seat C4
+order C4
+cook C4
+wait
+wait
+cook C4
+seat C5
+serve C4
+wait
+wait
+order C5
+cook C5
+wait
+wait
+cook C5
+seat C6
+order C6
+cook C5
