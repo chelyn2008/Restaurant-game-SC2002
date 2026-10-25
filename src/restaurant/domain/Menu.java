@@ -1,5 +1,6 @@
 package restaurant.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** The list of dishes customers can choose from. */
@@ -19,6 +20,21 @@ public class Menu {
                 new MenuItem("Salad", 900, 1),
                 new MenuItem("Burger", 1500, 1),
                 new MenuItem("Pasta", 1800, 2)));
+    }
+
+    /**
+     * The Stage 3 menu: the three base dishes plus every combo of two different dishes
+     * (Salad + Burger $21.60, Salad + Pasta $24.30, Burger + Pasta $29.70).
+     */
+    public static Menu withCombos() {
+        List<MenuItem> items = new ArrayList<>(standard().getItems());
+        MenuItem salad = items.get(0);
+        MenuItem burger = items.get(1);
+        MenuItem pasta = items.get(2);
+        items.add(new ComboMeal(salad, burger));
+        items.add(new ComboMeal(salad, pasta));
+        items.add(new ComboMeal(burger, pasta));
+        return new Menu(items);
     }
 
     public List<MenuItem> getItems() {
