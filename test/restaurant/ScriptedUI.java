@@ -23,6 +23,7 @@ public class ScriptedUI implements GameUI {
     private final Deque<String> lines;
     private final List<String> messages = new ArrayList<>();
     private List<String> lastWaiterTasks = List.of();
+    private int happyHourQuestions;
 
     public ScriptedUI(String... lines) {
         this.lines = new ArrayDeque<>(List.of(lines));
@@ -54,9 +55,15 @@ public class ScriptedUI implements GameUI {
         lastWaiterTasks = waiterTasks;
     }
 
+    /** How many times the engine offered Happy Hour. */
+    public int getHappyHourQuestions() {
+        return happyHourQuestions;
+    }
+
     /** Uses the next line: "yes" switches Happy Hour on; anything else (or no line) does not. */
     @Override
     public boolean askHappyHour() {
+        happyHourQuestions++;
         return !lines.isEmpty() && lines.poll().trim().equalsIgnoreCase("yes");
     }
 
