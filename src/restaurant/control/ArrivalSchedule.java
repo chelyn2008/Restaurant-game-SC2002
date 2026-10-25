@@ -47,6 +47,10 @@ public class ArrivalSchedule {
                 new Arrival(16, RegularCustomer::new)));
     }
 
+    public List<Arrival> getArrivals() {
+        return arrivals;
+    }
+
     /** The customer who arrives on this turn, if any. */
     public Optional<Customer> customerArrivingOn(int turn) {
         for (int i = 0; i < arrivals.size(); i++) {
