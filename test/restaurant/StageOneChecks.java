@@ -1,5 +1,12 @@
 package restaurant;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -16,10 +23,12 @@ import restaurant.domain.OrderStatus;
 import restaurant.domain.RegularCustomer;
 import restaurant.domain.Restaurant;
 import restaurant.domain.SeededRandomFoodChoice;
+import restaurant.ui.ConsoleUI;
 
 /**
  * Automated checks for Stage 1, using plain Java (no test library).
- * Run: java -cp out-test restaurant.StageOneChecks   (exit code 1 if any check fails)
+ * Run from the project root: java -cp out-test restaurant.StageOneChecks
+ * (exit code 1 if any check fails)
  */
 public class StageOneChecks {
     private static final GameConfig CONFIG = GameConfig.baseSetting(GameConfig.DEFAULT_SEED);
@@ -34,6 +43,7 @@ public class StageOneChecks {
         invalidInputDoesNotUseTheTask();
         winAndLoseBoundaries();
         atMostFiveCustomersCanPay();
+        savedRunsReproduce();
 
         System.out.println();
         System.out.println(passed + " checks passed, " + failed + " failed.");
@@ -270,6 +280,35 @@ public class StageOneChecks {
             }
         }
         check(true, "seeds 1-50 with fastest play: never more than five paid");
+    }
+
+    /** Replays runs/victory.txt and runs/defeat.txt with the default seed and compares with the saved logs. */
+    private static void savedRunsReproduce() {
+        section("Saved victory and defeat runs reproduce");
+        checkRun("victory", true);
+        checkRun("defeat", false);
+    }
+
+    private static void checkRun(String name, boolean expectVictory) {
+        Path input = Path.of("runs", name + ".txt");
+        Path log = Path.of("runs", name + ".log");
+        try (InputStream in = Files.newInputStream(input)) {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            PrintStream out = new PrintStream(buffer, true, StandardCharsets.UTF_8);
+            GameConfig config = GameConfig.baseSetting(GameConfig.DEFAULT_SEED);
+            GameResult result = new GameEngine(config, new ConsoleUI(in, out, true),
+                    new SeededRandomFoodChoice(config.seed())).run();
+            String expected = Files.readString(log, StandardCharsets.UTF_8);
+            String actual = buffer.toString(StandardCharsets.UTF_8);
+            check(result.victory() == expectVictory, name + " run ends in " + (expectVictory ? "VICTORY" : "DEFEAT"));
+            check(normalise(actual).equals(normalise(expected)), name + " run output matches " + log);
+        } catch (IOException e) {
+            check(false, "could not read " + input + " or " + log + " (run from the project root): " + e.getMessage());
+        }
+    }
+
+    private static String normalise(String text) {
+        return text.replace("\r\n", "\n");
     }
 
     private static Customer customer(GameEngine engine, String id) {
