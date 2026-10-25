@@ -43,8 +43,9 @@ public class ConsoleUI implements GameUI {
 
     @Override
     public void showWelcome(GameConfig config, Menu menu) {
-        out.println("=== Restaurant Rush (Stage 1) ===");
+        out.println("=== Restaurant Rush (Stage 2) ===");
         out.println("Seed: " + config.seed() + " | Turns: " + config.totalTurns() + " | Tables: " + config.tableCount());
+        out.println("Arrivals: " + config.arrivalSchedule().describe());
         out.println("Menu:");
         for (MenuItem item : menu.getItems()) {
             out.println("  " + item);

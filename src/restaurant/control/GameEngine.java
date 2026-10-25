@@ -27,7 +27,7 @@ public class GameEngine {
         this.ui = ui;
         this.foodChoice = foodChoice;
         this.restaurant = new Restaurant(Menu.standard(), config.tableCount());
-        this.arrivals = new ArrivalSchedule(config.arrivalTurns());
+        this.arrivals = config.arrivalSchedule();
         this.victoryCondition = new VictoryCondition(config);
     }
 

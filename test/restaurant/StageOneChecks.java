@@ -301,14 +301,20 @@ public class StageOneChecks {
             String expected = Files.readString(log, StandardCharsets.UTF_8);
             String actual = buffer.toString(StandardCharsets.UTF_8);
             check(result.victory() == expectVictory, name + " run ends in " + (expectVictory ? "VICTORY" : "DEFEAT"));
-            check(normalise(actual).equals(normalise(expected)), name + " run output matches " + log);
+            check(fromFirstTurn(actual).equals(fromFirstTurn(expected)), name + " run output from turn 1 on matches " + log);
         } catch (IOException e) {
             check(false, "could not read " + input + " or " + log + " (run from the project root): " + e.getMessage());
         }
     }
 
-    private static String normalise(String text) {
-        return text.replace("\r\n", "\n");
+    /**
+     * The game from turn 1 on, ignoring line endings. The welcome banner is skipped because it
+     * names the stage; the saved logs were recorded with the Stage 1 build.
+     */
+    static String fromFirstTurn(String text) {
+        String normalised = text.replace("\r\n", "\n");
+        int start = normalised.indexOf("==================== TURN 1 /");
+        return start < 0 ? normalised : normalised.substring(start);
     }
 
     private static Customer customer(GameEngine engine, String id) {
