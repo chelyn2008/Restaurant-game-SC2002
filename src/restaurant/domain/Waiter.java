@@ -24,16 +24,18 @@ public class Waiter extends Staff {
         return ActionResult.ok("seats " + customer.getId() + " at Table " + table.getNumber() + ".");
     }
 
-    /** Takes the order. The customer chooses the dish through the given strategy. */
+    /** Takes the order. The customer chooses the dish; the bill is locked now. */
     public ActionResult takeOrder(Restaurant restaurant, Customer customer, FoodChoiceStrategy foodChoice, int turn) {
         String problem = isAvailable() ? whyCannotTakeOrder(customer) : busyReason();
         if (problem != null) {
             return ActionResult.fail(problem);
         }
-        MenuItem item = foodChoice.choose(customer, restaurant.getMenu());
-        customer.placeOrder(new Order(customer, item, customer.calculateBill(item), turn));
+        MenuItem item = customer.chooseDish(restaurant.getMenu(), foodChoice);
+        int bill = customer.calculateBill(item);
+        customer.placeOrder(new Order(customer, item, bill, turn));
         completeTask();
-        return ActionResult.ok("takes " + customer.getId() + "'s order. " + customer.getId() + " chooses " + item + ".");
+        String billNote = bill == item.getPriceCents() ? "" : " " + customer.getTypeName() + " bill: " + Money.format(bill) + ".";
+        return ActionResult.ok("takes " + customer.getId() + "'s order. " + customer.getId() + " chooses " + item + "." + billNote);
     }
 
     public ActionResult serve(Customer customer, int turn) {

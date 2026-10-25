@@ -38,6 +38,11 @@ public abstract class Customer {
         return item.getPriceCents();
     }
 
+    /** Picks the dish when the order is taken. By default the customer follows the game's food-choice rule. */
+    public MenuItem chooseDish(Menu menu, FoodChoiceStrategy defaultChoice) {
+        return defaultChoice.choose(this, menu);
+    }
+
     /** True while the customer is still waiting for food: in the queue, seated or ordered. */
     public boolean isWaitingForService() {
         return status == CustomerStatus.WAITING
