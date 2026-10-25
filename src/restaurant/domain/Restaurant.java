@@ -3,11 +3,13 @@ package restaurant.domain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalDouble;
 
 /**
- * The restaurant is composed of its tables, waiting queue, staff and menu.
- * It keeps the revenue and applies the turn-level rules for eating and waiting.
+ * The restaurant is composed of its tables, waiting queue, staff, menu and pricing policy,
+ * plus (in Stage 3) a Host and the Happy Hour promotion. It keeps the revenue and applies
+ * the turn-level rules for eating, waiting and Happy Hour recovery.
  */
 public class Restaurant {
     private final Menu menu;
@@ -17,13 +19,24 @@ public class Restaurant {
     private final Waiter waiter = new Waiter();
     private final Chef chef = new Chef();
     private final Cashier cashier = new Cashier();
+    private final Host host;            // null when this game has no Host
+    private final HappyHour happyHour;  // null when this game offers no Happy Hour
+    private final PricingPolicy pricingPolicy;
     private int revenueCents;
 
+    /** A restaurant without a Host or Happy Hour (Stages 1 and 2). */
     public Restaurant(Menu menu, int tableCount) {
+        this(menu, tableCount, false, false);
+    }
+
+    public Restaurant(Menu menu, int tableCount, boolean withHost, boolean withHappyHour) {
         this.menu = menu;
         for (int number = 1; number <= tableCount; number++) {
             tables.add(new Table(number));
         }
+        this.host = withHost ? new Host() : null;
+        this.happyHour = withHappyHour ? new HappyHour() : null;
+        this.pricingPolicy = new PricingPolicy(happyHour == null ? List.of() : List.of(happyHour));
     }
 
     /** Lets every staff member act again. */
@@ -40,6 +53,24 @@ public class Restaurant {
         }
         customers.add(customer);
         waitingQueue.add(customer);
+    }
+
+    /**
+     * Turn start, while Happy Hour is active: every customer still waiting for a table or food
+     * recovers 15 satisfaction (maximum 100). Returns the customers who recovered.
+     */
+    public List<Customer> applyHappyHourRecovery(int turn) {
+        List<Customer> recovered = new ArrayList<>();
+        if (happyHour == null || !happyHour.isActive(turn)) {
+            return recovered;
+        }
+        for (Customer customer : customers) {
+            if (customer.isWaitingForService()) {
+                customer.recoverSatisfaction(HappyHour.RECOVERY_POINTS);
+                recovered.add(customer);
+            }
+        }
+        return recovered;
     }
 
     /** Customers who were served on an earlier turn finish eating and become READY_TO_PAY. */
@@ -70,6 +101,17 @@ public class Restaurant {
             }
         }
         return departed;
+    }
+
+    /** Why this customer cannot be seated now (shared by Waiter and Host), or null if they can. */
+    String whyCannotSeat(Customer customer) {
+        if (customer.getStatus() != CustomerStatus.WAITING) {
+            return customer.getId() + " is not in the waiting queue (status " + customer.getStatus() + ").";
+        }
+        if (findFreeTable() == null) {
+            return "No table is free. A table is freed only when its customer pays or leaves.";
+        }
+        return null;
     }
 
     void seatCustomer(Customer customer, Table table) {
@@ -143,8 +185,24 @@ public class Restaurant {
         return cashier;
     }
 
+    public Optional<Host> getHost() {
+        return Optional.ofNullable(host);
+    }
+
+    public Optional<HappyHour> getHappyHour() {
+        return Optional.ofNullable(happyHour);
+    }
+
+    public PricingPolicy getPricingPolicy() {
+        return pricingPolicy;
+    }
+
     public List<Staff> getStaff() {
-        return List.of(waiter, chef, cashier);
+        List<Staff> staff = new ArrayList<>(List.of(waiter, chef, cashier));
+        if (host != null) {
+            staff.add(host);
+        }
+        return staff;
     }
 
     public int getRevenueCents() {

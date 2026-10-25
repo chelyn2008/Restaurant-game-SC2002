@@ -14,7 +14,7 @@ public class Waiter extends Staff {
     }
 
     public ActionResult seat(Restaurant restaurant, Customer customer) {
-        String problem = isAvailable() ? whyCannotSeat(restaurant, customer) : busyReason();
+        String problem = isAvailable() ? restaurant.whyCannotSeat(customer) : busyReason();
         if (problem != null) {
             return ActionResult.fail(problem);
         }
@@ -31,10 +31,12 @@ public class Waiter extends Staff {
             return ActionResult.fail(problem);
         }
         MenuItem item = customer.chooseDish(restaurant.getMenu(), foodChoice);
-        int bill = customer.calculateBill(item);
+        PricingPolicy pricing = restaurant.getPricingPolicy();
+        int bill = pricing.lockedPrice(customer, item, turn);
         customer.placeOrder(new Order(customer, item, bill, turn));
         completeTask();
-        String billNote = bill == item.getPriceCents() ? "" : " " + customer.getTypeName() + " bill: " + Money.format(bill) + ".";
+        String discounts = pricing.describeDiscounts(customer, item, turn);
+        String billNote = discounts.isEmpty() ? "" : " " + discounts + " bill: " + Money.format(bill) + ".";
         return ActionResult.ok("takes " + customer.getId() + "'s order. " + customer.getId() + " chooses " + item + "." + billNote);
     }
 
@@ -52,7 +54,7 @@ public class Waiter extends Staff {
     public List<String> availableTasks(Restaurant restaurant, int turn) {
         List<String> tasks = new ArrayList<>();
         for (Customer customer : restaurant.getCustomers()) {
-            if (whyCannotSeat(restaurant, customer) == null) {
+            if (restaurant.whyCannotSeat(customer) == null) {
                 tasks.add("seat " + customer.getId());
             }
             if (whyCannotTakeOrder(customer) == null) {
@@ -63,16 +65,6 @@ public class Waiter extends Staff {
             }
         }
         return tasks;
-    }
-
-    private String whyCannotSeat(Restaurant restaurant, Customer customer) {
-        if (customer.getStatus() != CustomerStatus.WAITING) {
-            return customer.getId() + " is not in the waiting queue (status " + customer.getStatus() + ").";
-        }
-        if (restaurant.findFreeTable() == null) {
-            return "No table is free. A table is freed only when its customer pays or leaves.";
-        }
-        return null;
     }
 
     private String whyCannotTakeOrder(Customer customer) {
