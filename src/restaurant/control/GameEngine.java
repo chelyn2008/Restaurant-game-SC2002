@@ -1,10 +1,14 @@
 package restaurant.control;
 
+import java.util.List;
+import java.util.StringJoiner;
+
 import restaurant.domain.ActionResult;
 import restaurant.domain.Chef;
 import restaurant.domain.Customer;
 import restaurant.domain.FoodChoiceStrategy;
-import restaurant.domain.Menu;
+import restaurant.domain.HappyHour;
+import restaurant.domain.Host;
 import restaurant.domain.Restaurant;
 import restaurant.domain.Waiter;
 import restaurant.ui.GameUI;
@@ -26,7 +30,8 @@ public class GameEngine {
         this.config = config;
         this.ui = ui;
         this.foodChoice = foodChoice;
-        this.restaurant = new Restaurant(Menu.standard(), config.tableCount());
+        this.restaurant = new Restaurant(config.menu(), config.tableCount(),
+                config.hostEnabled(), config.happyHourEnabled());
         this.arrivals = config.arrivalSchedule();
         this.victoryCondition = new VictoryCondition(config);
     }
@@ -53,11 +58,18 @@ public class GameEngine {
             ui.showMessage(customer.getId() + " (" + customer.getTypeName()
                     + ") arrives and joins the waiting queue with satisfaction " + customer.getSatisfaction() + ".");
         });
-        ui.showTurnStart(restaurant,
+
+        // Turn start (Stage 3): the manager may switch on Happy Hour, then active turns give recovery
+        restaurant.getHappyHour().filter(HappyHour::isAvailable).ifPresent(happyHour -> offerHappyHour(happyHour, turn));
+        reportRecovery(restaurant.applyHappyHourRecovery(turn));
+
+        ui.showTurnStart(restaurant, turn,
+                restaurant.getHost().map(host -> host.availableTasks(restaurant)).orElse(List.of()),
                 restaurant.getWaiter().availableTasks(restaurant, turn),
                 restaurant.getChef().availableTasks(restaurant));
 
-        // Steps 2 and 3: manager choices; the Waiter acts before the Chef
+        // Steps 2 and 3: manager choices; the Host acts first, then the Waiter, then the Chef
+        restaurant.getHost().ifPresent(this::runHostTask);
         runWaiterTask(turn);
         runChefTask(turn);
 
@@ -81,6 +93,34 @@ public class GameEngine {
         return restaurant;
     }
 
+    private void offerHappyHour(HappyHour happyHour, int turn) {
+        if (ui.askHappyHour()) {
+            ActionResult result = happyHour.activate(turn);
+            ui.showMessage(result.success() ? result.message() : "Invalid choice: " + result.message());
+        }
+    }
+
+    private void reportRecovery(List<Customer> recovered) {
+        if (recovered.isEmpty()) {
+            return;
+        }
+        StringJoiner now = new StringJoiner(", ");
+        for (Customer customer : recovered) {
+            now.add(customer.getId() + " " + customer.getSatisfaction());
+        }
+        ui.showMessage("Happy Hour: waiting customers recover " + HappyHour.RECOVERY_POINTS
+                + " (max " + Customer.MAX_SATISFACTION + "): " + now + ".");
+    }
+
+    /** Asks until the manager gives a valid Host choice; invalid choices do not use the task. */
+    private void runHostTask(Host host) {
+        ActionResult result;
+        do {
+            result = executeHostCommand(host, ui.askHostCommand());
+            report("Host", result);
+        } while (!result.success());
+    }
+
     /** Asks until the manager gives a valid Waiter choice; invalid choices do not use the task. */
     private void runWaiterTask(int turn) {
         ActionResult result;
@@ -96,6 +136,17 @@ public class GameEngine {
             result = executeChefCommand(ui.askChefCommand(), turn);
             report("Chef", result);
         } while (!result.success());
+    }
+
+    private ActionResult executeHostCommand(Host host, HostCommand command) {
+        if (command.action() == HostCommand.Action.WAIT) {
+            return host.waitThisTurn();
+        }
+        Customer customer = restaurant.findCustomer(command.customerId());
+        if (customer == null) {
+            return ActionResult.fail("There is no customer " + command.customerId() + ".");
+        }
+        return host.seat(restaurant, customer);
     }
 
     private ActionResult executeWaiterCommand(WaiterCommand command, int turn) {

@@ -1,6 +1,5 @@
 package restaurant;
 
-import restaurant.control.ArrivalSchedule;
 import restaurant.control.GameConfig;
 import restaurant.control.GameEngine;
 import restaurant.domain.SeededRandomFoodChoice;
@@ -8,14 +7,14 @@ import restaurant.ui.ConsoleUI;
 
 /**
  * Starts the game with the base setting.
- * Usage: java -cp out restaurant.Main [--seed N] [--schedule mixed|regular] [--echo]
+ * Usage: java -cp out restaurant.Main [--stage 1|2|3] [--seed N] [--echo]
  */
 public class Main {
-    private static final String USAGE = "Usage: java -cp out restaurant.Main [--seed N] [--schedule mixed|regular] [--echo]";
+    private static final String USAGE = "Usage: java -cp out restaurant.Main [--stage 1|2|3] [--seed N] [--echo]";
 
     public static void main(String[] args) {
         long seed = GameConfig.DEFAULT_SEED;
-        ArrivalSchedule schedule = ArrivalSchedule.stageTwoMix();
+        int stage = 3;
         boolean echo = System.console() == null; // input is probably redirected from a file
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
@@ -29,12 +28,13 @@ public class Main {
                         usageAndExit("'" + args[i] + "' is not a valid seed.");
                     }
                 }
-                case "--schedule" -> {
-                    String name = i + 1 < args.length ? args[++i] : "";
-                    switch (name) {
-                        case "mixed" -> schedule = ArrivalSchedule.stageTwoMix();
-                        case "regular" -> schedule = ArrivalSchedule.allRegular();
-                        default -> usageAndExit("--schedule must be 'mixed' or 'regular'.");
+                case "--stage" -> {
+                    String value = i + 1 < args.length ? args[++i] : "";
+                    switch (value) {
+                        case "1" -> stage = 1;
+                        case "2" -> stage = 2;
+                        case "3" -> stage = 3;
+                        default -> usageAndExit("--stage must be 1, 2 or 3.");
                     }
                 }
                 case "--echo" -> echo = true;
@@ -42,7 +42,7 @@ public class Main {
             }
         }
 
-        GameConfig config = GameConfig.baseSetting(seed, schedule);
+        GameConfig config = GameConfig.forStage(stage, seed);
         ConsoleUI ui = new ConsoleUI(System.in, System.out, echo);
         new GameEngine(config, ui, new SeededRandomFoodChoice(seed)).run();
     }

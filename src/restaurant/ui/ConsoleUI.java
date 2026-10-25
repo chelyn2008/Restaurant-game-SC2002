@@ -13,9 +13,11 @@ import java.util.StringJoiner;
 import restaurant.control.ChefCommand;
 import restaurant.control.GameConfig;
 import restaurant.control.GameResult;
+import restaurant.control.HostCommand;
 import restaurant.control.WaiterCommand;
 import restaurant.domain.Customer;
 import restaurant.domain.CustomerStatus;
+import restaurant.domain.HappyHour;
 import restaurant.domain.Menu;
 import restaurant.domain.MenuItem;
 import restaurant.domain.Money;
@@ -43,7 +45,7 @@ public class ConsoleUI implements GameUI {
 
     @Override
     public void showWelcome(GameConfig config, Menu menu) {
-        out.println("=== Restaurant Rush (Stage 2) ===");
+        out.println("=== Restaurant Rush (Stage " + config.stage() + ") ===");
         out.println("Seed: " + config.seed() + " | Turns: " + config.totalTurns() + " | Tables: " + config.tableCount());
         out.println("Arrivals: " + config.arrivalSchedule().describe());
         out.println("Menu:");
@@ -55,6 +57,14 @@ public class ConsoleUI implements GameUI {
                 + ", average satisfaction of paid customers at least " + config.minAverageSatisfaction() + ".");
         out.println("Waiter commands: seat <id> | order <id> | serve <id> | wait");
         out.println("Chef commands:   cook <id> | wait");
+        if (config.hostEnabled()) {
+            out.println("Host commands:   seat <id> | wait   (the Host acts first, then the Waiter, then the Chef)");
+        }
+        if (config.happyHourEnabled()) {
+            out.println("Happy Hour: once per game, answer yes at the start of a turn. It lasts that turn and the next: "
+                    + HappyHour.DISCOUNT_PERCENT + "% off orders taken, waiting customers recover "
+                    + HappyHour.RECOVERY_POINTS + " at turn start.");
+        }
     }
 
     @Override
@@ -64,10 +74,12 @@ public class ConsoleUI implements GameUI {
     }
 
     @Override
-    public void showTurnStart(Restaurant restaurant, List<String> waiterTasks, List<String> chefTasks) {
+    public void showTurnStart(Restaurant restaurant, int turn, List<String> hostTasks,
+                              List<String> waiterTasks, List<String> chefTasks) {
         out.println("Revenue: " + Money.format(restaurant.getRevenueCents())
                 + " | Paid customers: " + restaurant.getPaidCount()
                 + " | Average satisfaction (paid): " + formatAverage(restaurant.getAverageSatisfactionOfPaid()));
+        restaurant.getHappyHour().ifPresent(happyHour -> out.println("Happy Hour: " + describe(happyHour, turn)));
 
         StringJoiner queue = new StringJoiner(", ");
         for (Customer customer : restaurant.getWaitingQueue()) {
@@ -85,8 +97,47 @@ public class ConsoleUI implements GameUI {
                         + " " + customer.getStatus() + ", " + order);
             }
         }
+        if (restaurant.getHost().isPresent()) {
+            out.println("Host can:   " + joinTasks(hostTasks));
+        }
         out.println("Waiter can: " + joinTasks(waiterTasks));
         out.println("Chef can:   " + joinTasks(chefTasks));
+    }
+
+    @Override
+    public boolean askHappyHour() {
+        while (true) {
+            String line = readLine("Activate Happy Hour now? It lasts this turn and the next (yes/no)> ");
+            if (line == null) {
+                out.println("(end of input: no Happy Hour)");
+                return false;
+            }
+            switch (line.trim().toLowerCase()) {
+                case "yes", "y" -> {
+                    return true;
+                }
+                case "no", "n" -> {
+                    return false;
+                }
+                default -> out.println("Invalid input: please type yes or no.");
+            }
+        }
+    }
+
+    @Override
+    public HostCommand askHostCommand() {
+        while (true) {
+            String line = readLine("Host> ");
+            if (line == null) {
+                out.println("(end of input: Host waits)");
+                return HostCommand.WAIT;
+            }
+            try {
+                return HostCommand.parse(line);
+            } catch (IllegalArgumentException e) {
+                out.println("Invalid input: " + e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -175,6 +226,18 @@ public class ConsoleUI implements GameUI {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private static String describe(HappyHour happyHour, int turn) {
+        if (happyHour.isActive(turn)) {
+            int left = happyHour.remainingTurns(turn);
+            return "ACTIVE, " + left + (left == 1 ? " turn left (last turn)" : " turns left (this turn and next)")
+                    + ", " + HappyHour.DISCOUNT_PERCENT + "% off orders taken now";
+        }
+        if (happyHour.isAvailable()) {
+            return "available (once per game)";
+        }
+        return "used (activated on turn " + happyHour.getActivatedOnTurn() + ")";
     }
 
     private static String describeCustomer(Customer customer) {

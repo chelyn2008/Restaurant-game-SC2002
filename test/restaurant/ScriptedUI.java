@@ -8,6 +8,7 @@ import java.util.List;
 import restaurant.control.ChefCommand;
 import restaurant.control.GameConfig;
 import restaurant.control.GameResult;
+import restaurant.control.HostCommand;
 import restaurant.control.WaiterCommand;
 import restaurant.domain.Menu;
 import restaurant.domain.Restaurant;
@@ -48,8 +49,27 @@ public class ScriptedUI implements GameUI {
     }
 
     @Override
-    public void showTurnStart(Restaurant restaurant, List<String> waiterTasks, List<String> chefTasks) {
+    public void showTurnStart(Restaurant restaurant, int turn, List<String> hostTasks,
+                              List<String> waiterTasks, List<String> chefTasks) {
         lastWaiterTasks = waiterTasks;
+    }
+
+    /** Uses the next line: "yes" switches Happy Hour on; anything else (or no line) does not. */
+    @Override
+    public boolean askHappyHour() {
+        return !lines.isEmpty() && lines.poll().trim().equalsIgnoreCase("yes");
+    }
+
+    @Override
+    public HostCommand askHostCommand() {
+        while (!lines.isEmpty()) {
+            try {
+                return HostCommand.parse(lines.poll());
+            } catch (IllegalArgumentException e) {
+                messages.add("Invalid input: " + e.getMessage());
+            }
+        }
+        return HostCommand.WAIT;
     }
 
     @Override

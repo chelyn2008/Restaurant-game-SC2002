@@ -5,6 +5,7 @@ import java.util.List;
 import restaurant.control.ChefCommand;
 import restaurant.control.GameConfig;
 import restaurant.control.GameResult;
+import restaurant.control.HostCommand;
 import restaurant.control.WaiterCommand;
 import restaurant.domain.Menu;
 import restaurant.domain.Restaurant;
@@ -19,8 +20,17 @@ public interface GameUI {
 
     void showTurnHeader(int turn, int totalTurns);
 
-    /** The start-of-turn display, including the tasks each staff member can do now. */
-    void showTurnStart(Restaurant restaurant, List<String> waiterTasks, List<String> chefTasks);
+    /**
+     * The start-of-turn display, including the tasks each staff member can do now.
+     * hostTasks is empty when the restaurant has no Host.
+     */
+    void showTurnStart(Restaurant restaurant, int turn, List<String> hostTasks,
+                       List<String> waiterTasks, List<String> chefTasks);
+
+    /** Asked at the start of a turn while Happy Hour is still available: true to switch it on now. */
+    boolean askHappyHour();
+
+    HostCommand askHostCommand();
 
     WaiterCommand askWaiterCommand();
 

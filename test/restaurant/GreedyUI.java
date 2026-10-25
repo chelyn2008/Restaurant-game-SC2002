@@ -6,19 +6,23 @@ import java.util.List;
 import restaurant.control.ChefCommand;
 import restaurant.control.GameConfig;
 import restaurant.control.GameResult;
+import restaurant.control.HostCommand;
 import restaurant.control.WaiterCommand;
 import restaurant.domain.Menu;
 import restaurant.domain.Restaurant;
 import restaurant.ui.GameUI;
 
 /**
- * A GameUI that plays as fast as possible: the Waiter serves before taking orders
- * before seating, and the Chef cooks the oldest unfinished order. It records the
- * commands it chose so a run can be saved as an input script.
+ * A GameUI that plays as fast as possible: the Host seats whoever it can, the Waiter
+ * serves before taking orders before seating, and the Chef cooks the oldest unfinished
+ * order. Happy Hour is never used. It records the commands it chose so a run can be
+ * saved as an input script.
  */
 public class GreedyUI implements GameUI {
     private final List<String> chosenCommands = new ArrayList<>();
-    private List<String> waiterTasks = List.of();
+    private Restaurant restaurant;
+    private int turn;
+    private List<String> hostTasks = List.of();
     private List<String> chefTasks = List.of();
 
     public List<String> getChosenCommands() {
@@ -26,19 +30,35 @@ public class GreedyUI implements GameUI {
     }
 
     @Override
-    public void showTurnStart(Restaurant restaurant, List<String> waiterTasks, List<String> chefTasks) {
-        this.waiterTasks = waiterTasks;
+    public void showTurnStart(Restaurant restaurant, int turn, List<String> hostTasks,
+                              List<String> waiterTasks, List<String> chefTasks) {
+        this.restaurant = restaurant;
+        this.turn = turn;
+        this.hostTasks = hostTasks;
         this.chefTasks = chefTasks;
     }
 
     @Override
+    public boolean askHappyHour() {
+        record("no");
+        return false;
+    }
+
+    @Override
+    public HostCommand askHostCommand() {
+        return HostCommand.parse(record(hostTasks.isEmpty() ? "wait" : hostTasks.get(0)));
+    }
+
+    @Override
     public WaiterCommand askWaiterCommand() {
-        String choice = firstStartingWith("serve ");
+        // Read the Waiter's tasks now, because the Host may have just seated someone.
+        List<String> waiterTasks = restaurant.getWaiter().availableTasks(restaurant, turn);
+        String choice = firstStartingWith(waiterTasks, "serve ");
         if (choice == null) {
-            choice = firstStartingWith("order ");
+            choice = firstStartingWith(waiterTasks, "order ");
         }
         if (choice == null) {
-            choice = firstStartingWith("seat ");
+            choice = firstStartingWith(waiterTasks, "seat ");
         }
         return WaiterCommand.parse(record(choice == null ? "wait" : choice));
     }
@@ -54,8 +74,8 @@ public class GreedyUI implements GameUI {
         return last.startsWith("order ") ? "cook " + last.substring("order ".length()) : "wait";
     }
 
-    private String firstStartingWith(String prefix) {
-        return waiterTasks.stream().filter(task -> task.startsWith(prefix)).findFirst().orElse(null);
+    private static String firstStartingWith(List<String> tasks, String prefix) {
+        return tasks.stream().filter(task -> task.startsWith(prefix)).findFirst().orElse(null);
     }
 
     private String record(String command) {
