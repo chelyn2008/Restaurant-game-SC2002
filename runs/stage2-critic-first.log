@@ -1,0 +1,306 @@
+=== Restaurant Rush (Stage 2) ===
+Seed: 2002 | Turns: 18 | Tables: 2
+Arrivals: turn 1: C1 Regular (-8/turn), turn 4: C2 Critic (-12/turn), turn 7: C3 VIP (-5/turn), turn 10: C4 Regular (-8/turn), turn 13: C5 Regular (-8/turn), turn 16: C6 Regular (-8/turn)
+Menu:
+  Salad $9.00 (1 prep unit)
+  Burger $15.00 (1 prep unit)
+  Pasta $18.00 (2 prep units)
+Goal after turn 18: at least 4 paid customers, revenue at least $45.00, average satisfaction of paid customers at least 60.
+Waiter commands: seat <id> | order <id> | serve <id> | wait
+Chef commands:   cook <id> | wait
+
+==================== TURN 1 / 18 ====================
+  C1 (Regular) arrives and joins the waiting queue with satisfaction 100.
+Revenue: $0.00 | Paid customers: 0 | Average satisfaction (paid): N/A
+Waiting queue: C1 [Regular, satisfaction 100]
+Table 1: free
+Table 2: free
+Waiter can: seat C1 | wait
+Chef can:   wait
+Waiter> wait
+  Waiter waits this turn.
+Chef> wait
+  Chef waits this turn.
+--- End of turn 1 ---
+Served: 0 | Unhappy departures: 0 | Revenue: $0.00 | Average satisfaction (paid): N/A | Turns used: 1/18
+Customers in restaurant: C1 92 (WAITING)
+
+==================== TURN 2 / 18 ====================
+Revenue: $0.00 | Paid customers: 0 | Average satisfaction (paid): N/A
+Waiting queue: C1 [Regular, satisfaction 92]
+Table 1: free
+Table 2: free
+Waiter can: seat C1 | wait
+Chef can:   wait
+Waiter> wait
+  Waiter waits this turn.
+Chef> wait
+  Chef waits this turn.
+--- End of turn 2 ---
+Served: 0 | Unhappy departures: 0 | Revenue: $0.00 | Average satisfaction (paid): N/A | Turns used: 2/18
+Customers in restaurant: C1 84 (WAITING)
+
+==================== TURN 3 / 18 ====================
+Revenue: $0.00 | Paid customers: 0 | Average satisfaction (paid): N/A
+Waiting queue: C1 [Regular, satisfaction 84]
+Table 1: free
+Table 2: free
+Waiter can: seat C1 | wait
+Chef can:   wait
+Waiter> seat C1
+  Waiter seats C1 at Table 1.
+Chef> wait
+  Chef waits this turn.
+--- End of turn 3 ---
+Served: 0 | Unhappy departures: 0 | Revenue: $0.00 | Average satisfaction (paid): N/A | Turns used: 3/18
+Customers in restaurant: C1 76 (SEATED)
+
+==================== TURN 4 / 18 ====================
+  C2 (Critic) arrives and joins the waiting queue with satisfaction 100.
+Revenue: $0.00 | Paid customers: 0 | Average satisfaction (paid): N/A
+Waiting queue: C2 [Critic, satisfaction 100]
+Table 1: C1 [Regular, satisfaction 76] SEATED, no order yet
+Table 2: free
+Waiter can: order C1 | seat C2 | wait
+Chef can:   wait
+Waiter> seat C2
+  Waiter seats C2 at Table 2.
+Chef> wait
+  Chef waits this turn.
+--- End of turn 4 ---
+Served: 0 | Unhappy departures: 0 | Revenue: $0.00 | Average satisfaction (paid): N/A | Turns used: 4/18
+Customers in restaurant: C1 68 (SEATED), C2 88 (SEATED)
+
+==================== TURN 5 / 18 ====================
+Revenue: $0.00 | Paid customers: 0 | Average satisfaction (paid): N/A
+Waiting queue: (empty)
+Table 1: C1 [Regular, satisfaction 68] SEATED, no order yet
+Table 2: C2 [Critic, satisfaction 88] SEATED, no order yet
+Waiter can: order C1 | order C2 | wait
+Chef can:   wait
+Waiter> order C2
+  Waiter takes C2's order. C2 chooses Pasta $18.00 (2 prep units).
+Chef> cook C2
+  Chef prepares C2's Pasta (1/2).
+--- End of turn 5 ---
+Served: 0 | Unhappy departures: 0 | Revenue: $0.00 | Average satisfaction (paid): N/A | Turns used: 5/18
+Customers in restaurant: C1 60 (SEATED), C2 76 (ORDERED)
+
+==================== TURN 6 / 18 ====================
+Revenue: $0.00 | Paid customers: 0 | Average satisfaction (paid): N/A
+Waiting queue: (empty)
+Table 1: C1 [Regular, satisfaction 60] SEATED, no order yet
+Table 2: C2 [Critic, satisfaction 76] ORDERED, order: Pasta $18.00 IN_PREPARATION 1/2
+Waiter can: order C1 | wait
+Chef can:   cook C2 | wait
+Waiter> order C1
+  Waiter takes C1's order. C1 chooses Burger $15.00 (1 prep unit).
+Chef> cook C2
+  Chef finishes C2's Pasta (2/2): READY.
+--- End of turn 6 ---
+Served: 0 | Unhappy departures: 0 | Revenue: $0.00 | Average satisfaction (paid): N/A | Turns used: 6/18
+Customers in restaurant: C1 52 (ORDERED), C2 64 (ORDERED)
+
+==================== TURN 7 / 18 ====================
+  C3 (VIP) arrives and joins the waiting queue with satisfaction 100.
+Revenue: $0.00 | Paid customers: 0 | Average satisfaction (paid): N/A
+Waiting queue: C3 [VIP, satisfaction 100]
+Table 1: C1 [Regular, satisfaction 52] ORDERED, order: Burger $15.00 PLACED 0/1
+Table 2: C2 [Critic, satisfaction 64] ORDERED, order: Pasta $18.00 READY 2/2
+Waiter can: serve C2 | wait
+Chef can:   cook C1 | wait
+Waiter> serve C2
+  Waiter serves C2's Pasta.
+Chef> cook C1
+  Chef finishes C1's Burger (1/1): READY.
+--- End of turn 7 ---
+Served: 1 | Unhappy departures: 0 | Revenue: $0.00 | Average satisfaction (paid): N/A | Turns used: 7/18
+Customers in restaurant: C1 44 (ORDERED), C2 64 (SERVED), C3 95 (WAITING)
+
+==================== TURN 8 / 18 ====================
+Revenue: $0.00 | Paid customers: 0 | Average satisfaction (paid): N/A
+Waiting queue: C3 [VIP, satisfaction 95]
+Table 1: C1 [Regular, satisfaction 44] ORDERED, order: Burger $15.00 READY 1/1
+Table 2: C2 [Critic, satisfaction 64] SERVED, order: Pasta $18.00 SERVED 2/2
+Waiter can: serve C1 | wait
+Chef can:   wait
+Waiter> serve C1
+  Waiter serves C1's Burger.
+Chef> wait
+  Chef waits this turn.
+  C2 finishes eating and is READY_TO_PAY.
+--- End of turn 8 ---
+Served: 2 | Unhappy departures: 0 | Revenue: $0.00 | Average satisfaction (paid): N/A | Turns used: 8/18
+Customers in restaurant: C1 44 (SERVED), C2 64 (READY_TO_PAY), C3 90 (WAITING)
+
+==================== TURN 9 / 18 ====================
+Revenue: $0.00 | Paid customers: 0 | Average satisfaction (paid): N/A
+Waiting queue: C3 [VIP, satisfaction 90]
+Table 1: C1 [Regular, satisfaction 44] SERVED, order: Burger $15.00 SERVED 1/1
+Table 2: C2 [Critic, satisfaction 64] READY_TO_PAY, order: Pasta $18.00 SERVED 2/2
+Waiter can: wait
+Chef can:   wait
+Waiter> wait
+  Waiter waits this turn.
+Chef> wait
+  Chef waits this turn.
+  C1 finishes eating and is READY_TO_PAY.
+  Cashier collects $18.00 from C2 (satisfaction 64 recorded). Table 2 is free.
+--- End of turn 9 ---
+Served: 2 | Unhappy departures: 0 | Revenue: $18.00 | Average satisfaction (paid): 64.0 | Turns used: 9/18
+Customers in restaurant: C1 44 (READY_TO_PAY), C3 85 (WAITING)
+
+==================== TURN 10 / 18 ====================
+  C4 (Regular) arrives and joins the waiting queue with satisfaction 100.
+Revenue: $18.00 | Paid customers: 1 | Average satisfaction (paid): 64.0
+Waiting queue: C3 [VIP, satisfaction 85], C4 [Regular, satisfaction 100]
+Table 1: C1 [Regular, satisfaction 44] READY_TO_PAY, order: Burger $15.00 SERVED 1/1
+Table 2: free
+Waiter can: seat C3 | seat C4 | wait
+Chef can:   wait
+Waiter> seat C3
+  Waiter seats C3 at Table 2.
+Chef> wait
+  Chef waits this turn.
+  Cashier collects $15.00 from C1 (satisfaction 44 recorded). Table 1 is free.
+--- End of turn 10 ---
+Served: 2 | Unhappy departures: 0 | Revenue: $33.00 | Average satisfaction (paid): 54.0 | Turns used: 10/18
+Customers in restaurant: C3 80 (SEATED), C4 92 (WAITING)
+
+==================== TURN 11 / 18 ====================
+Revenue: $33.00 | Paid customers: 2 | Average satisfaction (paid): 54.0
+Waiting queue: C4 [Regular, satisfaction 92]
+Table 1: free
+Table 2: C3 [VIP, satisfaction 80] SEATED, no order yet
+Waiter can: order C3 | seat C4 | wait
+Chef can:   wait
+Waiter> order C3
+  Waiter takes C3's order. C3 chooses Burger $15.00 (1 prep unit). VIP bill: $13.50.
+Chef> cook C3
+  Chef finishes C3's Burger (1/1): READY.
+--- End of turn 11 ---
+Served: 2 | Unhappy departures: 0 | Revenue: $33.00 | Average satisfaction (paid): 54.0 | Turns used: 11/18
+Customers in restaurant: C3 75 (ORDERED), C4 84 (WAITING)
+
+==================== TURN 12 / 18 ====================
+Revenue: $33.00 | Paid customers: 2 | Average satisfaction (paid): 54.0
+Waiting queue: C4 [Regular, satisfaction 84]
+Table 1: free
+Table 2: C3 [VIP, satisfaction 75] ORDERED, order: Burger $13.50 READY 1/1
+Waiter can: serve C3 | seat C4 | wait
+Chef can:   wait
+Waiter> serve C3
+  Waiter serves C3's Burger.
+Chef> wait
+  Chef waits this turn.
+--- End of turn 12 ---
+Served: 3 | Unhappy departures: 0 | Revenue: $33.00 | Average satisfaction (paid): 54.0 | Turns used: 12/18
+Customers in restaurant: C3 75 (SERVED), C4 76 (WAITING)
+
+==================== TURN 13 / 18 ====================
+  C5 (Regular) arrives and joins the waiting queue with satisfaction 100.
+Revenue: $33.00 | Paid customers: 2 | Average satisfaction (paid): 54.0
+Waiting queue: C4 [Regular, satisfaction 76], C5 [Regular, satisfaction 100]
+Table 1: free
+Table 2: C3 [VIP, satisfaction 75] SERVED, order: Burger $13.50 SERVED 1/1
+Waiter can: seat C4 | seat C5 | wait
+Chef can:   wait
+Waiter> seat C4
+  Waiter seats C4 at Table 1.
+Chef> wait
+  Chef waits this turn.
+  C3 finishes eating and is READY_TO_PAY.
+--- End of turn 13 ---
+Served: 3 | Unhappy departures: 0 | Revenue: $33.00 | Average satisfaction (paid): 54.0 | Turns used: 13/18
+Customers in restaurant: C3 75 (READY_TO_PAY), C4 68 (SEATED), C5 92 (WAITING)
+
+==================== TURN 14 / 18 ====================
+Revenue: $33.00 | Paid customers: 2 | Average satisfaction (paid): 54.0
+Waiting queue: C5 [Regular, satisfaction 92]
+Table 1: C4 [Regular, satisfaction 68] SEATED, no order yet
+Table 2: C3 [VIP, satisfaction 75] READY_TO_PAY, order: Burger $13.50 SERVED 1/1
+Waiter can: order C4 | wait
+Chef can:   wait
+Waiter> order C4
+  Waiter takes C4's order. C4 chooses Salad $9.00 (1 prep unit).
+Chef> cook C4
+  Chef finishes C4's Salad (1/1): READY.
+  Cashier collects $13.50 from C3 (satisfaction 75 recorded). Table 2 is free.
+--- End of turn 14 ---
+Served: 3 | Unhappy departures: 0 | Revenue: $46.50 | Average satisfaction (paid): 61.0 | Turns used: 14/18
+Customers in restaurant: C4 60 (ORDERED), C5 84 (WAITING)
+
+==================== TURN 15 / 18 ====================
+Revenue: $46.50 | Paid customers: 3 | Average satisfaction (paid): 61.0
+Waiting queue: C5 [Regular, satisfaction 84]
+Table 1: C4 [Regular, satisfaction 60] ORDERED, order: Salad $9.00 READY 1/1
+Table 2: free
+Waiter can: serve C4 | seat C5 | wait
+Chef can:   wait
+Waiter> serve C4
+  Waiter serves C4's Salad.
+Chef> wait
+  Chef waits this turn.
+--- End of turn 15 ---
+Served: 4 | Unhappy departures: 0 | Revenue: $46.50 | Average satisfaction (paid): 61.0 | Turns used: 15/18
+Customers in restaurant: C4 60 (SERVED), C5 76 (WAITING)
+
+==================== TURN 16 / 18 ====================
+  C6 (Regular) arrives and joins the waiting queue with satisfaction 100.
+Revenue: $46.50 | Paid customers: 3 | Average satisfaction (paid): 61.0
+Waiting queue: C5 [Regular, satisfaction 76], C6 [Regular, satisfaction 100]
+Table 1: C4 [Regular, satisfaction 60] SERVED, order: Salad $9.00 SERVED 1/1
+Table 2: free
+Waiter can: seat C5 | seat C6 | wait
+Chef can:   wait
+Waiter> seat C5
+  Waiter seats C5 at Table 2.
+Chef> wait
+  Chef waits this turn.
+  C4 finishes eating and is READY_TO_PAY.
+--- End of turn 16 ---
+Served: 4 | Unhappy departures: 0 | Revenue: $46.50 | Average satisfaction (paid): 61.0 | Turns used: 16/18
+Customers in restaurant: C4 60 (READY_TO_PAY), C5 68 (SEATED), C6 92 (WAITING)
+
+==================== TURN 17 / 18 ====================
+Revenue: $46.50 | Paid customers: 3 | Average satisfaction (paid): 61.0
+Waiting queue: C6 [Regular, satisfaction 92]
+Table 1: C4 [Regular, satisfaction 60] READY_TO_PAY, order: Salad $9.00 SERVED 1/1
+Table 2: C5 [Regular, satisfaction 68] SEATED, no order yet
+Waiter can: order C5 | wait
+Chef can:   wait
+Waiter> order C5
+  Waiter takes C5's order. C5 chooses Burger $15.00 (1 prep unit).
+Chef> cook C5
+  Chef finishes C5's Burger (1/1): READY.
+  Cashier collects $9.00 from C4 (satisfaction 60 recorded). Table 1 is free.
+--- End of turn 17 ---
+Served: 4 | Unhappy departures: 0 | Revenue: $55.50 | Average satisfaction (paid): 60.8 | Turns used: 17/18
+Customers in restaurant: C5 60 (ORDERED), C6 84 (WAITING)
+
+==================== TURN 18 / 18 ====================
+Revenue: $55.50 | Paid customers: 4 | Average satisfaction (paid): 60.8
+Waiting queue: C6 [Regular, satisfaction 84]
+Table 1: free
+Table 2: C5 [Regular, satisfaction 60] ORDERED, order: Burger $15.00 READY 1/1
+Waiter can: serve C5 | seat C6 | wait
+Chef can:   wait
+Waiter> serve C5
+  Waiter serves C5's Burger.
+Chef> wait
+  Chef waits this turn.
+--- End of turn 18 ---
+Served: 5 | Unhappy departures: 0 | Revenue: $55.50 | Average satisfaction (paid): 60.8 | Turns used: 18/18
+Customers in restaurant: C5 60 (SERVED), C6 76 (WAITING)
+
+==================== FINAL RESULT: VICTORY ====================
+Paid customers: 4 (target >= 4) MET
+Revenue: $55.50 (target >= $45.00) MET
+Average satisfaction of paid customers: 60.8 (target >= 60) MET
+Served: 5 | Unhappy departures: 0
+  C1: PAID, paid $15.00, satisfaction at payment 44
+  C2: PAID, paid $18.00, satisfaction at payment 64
+  C3: PAID, paid $13.50, satisfaction at payment 75
+  C4: PAID, paid $9.00, satisfaction at payment 60
+  C5: SERVED, satisfaction 60
+  C6: WAITING, satisfaction 76
