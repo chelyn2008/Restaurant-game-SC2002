@@ -1,17 +1,32 @@
 # Restaurant Rush (SC2002 Group Assignment)
 
-A command-line, turn-based restaurant management game in Java. You are the manager:
-each turn you choose what the Waiter and the Chef do. Customers arrive, wait, order,
-eat and pay; if they wait too long they leave unhappy.
+Repository: https://github.com/chelyn2008/Restaurant-game-SC2002
 
-**Current stage: Stage 2 (customer behaviour).** Regular, VIP and Critic customers;
-Waiter, Chef and Cashier; full 18-turn sequence with Victory and Defeat.
+A command-line, turn-based restaurant management game in Java. You are the manager:
+each turn you choose what the Host, Waiter and Chef do, and when to run Happy Hour.
+Customers arrive, wait, order, eat and pay; if they wait too long they leave unhappy.
+
+**Current stage: Stage 3 (new role and menu policy).** Regular, VIP and Critic customers;
+Host, Waiter, Chef and Cashier; combo meals; Happy Hour; full 18-turn sequence with Victory
+and Defeat. Stages 1 and 2 are still playable with `--stage 1` / `--stage 2`.
 
 | Customer | Loses per waiting turn | Bill | Special behaviour |
 |----------|------------------------|------|-------------------|
 | Regular | 8 | Full price | — |
 | VIP | 5 | 10% off (nearest cent) | — |
-| Critic | 12 | Full price | Signature dish: always orders the most expensive dish (Pasta) |
+| Critic | 12 | Full price | Signature dish: always orders the most expensive item (Pasta in Stages 1-2, the Burger + Pasta Combo in Stage 3) |
+
+| Menu (Stage 3) | Price | Prep units |
+|----------------|-------|------------|
+| Salad / Burger / Pasta | $9.00 / $15.00 / $18.00 | 1 / 1 / 2 |
+| Salad + Burger Combo | $21.60 | 2 |
+| Salad + Pasta Combo | $24.30 | 3 |
+| Burger + Pasta Combo | $29.70 | 3 |
+
+**Happy Hour** (once per game, at the start of a turn, lasts that turn and the next): orders taken
+while it is active get 20% off (after the VIP discount: a VIP Burger costs $10.80), and customers
+still waiting for a table or food recover 15 satisfaction at the start of each active turn (max 100).
+The price is locked when the order is taken.
 
 ## Requirements
 
@@ -19,38 +34,37 @@ Waiter, Chef and Cashier; full 18-turn sequence with Victory and Defeat.
 
 ## Build and run
 
-From the project root:
+From the project root (Git Bash / macOS / Linux):
 
 ```sh
 # Build the game
 javac --release 17 -d out $(find src -name "*.java")
 
-# Play (default seed 2002, Stage 2 mixed arrivals: Critic on turn 4, VIP on turn 7)
+# Play Stage 3 (default seed 2002)
 java -cp out restaurant.Main
 
-# Play with another seed for the customers' food choices
+# Other options: another seed for the customers' food choices, or an earlier stage
 java -cp out restaurant.Main --seed 7
+java -cp out restaurant.Main --stage 1      # six Regular customers, base menu, no Host / Happy Hour
+java -cp out restaurant.Main --stage 2      # adds the VIP and the Critic
 
-# Stage 1 arrivals (six Regular customers), to re-check Stage 1 behaviour
-java -cp out restaurant.Main --schedule regular
-
-# Replay a saved Stage 2 run (--echo prints each command into the output)
-java -cp out restaurant.Main --echo < runs/stage2-critic-first.txt
-java -cp out restaurant.Main --echo < runs/stage2-regular-first.txt
-
-# Replay the Stage 1 runs
-java -cp out restaurant.Main --schedule regular --echo < runs/victory.txt
-java -cp out restaurant.Main --schedule regular --echo < runs/defeat.txt
+# Replay saved runs (--echo prints each command into the output)
+java -cp out restaurant.Main --echo < runs/stage3-victory.txt
+java -cp out restaurant.Main --echo < runs/stage3-defeat.txt
+java -cp out restaurant.Main --stage 2 --echo < runs/stage2-critic-first.txt
+java -cp out restaurant.Main --stage 1 --echo < runs/victory.txt
 
 # Check a replay is identical to the saved log (no output = identical)
-java -cp out restaurant.Main --echo < runs/stage2-critic-first.txt | diff --strip-trailing-cr - runs/stage2-critic-first.log
+java -cp out restaurant.Main --echo < runs/stage3-victory.txt | diff --strip-trailing-cr - runs/stage3-victory.log
 ```
 
-On Windows (PowerShell), build with:
+In PowerShell (the VS Code default on Windows), `<` does not work; pipe the file instead:
 
 ```powershell
 javac --release 17 -d out (Get-ChildItem -Recurse src -Filter *.java).FullName
-Get-Content runs\stage2-critic-first.txt | java -cp out restaurant.Main --echo
+java -cp out restaurant.Main
+Get-Content runs\stage3-victory.txt | java -cp out restaurant.Main --echo
+Get-Content runs\victory.txt | java -cp out restaurant.Main --stage 1 --echo
 ```
 
 ## Automated checks
@@ -59,24 +73,29 @@ Get-Content runs\stage2-critic-first.txt | java -cp out restaurant.Main --echo
 javac --release 17 -d out-test $(find src test -name "*.java")
 java -cp out-test restaurant.StageOneChecks
 java -cp out-test restaurant.StageTwoChecks
+java -cp out-test restaurant.StageThreeChecks
 ```
 
+PowerShell: `javac --release 17 -d out-test (Get-ChildItem -Recurse src,test -Filter *.java).FullName`.
 Run from the project root (some checks replay `runs/*.txt` and scan `src/`). Each prints
 `PASS`/`FAIL` per check and exits with code 1 if any check fails. See [TESTING.md](TESTING.md).
 
 ## How to play
 
-Each turn shows the revenue, the waiting queue, both tables (customer, satisfaction,
-order status) and the tasks each staff member can do. Then type one command for the
-Waiter and one for the Chef:
+Each turn shows the revenue, Happy Hour status, the waiting queue, both tables (customer,
+satisfaction, order status) and the tasks each staff member can do. While Happy Hour is unused you
+are first asked whether to switch it on (`yes` / `no`). Then type one command for each staff member,
+in this order:
 
 | Staff  | Commands |
 |--------|----------|
-| Waiter | `seat <id>` (seat a queued customer at the lowest free table), `order <id>` (take a seated customer's order), `serve <id>` (serve a READY order), `wait` |
+| Host   | `seat <id>` (seat a queued customer at the lowest free table), `wait` |
+| Waiter | `seat <id>`, `order <id>` (take a seated customer's order), `serve <id>` (serve a READY order), `wait` |
 | Chef   | `cook <id>` (one preparation unit of that customer's order), `wait` |
 
-Customer ids are `C1` to `C6` (`c1` or `1` also work). An invalid choice is explained and
-you choose again; it does not use up the task. The Cashier works automatically.
+Customer ids are `C1` to `C6` (`c1` or `1` also work). An invalid choice is explained and you choose
+again; it does not use up the task. The Cashier works automatically. In `--stage 1` and `--stage 2`
+there is no Host and no Happy Hour question.
 
 **Goal after turn 18:** at least 4 paid customers, revenue at least $45.00, and average
 satisfaction of paid customers at least 60.
@@ -84,15 +103,18 @@ satisfaction of paid customers at least 60.
 ## Project layout
 
 ```
-src/restaurant/Main.java     entry point (--seed N, --schedule mixed|regular, --echo)
-src/restaurant/domain/       entities and rules: Customer (Regular, VIP, Critic), Order, Table, Menu, Waiter, Chef, Cashier, Restaurant ...
+src/restaurant/Main.java     entry point (--stage 1|2|3, --seed N, --echo)
+src/restaurant/domain/       entities and rules: Customer (Regular, VIP, Critic), Order, Table, Menu, MenuItem, ComboMeal,
+                             Staff (Host, Waiter, Chef, Cashier), Promotion, HappyHour, PricingPolicy, Restaurant ...
 src/restaurant/control/      GameEngine (turn loop), GameConfig, ArrivalSchedule, CustomerFactory, commands, VictoryCondition
 src/restaurant/ui/           GameUI interface and ConsoleUI
-test/restaurant/             StageOneChecks, StageTwoChecks and test UIs (ScriptedUI, GreedyUI, FixedFoodChoice)
-runs/                        input scripts and their console logs (Stage 1: victory/defeat; Stage 2: stage2-*)
+test/restaurant/             StageOneChecks, StageTwoChecks, StageThreeChecks and test UIs
+runs/                        input scripts and console logs (Stage 1: victory/defeat; Stage 2: stage2-*; Stage 3: stage3-*)
 ```
 
-Design notes for the report: [DESIGN-NOTES.md](DESIGN-NOTES.md). Test evidence: [TESTING.md](TESTING.md).
+Report material: [DESIGN-NOTES.md](DESIGN-NOTES.md) (design discussion),
+[CLASS-DIAGRAM.md](CLASS-DIAGRAM.md) (every class with attributes, operations and relationships),
+[TESTING.md](TESTING.md) (checks and reproducible runs).
 
 ## Stages
 
@@ -100,7 +122,7 @@ Design notes for the report: [DESIGN-NOTES.md](DESIGN-NOTES.md). Test evidence: 
 |-------|-----|------|
 | 1 | `stage-1` | Regular customers, menu, Waiter, Chef, Cashier, full turn sequence, both endings |
 | 2 | `stage-2` | VIP and Critic customers, configurable arrival schedule |
-| 3 | `stage-3` | (to do) Host, ComboMeal, Happy Hour |
+| 3 | `stage-3` | Host, ComboMeal, Happy Hour (with PricingPolicy), `--stage` option |
 
 ### Stage 1 → 2
 
@@ -111,4 +133,27 @@ Design notes for the report: [DESIGN-NOTES.md](DESIGN-NOTES.md). Test evidence: 
 - Reasons for each change: [CHANGES-stage1-to-2.md](CHANGES-stage1-to-2.md).
 - Compare: https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-1...stage-2
 
-Video timestamps will be added here when the video is recorded.
+### Stage 2 → 3
+
+- New files: `Host`, `ComboMeal`, `Promotion`, `HappyHour`, `PricingPolicy`, `HostCommand`,
+  `StageThreeChecks`, `runs/stage3-*`, `CHANGES-stage2-to-3.md`, `CLASS-DIAGRAM.md`.
+- Changed: `Restaurant` (owns Host, Happy Hour and PricingPolicy; shared seating check; recovery),
+  `Waiter` (price from PricingPolicy), `Customer` (`recoverSatisfaction`), `Menu` (`withCombos`),
+  `GameConfig` (per-stage features), `GameEngine` (Happy Hour and Host steps), `GameUI` / `ConsoleUI`
+  (two new questions, Happy Hour display), `Main` (`--stage` replaces `--schedule`), test UIs. Nothing deleted.
+- Reasons for each change: [CHANGES-stage2-to-3.md](CHANGES-stage2-to-3.md).
+- Compare: https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
+
+## Video timestamps
+
+To be added when the video is recorded:
+
+| # | Segment | Time |
+|---|---------|------|
+| 1 | The game launching from the submitted project | |
+| 2 | Meaningful manager choices, including a decision where staff are constrained | |
+| 3 | A dish going READY → SERVED → payment | |
+| 4 | A VIP or Critic behaviour | |
+| 5 | A Stage 3 feature | |
+| 6 | One victory and one defeat | |
+| 7 | The stage tag comparisons and the diagrams | |
