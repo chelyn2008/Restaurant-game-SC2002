@@ -1,13 +1,16 @@
-=== Restaurant Rush (Stage 2) ===
+====== Restaurant Rush (Stage 2) ======
 Seed: 2002 | Turns: 18 | Tables: 2
 Arrivals: turn 1: C1 Regular (-8/turn), turn 4: C2 Critic (-12/turn), turn 7: C3 VIP (-5/turn), turn 10: C4 Regular (-8/turn), turn 13: C5 Regular (-8/turn), turn 16: C6 Regular (-8/turn)
 Menu:
   Salad $9.00 (1 prep unit)
   Burger $15.00 (1 prep unit)
   Pasta $18.00 (2 prep units)
+
 Goal after turn 18: at least 4 paid customers, revenue at least $45.00, average satisfaction of paid customers at least 60.
+
 Waiter commands: seat <id> | order <id> | serve <id> | wait
 Chef commands:   cook <id> | wait
+
 
 ==================== TURN 1 / 18 ====================
   C1 (Regular) arrives and joins the waiting queue with satisfaction 100.

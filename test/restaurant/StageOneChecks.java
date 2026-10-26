@@ -18,11 +18,11 @@ import restaurant.control.VictoryCondition;
 import restaurant.domain.ActionResult;
 import restaurant.domain.Customer;
 import restaurant.domain.CustomerStatus;
-import restaurant.domain.Menu;
 import restaurant.domain.OrderStatus;
 import restaurant.domain.RegularCustomer;
 import restaurant.domain.Restaurant;
 import restaurant.domain.SeededRandomFoodChoice;
+import restaurant.domain.menu.Menu;
 import restaurant.ui.ConsoleUI;
 
 /**

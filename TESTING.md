@@ -44,10 +44,12 @@ All runs replay with `java -cp out restaurant.Main --stage N --echo < runs/<scri
 
 - `StageOneChecks`: 52 passed. Its replay of `runs/victory.txt` / `runs/defeat.txt` with the Stage 1
   setting matches the Stage 1 logs from turn 1 to the end.
-- `StageTwoChecks`: 38 passed. Its replay of both Stage 2 scripts matches the Stage 2 logs **byte for
-  byte, including the banner**.
-- By hand: `--stage 2` replays of the Stage 2 scripts show no `diff` at all; `--stage 1` replays of the
-  Stage 1 scripts differ only by the "Arrivals:" banner line (line 3).
+- `StageTwoChecks`: 38 passed. Its replay of both Stage 2 scripts matches the saved Stage 2 logs.
+  Those two logs were re-recorded after the welcome banner was restyled in Stage 3; compared with the
+  logs at the `stage-2` tag, only the banner lines differ (title, blank lines), and every turn, choice
+  and result is the same.
+- By hand: `--stage 2` replays of the Stage 2 scripts show no `diff` against `runs/`; `--stage 1`
+  replays of the Stage 1 scripts differ only in the banner lines before turn 1.
 
 ## Stage 3 reproducible runs
 
@@ -122,7 +124,7 @@ Defeat). Only the two banner lines before turn 1 differ ("Stage 2" and the arriv
 ```sh
 java -cp out restaurant.Main --stage 1 --echo < runs/victory.txt | diff --strip-trailing-cr - runs/victory.log
 java -cp out restaurant.Main --stage 1 --echo < runs/defeat.txt  | diff --strip-trailing-cr - runs/defeat.log
-# with the Stage 2 build lines 1 and 3 differed; with the Stage 3 build only line 3 (the arrivals) differs
+# only the banner lines before "TURN 1" differ (the logs were recorded by the Stage 1 build)
 ```
 
 ## Stage 2 reproducible runs

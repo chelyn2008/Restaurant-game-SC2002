@@ -2,10 +2,10 @@ package restaurant.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import restaurant.domain.menu.MenuItem;
 
 /**
  * The Waiter seats a queued customer, takes a seated customer's order, or serves a READY order.
- * Each check returns a reason when the task is not allowed, so the manager can choose again.
  */
 public class Waiter extends Staff {
 

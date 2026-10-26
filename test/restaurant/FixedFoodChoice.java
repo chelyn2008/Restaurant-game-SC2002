@@ -2,8 +2,8 @@ package restaurant;
 
 import restaurant.domain.Customer;
 import restaurant.domain.FoodChoiceStrategy;
-import restaurant.domain.Menu;
-import restaurant.domain.MenuItem;
+import restaurant.domain.menu.Menu;
+import restaurant.domain.menu.MenuItem;
 
 /** Test strategy: every customer orders the same dish. */
 public class FixedFoodChoice implements FoodChoiceStrategy {

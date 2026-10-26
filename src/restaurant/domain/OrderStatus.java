@@ -1,6 +1,6 @@
 package restaurant.domain;
 
-/** The life cycle of an order. */
+
 public enum OrderStatus {
     PLACED,          // taken by the Waiter, no preparation yet
     IN_PREPARATION,  // some but not all preparation units done

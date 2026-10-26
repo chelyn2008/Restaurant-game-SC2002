@@ -163,11 +163,7 @@ classDiagram
 
 **`OrderStatus`** *(enumeration)*: `PLACED`, `IN_PREPARATION`, `READY`, `SERVED`, `PAID`, `CANCELLED`.
 
-**`MenuItem`**: `-name: String` {readOnly}, `-priceCents: int` {readOnly}, `-prepUnits: int` {readOnly}; `+MenuItem(name: String, priceCents: int, prepUnits: int)`, `+getName(): String`, `+getPriceCents(): int`, `+getPrepUnits(): int`, `+toString(): String`.
-
-**`ComboMeal`** extends `MenuItem`: `-PRICE_PERCENT: int = 90` *static*, `-first: MenuItem` {readOnly}, `-second: MenuItem` {readOnly}; `+ComboMeal(first: MenuItem, second: MenuItem)`, `-comboPrice(first: MenuItem, second: MenuItem): int` *static*, `+getFirst(): MenuItem`, `+getSecond(): MenuItem`.
-
-**`Menu`**: `-items: List<MenuItem>` {readOnly}; `+Menu(items: List<MenuItem>)`, `+standard(): Menu` *static*, `+withCombos(): Menu` *static*, `+getItems(): List<MenuItem>`, `+findItem(name: String): MenuItem`.
+*(`MenuItem`, `ComboMeal` and `Menu` are in the sub-package `restaurant.domain.menu`, below.)*
 
 **`Table`**: `-number: int` {readOnly}, `-occupant: Customer`; `~Table(number: int)`, `+getNumber(): int`, `+getOccupant(): Customer`, `+isFree(): boolean`, `~assign(customer: Customer): void`, `~release(): void`.
 
@@ -212,6 +208,18 @@ classDiagram
 **`ActionResult`** *(record)*: `+success: boolean`, `+message: String`; `+ok(message: String): ActionResult` *static*, `+fail(reason: String): ActionResult` *static*.
 
 **`Money`** *(final utility)*: `-Money()`, `+format(cents: int): String` *static*.
+
+### `restaurant.domain.menu` (menu entities)
+
+All members here are public or private, so these classes could move to their own package without
+any visibility change. (The customer and staff classes stay in `restaurant.domain` because they use
+package-private methods of each other, `Order` and `Restaurant`.)
+
+**`MenuItem`**: `-name: String` {readOnly}, `-priceCents: int` {readOnly}, `-prepUnits: int` {readOnly}; `+MenuItem(name: String, priceCents: int, prepUnits: int)`, `+getName(): String`, `+getPriceCents(): int`, `+getPrepUnits(): int`, `+toString(): String`. Depends on `restaurant.domain.Money`.
+
+**`ComboMeal`** extends `MenuItem`: `-PRICE_PERCENT: int = 90` *static*, `-first: MenuItem` {readOnly}, `-second: MenuItem` {readOnly}; `+ComboMeal(first: MenuItem, second: MenuItem)`, `-comboPrice(first: MenuItem, second: MenuItem): int` *static*, `+getFirst(): MenuItem`, `+getSecond(): MenuItem`.
+
+**`Menu`**: `-items: List<MenuItem>` {readOnly}; `+Menu(items: List<MenuItem>)`, `+standard(): Menu` *static*, `+withCombos(): Menu` *static*, `+getItems(): List<MenuItem>`, `+findItem(name: String): MenuItem`.
 
 ### `restaurant.control` (control)
 

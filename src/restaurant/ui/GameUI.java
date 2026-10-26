@@ -1,14 +1,13 @@
 package restaurant.ui;
 
 import java.util.List;
-
 import restaurant.control.ChefCommand;
 import restaurant.control.GameConfig;
 import restaurant.control.GameResult;
 import restaurant.control.HostCommand;
 import restaurant.control.WaiterCommand;
-import restaurant.domain.Menu;
 import restaurant.domain.Restaurant;
+import restaurant.domain.menu.Menu;
 
 /**
  * Everything the game engine needs from a user interface. The UI only collects the
@@ -20,14 +19,9 @@ public interface GameUI {
 
     void showTurnHeader(int turn, int totalTurns);
 
-    /**
-     * The start-of-turn display, including the tasks each staff member can do now.
-     * hostTasks is empty when the restaurant has no Host.
-     */
     void showTurnStart(Restaurant restaurant, int turn, List<String> hostTasks,
                        List<String> waiterTasks, List<String> chefTasks);
 
-    /** Asked at the start of a turn while Happy Hour is still available: true to switch it on now. */
     boolean askHappyHour();
 
     HostCommand askHostCommand();

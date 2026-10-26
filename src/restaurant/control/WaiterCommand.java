@@ -1,13 +1,12 @@
 package restaurant.control;
 
-/** The manager's choice for the Waiter this turn, e.g. "seat C2" or "wait". */
 public record WaiterCommand(Action action, String customerId) {
 
     public enum Action { SEAT, ORDER, SERVE, WAIT }
 
     public static final WaiterCommand WAIT = new WaiterCommand(Action.WAIT, null);
 
-    /** Parses typed text. Throws IllegalArgumentException with a message if the text is not a valid command. */
+    /** Parses typed text. Throws IllegalArgumentException with a message if the text is not a valid command */
     public static WaiterCommand parse(String text) {
         String[] words = CommandParsing.words(text);
         if (words.length == 1 && words[0].equals("wait")) {

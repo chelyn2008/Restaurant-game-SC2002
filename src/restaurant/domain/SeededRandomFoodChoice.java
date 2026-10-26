@@ -2,10 +2,12 @@ package restaurant.domain;
 
 import java.util.List;
 import java.util.Random;
+import restaurant.domain.menu.Menu;
+import restaurant.domain.menu.MenuItem;
 
 /**
  * Picks a menu item uniformly at random using a fixed seed, so the same seed
- * and the same manager inputs always give the same choices.
+ * and the same manager inputs always give the same choices
  */
 public class SeededRandomFoodChoice implements FoodChoiceStrategy {
     private final Random random;

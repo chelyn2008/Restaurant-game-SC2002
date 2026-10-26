@@ -17,20 +17,20 @@ import restaurant.control.GameEngine;
 import restaurant.control.GameResult;
 import restaurant.control.HostCommand;
 import restaurant.domain.ActionResult;
-import restaurant.domain.ComboMeal;
 import restaurant.domain.CriticCustomer;
 import restaurant.domain.Customer;
 import restaurant.domain.CustomerStatus;
 import restaurant.domain.HappyHour;
 import restaurant.domain.Host;
-import restaurant.domain.Menu;
-import restaurant.domain.MenuItem;
 import restaurant.domain.OrderStatus;
 import restaurant.domain.PricingPolicy;
 import restaurant.domain.RegularCustomer;
 import restaurant.domain.Restaurant;
 import restaurant.domain.SeededRandomFoodChoice;
 import restaurant.domain.VIPCustomer;
+import restaurant.domain.menu.ComboMeal;
+import restaurant.domain.menu.Menu;
+import restaurant.domain.menu.MenuItem;
 import restaurant.ui.ConsoleUI;
 
 /**

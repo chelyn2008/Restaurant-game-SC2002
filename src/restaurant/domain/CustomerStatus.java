@@ -1,6 +1,6 @@
 package restaurant.domain;
 
-/** Where a customer is in the service flow. */
+
 public enum CustomerStatus {
     WAITING,       // in the waiting queue
     SEATED,        // at a table, has not ordered yet

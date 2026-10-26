@@ -3,7 +3,6 @@ package restaurant.control;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
-
 import restaurant.domain.CriticCustomer;
 import restaurant.domain.Customer;
 import restaurant.domain.RegularCustomer;
@@ -15,7 +14,7 @@ import restaurant.domain.VIPCustomer;
  */
 public class ArrivalSchedule {
 
-    /** One scheduled arrival: the turn and how to create that customer. */
+    /** One scheduled arrival: the turn and how to create that customer */
     public record Arrival(int turn, CustomerFactory factory) {
     }
 
@@ -25,7 +24,7 @@ public class ArrivalSchedule {
         this.arrivals = List.copyOf(arrivals);
     }
 
-    /** Stage 1 schedule: six Regular customers on turns 1, 4, 7, 10, 13, 16. */
+    /** Stage 1 schedule: six Regular customers on turns 1, 4, 7, 10, 13, 16 */
     public static ArrivalSchedule allRegular() {
         return new ArrivalSchedule(List.of(
                 new Arrival(1, RegularCustomer::new),
@@ -36,7 +35,7 @@ public class ArrivalSchedule {
                 new Arrival(16, RegularCustomer::new)));
     }
 
-    /** Stage 2 schedule: same six turns, with one VIP and one Critic replacing two Regulars. */
+    /** Stage 2 schedule: same six turns, with one VIP and one Critic replacing two Regulars */
     public static ArrivalSchedule stageTwoMix() {
         return new ArrivalSchedule(List.of(
                 new Arrival(1, RegularCustomer::new),
@@ -51,7 +50,7 @@ public class ArrivalSchedule {
         return arrivals;
     }
 
-    /** The customer who arrives on this turn, if any. */
+    /** The customer who arrives on this turn, if any */
     public Optional<Customer> customerArrivingOn(int turn) {
         for (int i = 0; i < arrivals.size(); i++) {
             Arrival arrival = arrivals.get(i);
@@ -62,7 +61,7 @@ public class ArrivalSchedule {
         return Optional.empty();
     }
 
-    /** For display, e.g. "turn 1: C1 Regular (-8/turn), turn 4: C2 Critic (-12/turn)". */
+    /** For display, e.g. "turn 1: C1 Regular (-8/turn), turn 4: C2 Critic (-12/turn)" */
     public String describe() {
         StringJoiner joiner = new StringJoiner(", ");
         for (int i = 0; i < arrivals.size(); i++) {

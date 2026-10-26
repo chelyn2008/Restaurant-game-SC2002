@@ -1,5 +1,7 @@
 package restaurant.domain;
 
+import restaurant.domain.menu.MenuItem;
+
 /**
  * One customer's order. The price is locked when the order is taken.
  * The Chef advances it one preparation unit at a time until it is READY.
@@ -46,7 +48,7 @@ public class Order {
         return status;
     }
 
-    /** The turn on which the last preparation unit was done, or -1 if not READY yet. */
+    /** The turn on which the last preparation unit was done, or -1 if not READY yet */
     public int getReadyOnTurn() {
         return readyOnTurn;
     }

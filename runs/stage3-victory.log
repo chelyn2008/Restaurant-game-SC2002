@@ -1,4 +1,4 @@
-=== Restaurant Rush (Stage 3) ===
+====== Restaurant Rush (Stage 3) ======
 Seed: 2002 | Turns: 18 | Tables: 2
 Arrivals: turn 1: C1 Regular (-8/turn), turn 4: C2 Critic (-12/turn), turn 7: C3 VIP (-5/turn), turn 10: C4 Regular (-8/turn), turn 13: C5 Regular (-8/turn), turn 16: C6 Regular (-8/turn)
 Menu:
@@ -8,11 +8,16 @@ Menu:
   Salad + Burger Combo $21.60 (2 prep units)
   Salad + Pasta Combo $24.30 (3 prep units)
   Burger + Pasta Combo $29.70 (3 prep units)
+
 Goal after turn 18: at least 4 paid customers, revenue at least $45.00, average satisfaction of paid customers at least 60.
+
 Waiter commands: seat <id> | order <id> | serve <id> | wait
 Chef commands:   cook <id> | wait
 Host commands:   seat <id> | wait   (the Host acts first, then the Waiter, then the Chef)
-Happy Hour: once per game, answer yes at the start of a turn. It lasts that turn and the next: 20% off orders taken, waiting customers recover 15 at turn start.
+
+Happy Hour: once per game, answer yes at the start of a turn. It lasts that turn and the next:
+           - 20% off orders taken
+           - waiting customers recover 15 satisfaction at turn start
 
 ==================== TURN 1 / 18 ====================
   C1 (Regular) arrives and joins the waiting queue with satisfaction 100.
@@ -204,7 +209,7 @@ Customers in restaurant: C2 28 (ORDERED), C3 85 (WAITING)
 ==================== TURN 10 / 18 ====================
   C4 (Regular) arrives and joins the waiting queue with satisfaction 100.
 Activate Happy Hour now? It lasts this turn and the next (yes/no)> yes
-  Happy Hour is ON for this turn and the next: 20% off orders taken, and waiting customers recover 15 at turn start.
+  Happy Hour is ON for this turn and the next: 20% off orders taken, and waiting customers recover 15 satisfaction at turn start.
   Happy Hour: waiting customers recover 15 (max 100): C2 43, C3 100, C4 100.
 Revenue: $24.30 | Paid customers: 1 | Average satisfaction (paid): 52.0
 Happy Hour: ACTIVE, 2 turns left (this turn and next), 20% off orders taken now

@@ -1,6 +1,6 @@
 package restaurant.control;
 
-/** The manager's choice for the Chef this turn, e.g. "cook C1" or "wait". */
+
 public record ChefCommand(Action action, String customerId) {
 
     public enum Action { COOK, WAIT }

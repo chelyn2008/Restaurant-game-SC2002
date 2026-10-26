@@ -34,6 +34,11 @@ The price is locked when the order is taken.
 
 ## Build and run
 
+javac --release 17 -d out (Get-ChildItem -Recurse src -Filter *.java).FullName
+
+java -cp out restaurant.Main
+
+
 From the project root (Git Bash / macOS / Linux):
 
 ```sh
@@ -104,8 +109,9 @@ satisfaction of paid customers at least 60.
 
 ```
 src/restaurant/Main.java     entry point (--stage 1|2|3, --seed N, --echo)
-src/restaurant/domain/       entities and rules: Customer (Regular, VIP, Critic), Order, Table, Menu, MenuItem, ComboMeal,
+src/restaurant/domain/       entities and rules: Customer (Regular, VIP, Critic), Order, Table,
                              Staff (Host, Waiter, Chef, Cashier), Promotion, HappyHour, PricingPolicy, Restaurant ...
+src/restaurant/domain/menu/  Menu, MenuItem, ComboMeal (package restaurant.domain.menu)
 src/restaurant/control/      GameEngine (turn loop), GameConfig, ArrivalSchedule, CustomerFactory, commands, VictoryCondition
 src/restaurant/ui/           GameUI interface and ConsoleUI
 test/restaurant/             StageOneChecks, StageTwoChecks, StageThreeChecks and test UIs

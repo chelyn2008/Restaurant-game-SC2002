@@ -5,11 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
+import restaurant.domain.menu.Menu;
 
 /**
- * The restaurant is composed of its tables, waiting queue, staff, menu and pricing policy,
+ * composed of its tables, waiting queue, staff, menu and pricing policy,
  * plus (in Stage 3) a Host and the Happy Hour promotion. It keeps the revenue and applies
- * the turn-level rules for eating, waiting and Happy Hour recovery.
+ * the turn-level rules for eating, waiting and Happy Hour recovery
  */
 public class Restaurant {
     private final Menu menu;
@@ -24,7 +25,7 @@ public class Restaurant {
     private final PricingPolicy pricingPolicy;
     private int revenueCents;
 
-    /** A restaurant without a Host or Happy Hour (Stages 1 and 2). */
+    /** A restaurant without a Host or Happy Hour (Stages 1 and 2) */
     public Restaurant(Menu menu, int tableCount) {
         this(menu, tableCount, false, false);
     }
@@ -39,14 +40,14 @@ public class Restaurant {
         this.pricingPolicy = new PricingPolicy(happyHour == null ? List.of() : List.of(happyHour));
     }
 
-    /** Lets every staff member act again. */
+    /** Lets every staff member act again at each turn */
     public void startNewTurn() {
         for (Staff staff : getStaff()) {
             staff.resetForNewTurn();
         }
     }
 
-    /** A newly arrived customer joins the end of the waiting queue. */
+    /** A newly arrived customer joins the end of the waiting queue */
     public void admitCustomer(Customer customer) {
         if (customer.getStatus() != CustomerStatus.WAITING || customers.contains(customer)) {
             throw new IllegalArgumentException(customer.getId() + " cannot join the queue.");
@@ -73,7 +74,7 @@ public class Restaurant {
         return recovered;
     }
 
-    /** Customers who were served on an earlier turn finish eating and become READY_TO_PAY. */
+    /** Customers who were served on an earlier turn finish eating and become READY_TO_PAY */
     public List<Customer> finishEating(int turn) {
         List<Customer> finished = new ArrayList<>();
         for (Customer customer : customers) {
@@ -136,7 +137,7 @@ public class Restaurant {
         customer.leave();
     }
 
-    /** Returns the customer with this id (e.g. "C2"), or null if there is none. */
+    /** Returns the customer with this id (e.g. "C2"), or null if there is none */
     public Customer findCustomer(String id) {
         for (Customer customer : customers) {
             if (customer.getId().equalsIgnoreCase(id)) {
@@ -146,7 +147,7 @@ public class Restaurant {
         return null;
     }
 
-    /** The lowest-numbered free table, or null if all are occupied. */
+    /** The lowest-numbered free table, or null if all are occupied */
     public Table findFreeTable() {
         for (Table table : tables) {
             if (table.isFree()) {
@@ -168,7 +169,7 @@ public class Restaurant {
         return Collections.unmodifiableList(waitingQueue);
     }
 
-    /** All customers who have arrived so far, in arrival order. */
+    /** All customers who have arrived so far, in arrival order */
     public List<Customer> getCustomers() {
         return Collections.unmodifiableList(customers);
     }
@@ -221,7 +222,7 @@ public class Restaurant {
         return (int) customers.stream().filter(Customer::hasBeenServed).count();
     }
 
-    /** Average of the satisfaction recorded at payment; empty if no one has paid. */
+    /** Average of the satisfaction recorded at payment; empty if no one has paid */
     public OptionalDouble getAverageSatisfactionOfPaid() {
         return customers.stream()
                 .filter(customer -> customer.getStatus() == CustomerStatus.PAID)

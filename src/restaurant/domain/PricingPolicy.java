@@ -2,11 +2,12 @@ package restaurant.domain;
 
 import java.util.List;
 import java.util.StringJoiner;
+import restaurant.domain.menu.MenuItem;
 
 /**
  * Computes the price locked into an order when it is taken. Discounts stack in a fixed
  * order: first the customer's own bill (e.g. VIP 10% off), then every active promotion
- * (e.g. Happy Hour 20% off), rounding to the nearest cent at each step.
+ * (e.g. Happy Hour 20% off)
  * Example: VIP Burger during Happy Hour = $15.00 x 0.9 x 0.8 = $10.80.
  */
 public class PricingPolicy {
@@ -26,7 +27,7 @@ public class PricingPolicy {
         return price;
     }
 
-    /** Which discounts apply, e.g. "VIP + Happy Hour"; empty when the menu price applies. */
+    /** Which discounts apply, e.g. "VIP + Happy Hour"; empty when the menu price applies */
     public String describeDiscounts(Customer customer, MenuItem item, int turn) {
         StringJoiner discounts = new StringJoiner(" + ");
         if (customer.calculateBill(item) != item.getPriceCents()) {

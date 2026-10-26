@@ -1,6 +1,6 @@
 package restaurant.domain;
 
-/** A table that holds at most one customer until that customer pays or leaves. */
+/** A table that holds at most one customer until that customer pays or leaves */
 public class Table {
     private final int number;
     private Customer occupant;
@@ -13,7 +13,7 @@ public class Table {
         return number;
     }
 
-    /** The customer at this table, or null if it is free. */
+    /** The customer at this table, or null if it is free */
     public Customer getOccupant() {
         return occupant;
     }

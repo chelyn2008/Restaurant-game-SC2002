@@ -3,7 +3,6 @@ package restaurant.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-/** The Chef advances one order by one preparation unit per turn. */
 public class Chef extends Staff {
 
     public Chef() {

@@ -1,12 +1,10 @@
 package restaurant.domain;
 
+import restaurant.domain.menu.Menu;
+import restaurant.domain.menu.MenuItem;
+
 /**
- * A restaurant customer. The service flow (queue, seat, order, serve, eat, pay)
- * is the same for every customer; subclasses change behaviour by overriding the
- * hook methods such as {@link #getSatisfactionLossPerTurn()}.
- *
- * State only changes through package-private methods called by the staff and the
- * Restaurant, which check the game rules first.
+ * The service flow (queue, seat, order, serve, eat, pay) is the same for every customer
  */
 public abstract class Customer {
     public static final int MAX_SATISFACTION = 100;
@@ -27,23 +25,23 @@ public abstract class Customer {
         this.arrivalTurn = arrivalTurn;
     }
 
-    /** Satisfaction points lost for each turn spent waiting (in the queue, at a table, or for food). */
+    /** Satisfaction points lost for each turn spent waiting (in the queue, at a table, for food) */
     public abstract int getSatisfactionLossPerTurn();
 
-    /** Label shown in the UI, e.g. "Regular". */
+    /** Label shown in the UI, e.g. "Regular" */
     public abstract String getTypeName();
 
-    /** The bill for a dish. Full price by default. */
+    /** The bill for a dish */
     public int calculateBill(MenuItem item) {
         return item.getPriceCents();
     }
 
-    /** Picks the dish when the order is taken. By default the customer follows the game's food-choice rule. */
+    /** Picks the dish when the order is taken, by default the customer follows the game's food-choice rule */
     public MenuItem chooseDish(Menu menu, FoodChoiceStrategy defaultChoice) {
         return defaultChoice.choose(this, menu);
     }
 
-    /** True while the customer is still waiting for food: in the queue, seated or ordered. */
+    /** True while the customer is still waiting for food: in the queue, seated or ordered */
     public boolean isWaitingForService() {
         return status == CustomerStatus.WAITING
                 || status == CustomerStatus.SEATED
@@ -128,12 +126,12 @@ public abstract class Customer {
         return status;
     }
 
-    /** The customer's table, or null if not seated. */
+    /** The customer's table, or null if not seated */
     public Table getTable() {
         return table;
     }
 
-    /** The customer's order, or null if none has been placed. */
+    /** The customer's order, or null if none has been placed */
     public Order getOrder() {
         return order;
     }
@@ -146,7 +144,7 @@ public abstract class Customer {
         return readyToPayOnTurn;
     }
 
-    /** Satisfaction recorded when the customer paid, or -1 if not paid. */
+    /** Satisfaction recorded when the customer paid, or -1 if not paid */
     public int getSatisfactionAtPayment() {
         return satisfactionAtPayment;
     }

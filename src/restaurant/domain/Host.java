@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Host seats at most one queued customer per turn, in addition to the Waiter's task.
- * The Host acts before the Waiter, so the Waiter can take that customer's order in the same turn.
+ * The Host seats at most one queued customer per turn, in addition to the Waiter's task
+ * The Host acts before Waiter, so Waiter can take that customer's order in the same turn
  */
 public class Host extends Staff {
 

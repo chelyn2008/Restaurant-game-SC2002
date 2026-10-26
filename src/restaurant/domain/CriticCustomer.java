@@ -1,11 +1,13 @@
 package restaurant.domain;
 
 import java.util.Comparator;
+import restaurant.domain.menu.Menu;
+import restaurant.domain.menu.MenuItem;
 
 /**
  * A food critic: loses 12 satisfaction per waiting turn and pays full price.
- * Special behaviour (signature dish): the Critic always orders the most expensive
- * dish on the menu (Pasta in the base menu) instead of using the food-choice rule.
+ * Special behaviour : the Critic always orders the most expensive food
+                       Pasta in the base menu instead of using the food-choice rule
  */
 public class CriticCustomer extends Customer {
     private static final int SATISFACTION_LOSS = 12;

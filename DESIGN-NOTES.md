@@ -8,7 +8,8 @@ What changed in each stage: [CHANGES-stage1-to-2.md](CHANGES-stage1-to-2.md),
 
 | Package | Layer | Contents |
 |---------|-------|----------|
-| `restaurant.domain` | Entity | Game state and the rules that protect it: customers, orders, tables, menu and combos, staff, Happy Hour, pricing, restaurant |
+| `restaurant.domain` | Entity | Game state and the rules that protect it: customers, orders, tables, staff, Happy Hour, pricing, restaurant |
+| `restaurant.domain.menu` | Entity | `Menu`, `MenuItem`, `ComboMeal`. A separate package because they need no package-private access; customers and staff stay in `restaurant.domain` so their state-changing methods can remain package-private (encapsulation). |
 | `restaurant.control` | Control | The turn loop, game setup per stage, arrival schedule, command objects, victory check |
 | `restaurant.ui` | Boundary | `GameUI` interface and `ConsoleUI`; only collects decisions and displays state |
 | `restaurant` | Entry | `Main` reads `--stage`, `--seed`, `--echo` and wires the objects together |

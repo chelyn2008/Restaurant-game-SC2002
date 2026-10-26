@@ -1,6 +1,7 @@
 package restaurant.control;
 
-import restaurant.domain.Menu;
+import restaurant.domain.menu.Menu;
+
 
 /**
  * The settings for one game. Every stage uses the base setting (18 turns, 2 tables,
@@ -20,17 +21,17 @@ public record GameConfig(int stage,
 
     public static final long DEFAULT_SEED = 2002L;
 
-    /** Stage 1: six Regular customers, base menu, no Host, no Happy Hour. */
+    /** Stage 1: six Regular customers, base menu, no Host, no Happy Hour */
     public static GameConfig baseSetting(long seed) {
         return new GameConfig(1, 18, 2, ArrivalSchedule.allRegular(), Menu.standard(), false, false, 4, 4500, 60, seed);
     }
 
-    /** Stage 2 rules with the given arrivals: base menu, no Host, no Happy Hour. */
+    /** Stage 2 rules with the given arrivals: base menu, no Host, no Happy Hour */
     public static GameConfig baseSetting(long seed, ArrivalSchedule arrivalSchedule) {
         return new GameConfig(2, 18, 2, arrivalSchedule, Menu.standard(), false, false, 4, 4500, 60, seed);
     }
 
-    /** Stage 3: the Stage 2 arrivals, the menu with combos, a Host and Happy Hour. */
+    /** Stage 3: the Stage 2 arrivals, the menu with combos, a Host and Happy Hour */
     public static GameConfig stageThree(long seed) {
         return stageThree(seed, ArrivalSchedule.stageTwoMix());
     }
@@ -39,7 +40,7 @@ public record GameConfig(int stage,
         return new GameConfig(3, 18, 2, arrivalSchedule, Menu.withCombos(), true, true, 4, 4500, 60, seed);
     }
 
-    /** The game for stage 1, 2 or 3, as selected with --stage. */
+    /** The game for stage 1, 2 or 3, as selected with --stage */
     public static GameConfig forStage(int stage, long seed) {
         return switch (stage) {
             case 1 -> baseSetting(seed);

@@ -1,6 +1,6 @@
 package restaurant.domain;
 
-/** A staff member who can complete at most one task per turn. */
+/** complete at most one task per turn */
 public abstract class Staff {
     private final String role;
     private boolean taskDone;

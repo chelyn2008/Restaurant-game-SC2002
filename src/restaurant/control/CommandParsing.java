@@ -1,6 +1,6 @@
 package restaurant.control;
 
-/** Small helpers shared by the command parsers. */
+/** Small helpers shared by the command parsers */
 final class CommandParsing {
     private CommandParsing() {
     }
@@ -13,7 +13,7 @@ final class CommandParsing {
         return trimmed.split("\\s+");
     }
 
-    /** Accepts "C2", "c2" or "2" and returns "C2". */
+    /** Accepts "C2", "c2" or "2" and returns "C2" */
     static String customerId(String word) {
         String digits = word.startsWith("c") ? word.substring(1) : word;
         if (digits.isEmpty() || !digits.chars().allMatch(Character::isDigit)) {

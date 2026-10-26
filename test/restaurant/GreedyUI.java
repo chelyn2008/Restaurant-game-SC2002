@@ -8,8 +8,8 @@ import restaurant.control.GameConfig;
 import restaurant.control.GameResult;
 import restaurant.control.HostCommand;
 import restaurant.control.WaiterCommand;
-import restaurant.domain.Menu;
 import restaurant.domain.Restaurant;
+import restaurant.domain.menu.Menu;
 import restaurant.ui.GameUI;
 
 /**
