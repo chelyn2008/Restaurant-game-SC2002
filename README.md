@@ -1,9 +1,8 @@
-<<<<<<< HEAD
 # Restaurant Rush (SC2002 Group Assignment)
 
 ## Repository
 
-https://github.com/crocmii08-creator/2002-own-
+https://github.com/chelyn2008/Restaurant-game-SC2002
 
 ## Stage comparisons
 
