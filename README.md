@@ -2,7 +2,7 @@
 
 ## Repository
 
-https://github.com/chelyn2008/Restaurant-game-SC2002
+https://github.com/crocmii08-creator/2002-own-
 
 ## Stage comparisons
 
@@ -11,22 +11,22 @@ that stage's features.
 
 | Stage | Tag | Commit | Adds | Runnable on its own |
 |-------|-----|--------|------|---------------------|
-| 1 | `stage-1` | `fbd6130` | Regular customers, menu, Waiter, Chef, Cashier, full turn sequence, Victory and Defeat | Yes; no VIP, Critic, Host, combo or Happy Hour classes |
-| 2 | `stage-2` | `cbc34b3` | VIP and Critic customers, configurable arrival schedule | Yes; no Host, combo or Happy Hour classes |
+| 1 | `stage-1` | `373d83b` | Regular customers, menu, Waiter, Chef, Cashier, full turn sequence, Victory and Defeat | Yes; no VIP, Critic, Host, combo or Happy Hour classes |
+| 2 | `stage-2` | `30a5f0d` | VIP and Critic customers, configurable arrival schedule | Yes; no Host, combo or Happy Hour classes |
 | 3 | `stage-3` | final commit | Host, ComboMeal, Happy Hour (with PricingPolicy), `--stage` option | Yes |
 
 Compare links:
 
-- Stage 1 → 2: https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-1...stage-2
-- Stage 2 → 3: https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
+- Stage 1 → 2: https://github.com/crocmii08-creator/2002-own-/compare/stage-1...stage-2
+- Stage 2 → 3: https://github.com/crocmii08-creator/2002-own-/compare/stage-2...stage-3
 
 Commits in each stage:
 
 | Stage | Commits |
 |-------|---------|
-| 1 | `869f81c` domain entities · `747b878` staff and Restaurant · `0b73a17` GameEngine, config, commands, victory check · `528f033` ConsoleUI and Main · `49989af` Stage 1 checks · `c585294` victory/defeat runs · `fbd6130` documentation |
-| 2 | `20cf485` VIPCustomer and CriticCustomer · `b853b05` configurable arrival schedule · `07dbf70` Stage 2 runs · `6cced46` Stage 2 checks · `cbc34b3` documentation |
-| 3 | `059ae75` ComboMeal and combo menu · `143ba9d` Host, Happy Hour, PricingPolicy · `ec4b9e6` wiring and `--stage` option · `26f2931` Stage 3 runs · `3367855` Stage 3 checks · `f3bc81f` documentation · `ba78b46` menu package and display tidy-up |
+| 1 | `392f663` domain entities · `6a3033d` staff and Restaurant · `993ef5b` GameEngine, config, commands, victory check · `16d72ee` ConsoleUI and Main · `0146318` Stage 1 checks · `5b20f31` victory/defeat runs · `373d83b` documentation |
+| 2 | `04591be` VIPCustomer and CriticCustomer · `25655a7` configurable arrival schedule · `1dc4866` Stage 2 runs · `df15873` Stage 2 checks · `30a5f0d` documentation |
+| 3 | `b7d79a4` ComboMeal and combo menu · `9a2471f` Host, Happy Hour, PricingPolicy · `df9663b` wiring and `--stage` option · `b4606cf` Stage 3 runs · `c13fbed` Stage 3 checks · `837776f` documentation · `dfbf4a5` menu package and display tidy-up · `0e29b85` README update · `354402e` restore the missing `domain/menu` files · then the README update this tag points to |
 
 ## How to run each stage individually
 
@@ -97,7 +97,7 @@ Seed and input details for every run are in [TESTING.md](TESTING.md).
 ## Stage 1 → 2
 
 Full details: [CHANGES-stage1-to-2.md](CHANGES-stage1-to-2.md). Compare:
-https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-1...stage-2
+https://github.com/crocmii08-creator/2002-own-/compare/stage-1...stage-2
 
 **New files**
 
@@ -129,7 +129,7 @@ https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-1...stage-2
 ## Stage 2 → 3
 
 Full details: [CHANGES-stage2-to-3.md](CHANGES-stage2-to-3.md). Compare:
-https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
+https://github.com/crocmii08-creator/2002-own-/compare/stage-2...stage-3
 
 **New files**
 
