@@ -175,6 +175,3 @@ https://github.com/crocmii08-creator/2002-own-/compare/stage-2...stage-3
 | 5 | A Stage 3 feature | |
 | 6 | One victory and one defeat | |
 | 7 | The stage tag comparisons and the diagrams | |
-=======
-# Restaurant-game-SC2002
->>>>>>> origin/main
