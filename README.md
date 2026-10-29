@@ -17,8 +17,8 @@ that stage's features.
 
 Compare links:
 
-- Stage 1 → 2: https://github.com/crocmii08-creator/2002-own-/compare/stage-1...stage-2
-- Stage 2 → 3: https://github.com/crocmii08-creator/2002-own-/compare/stage-2...stage-3
+- Stage 1 → 2: https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-1...stage-2
+- Stage 2 → 3: https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
 
 Commits in each stage:
 
@@ -28,76 +28,59 @@ Commits in each stage:
 | 2 | `04591be` VIPCustomer and CriticCustomer · `25655a7` configurable arrival schedule · `1dc4866` Stage 2 runs · `df15873` Stage 2 checks · `30a5f0d` documentation |
 | 3 | `b7d79a4` ComboMeal and combo menu · `9a2471f` Host, Happy Hour, PricingPolicy · `df9663b` wiring and `--stage` option · `b4606cf` Stage 3 runs · `c13fbed` Stage 3 checks · `837776f` documentation · `dfbf4a5` menu package and display tidy-up · `0e29b85` README update · `354402e` restore the missing `domain/menu` files · then the README update this tag points to |
 
-## How to run each stage individually
+## How to run the game
 
-Requirements: Java 17 or newer (JDK), no external libraries, no network. Run every command from the
-project root.
+You need Java 17 or newer. Open a terminal (e.g. PowerShell in VS Code) **in the project folder**
+and type the commands below.
 
-### 1. Switch to the stage
+### Step 1: Build (once)
 
-```sh
-git checkout stage-1        # or stage-2, or stage-3 (commit or stash your own changes first)
+```powershell
+javac --release 17 -d out (Get-ChildItem -Recurse src -Filter *.java).FullName
 ```
 
-Afterwards, return to the latest code with `git checkout dev` (or your branch name). To keep your
-normal folder unchanged, open a stage in a separate folder instead:
-`git worktree add ../restaurant-stage-1 stage-1`, then `cd ../restaurant-stage-1`.
+No output means it built successfully.
 
-### 2. Build
+### Step 2: Play a stage
 
-| Terminal | Command |
-|----------|---------|
-| PowerShell (VS Code on Windows) | `javac --release 17 -d out (Get-ChildItem -Recurse src -Filter *.java).FullName` |
-| Git Bash / macOS / Linux | `javac --release 17 -d out $(find src -name "*.java")` |
+| Stage | Type this |
+|-------|-----------|
+| Stage 1 | `java -cp out restaurant.Main --stage 1` |
+| Stage 2 | `java -cp out restaurant.Main --stage 2` |
+| Stage 3 | `java -cp out restaurant.Main --stage 3` |
 
-### 3. Play, replay the victory and defeat runs, run the checks
+Each turn, type one command for each staff member when asked, then press Enter
+(e.g. `seat C1`, `order C1`, `serve C1`, `cook C1` or `wait`). The game shows which
+commands are allowed every turn.
 
-To replay a run in PowerShell, pipe the script in: `Get-Content runs\<script>.txt | java -cp out restaurant.Main --echo`.
-In Git Bash, redirect it instead: `java -cp out restaurant.Main --echo < runs/<script>.txt`.
+### Optional: replay the saved victory and defeat runs
 
-To build the checks in PowerShell: `javac --release 17 -d out-test (Get-ChildItem -Recurse src,test -Filter *.java).FullName`.
-In Git Bash: `javac --release 17 -d out-test $(find src test -name "*.java")`.
+| Stage | Victory | Defeat |
+|-------|---------|--------|
+| 1 | `Get-Content runs\victory.txt \| java -cp out restaurant.Main --stage 1 --echo` | `Get-Content runs\defeat.txt \| java -cp out restaurant.Main --stage 1 --echo` |
+| 2 | `Get-Content runs\stage2-critic-first.txt \| java -cp out restaurant.Main --stage 2 --echo` | `Get-Content runs\stage2-regular-first.txt \| java -cp out restaurant.Main --stage 2 --echo` |
+| 3 | `Get-Content runs\stage3-victory.txt \| java -cp out restaurant.Main --stage 3 --echo` | `Get-Content runs\stage3-defeat.txt \| java -cp out restaurant.Main --stage 3 --echo` |
 
-**At `stage-1`**
+### Optional: run the automated checks
 
-| What | PowerShell command | Expected result |
-|------|--------------------|-----------------|
-| Play | `java -cp out restaurant.Main` | Stage 1 game, six Regular customers |
-| Victory run | `Get-Content runs\victory.txt \| java -cp out restaurant.Main --echo` | VICTORY: 5 paid, $72.00, average 82.4 |
-| Defeat run | `Get-Content runs\defeat.txt \| java -cp out restaurant.Main --echo` | DEFEAT: 1 paid, $15.00, average 28.0 |
-| Checks | `java -cp out-test restaurant.StageOneChecks` | 52 checks passed |
+```powershell
+javac --release 17 -d out-test (Get-ChildItem -Recurse src,test -Filter *.java).FullName
+java -cp out-test restaurant.StageOneChecks
+java -cp out-test restaurant.StageTwoChecks
+java -cp out-test restaurant.StageThreeChecks
+```
 
-**At `stage-2`**
+Using Git Bash, macOS or Linux instead of PowerShell? Build with
+`javac --release 17 -d out $(find src -name "*.java")` and replay with
+`java -cp out restaurant.Main --stage 1 --echo < runs/victory.txt`.
 
-| What | PowerShell command | Expected result |
-|------|--------------------|-----------------|
-| Play | `java -cp out restaurant.Main` | Stage 2 game, Critic on turn 4, VIP on turn 7 |
-| Victory run | `Get-Content runs\stage2-critic-first.txt \| java -cp out restaurant.Main --echo` | VICTORY: 4 paid, $55.50, average 60.8 |
-| Defeat run | `Get-Content runs\stage2-regular-first.txt \| java -cp out restaurant.Main --echo` | DEFEAT: 4 paid, $55.50, average 59.8 |
-| Checks | `java -cp out-test restaurant.StageOneChecks` and `java -cp out-test restaurant.StageTwoChecks` | 52 and 38 checks passed |
-
-At this tag the Stage 1 scripts replay with `--schedule regular`, e.g.
-`Get-Content runs\victory.txt | java -cp out restaurant.Main --schedule regular --echo`.
-
-**At `stage-3`**
-
-| What | PowerShell command | Expected result |
-|------|--------------------|-----------------|
-| Play | `java -cp out restaurant.Main` | Stage 3 game, Host, combos and Happy Hour |
-| Victory run | `Get-Content runs\stage3-victory.txt \| java -cp out restaurant.Main --echo` | VICTORY: 4 paid, $86.40, average 64.5 (VIP Burger $10.80) |
-| Defeat run | `Get-Content runs\stage3-defeat.txt \| java -cp out restaurant.Main --echo` | DEFEAT: 4 paid, $89.10, average 53.8 |
-| Checks | `java -cp out-test restaurant.StageOneChecks`, `StageTwoChecks`, `StageThreeChecks` | 52, 38 and 48 checks passed |
-
-At this tag the earlier stages can also be played from the same code with `--stage 1` or `--stage 2`,
-e.g. `java -cp out restaurant.Main --stage 1`, and their runs replay the same way:
-`Get-Content runs\victory.txt | java -cp out restaurant.Main --stage 1 --echo`.
-
-Seed and input details for every run are in [TESTING.md](TESTING.md).
+Seed and input details for every run are in [TESTING.md](TESTING.md). To see the code exactly as
+it was at an earlier stage, use its git tag, e.g. `git checkout stage-1` (then build and run as above).
 
 ## Stage 1 → 2
 
 Full details: [CHANGES-stage1-to-2.md](CHANGES-stage1-to-2.md). Compare:
-https://github.com/crocmii08-creator/2002-own-/compare/stage-1...stage-2
+https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-1...stage-2
 
 **New files**
 
@@ -129,7 +112,7 @@ https://github.com/crocmii08-creator/2002-own-/compare/stage-1...stage-2
 ## Stage 2 → 3
 
 Full details: [CHANGES-stage2-to-3.md](CHANGES-stage2-to-3.md). Compare:
-https://github.com/crocmii08-creator/2002-own-/compare/stage-2...stage-3
+https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
 
 **New files**
 
