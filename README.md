@@ -28,6 +28,20 @@ Commits in each stage:
 | 2 | `04591be` VIPCustomer and CriticCustomer · `25655a7` configurable arrival schedule · `1dc4866` Stage 2 runs · `df15873` Stage 2 checks · `30a5f0d` documentation |
 | 3 | `b7d79a4` ComboMeal and combo menu · `9a2471f` Host, Happy Hour, PricingPolicy · `df9663b` wiring and `--stage` option · `b4606cf` Stage 3 runs · `c13fbed` Stage 3 checks · `837776f` documentation · `dfbf4a5` menu package and display tidy-up · `0e29b85` README update · `354402e` restore the missing `domain/menu` files · then the README update this tag points to |
 
+## Class diagrams
+
+One UML class diagram per stage, drawn in draw.io. Each one matches the code at its tag. All three
+use the same layout, so a class added in Stage 2 or 3 fills a space that was empty before
+(marked `NEW in Stage N`; added members are **bold** with `*`).
+
+| Stage | Tag | Diagram | draw.io source |
+|-------|-----|---------|----------------|
+| 1 | `stage-1` | [PNG](ClassDiagram/class_stage1.png) · [SVG](ClassDiagram/class_stage1.svg) | [class_stage1.drawio](ClassDiagram/class_stage1.drawio) |
+| 2 | `stage-2` | [PNG](ClassDiagram/class_stage2.png) · [SVG](ClassDiagram/class_stage2.svg) | [class_stage2.drawio](ClassDiagram/class_stage2.drawio) |
+| 3 (final) | `stage-3` | [PNG](ClassDiagram/class_stage3.png) · [SVG](ClassDiagram/class_stage3.svg) | [class_stage3.drawio](ClassDiagram/class_stage3.drawio) |
+
+A text list of every class, attribute and operation is in [CLASS-DIAGRAM.md](CLASS-DIAGRAM.md).
+
 ## How to run the game
 
 You need Java 17 or newer. Open a terminal (e.g. PowerShell in VS Code) **in the project folder**
