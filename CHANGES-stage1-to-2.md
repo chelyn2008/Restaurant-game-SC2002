@@ -4,7 +4,7 @@ Stage 2 adds VIP and Critic customers alongside Regular customers. The turn step
 rules are unchanged; the new behaviour lives in two new `Customer` subclasses.
 
 Compare link (after both tags are pushed):
-https://github.com/crocmii08-creator/2002-own-/compare/stage-1...stage-2
+https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-1...stage-2
 
 ## New files
 

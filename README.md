@@ -13,7 +13,7 @@ that stage's features.
 |-------|-----|--------|------|---------------------|
 | 1 | `stage-1` | `373d83b` | Regular customers, menu, Waiter, Chef, Cashier, full turn sequence, Victory and Defeat | Yes; no VIP, Critic, Host, combo or Happy Hour classes |
 | 2 | `stage-2` | `30a5f0d` | VIP and Critic customers, configurable arrival schedule | Yes; no Host, combo or Happy Hour classes |
-| 3 | `stage-3` | final commit | Host, ComboMeal, Happy Hour (with PricingPolicy), `--stage` option | Yes |
+| 3 | `stage-3` | `354402e` | Host, ComboMeal, Happy Hour (with PricingPolicy), `--stage` option | Yes |
 
 Compare links:
 
