@@ -145,7 +145,7 @@ https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
 | `runs/stage2-*.log` | Re-recorded | Only the banner changed; every turn and result is identical to the Stage 2 logs |
 | `README.md`, `DESIGN-NOTES.md`, `TESTING.md` | Updated for Stage 3 | Documentation |
 
-**Deleted files:** none (`Menu.java` and `MenuItem.java` were moved, not deleted).
+**Deleted files:** none 
 
 ## Video timestamps
 
