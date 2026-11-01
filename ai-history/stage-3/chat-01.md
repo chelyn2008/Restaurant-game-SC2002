@@ -1,0 +1,306 @@
+# AI History — Chat 01 (Sequence Diagram: requirements, repo, lecture notation)
+
+- **Member:** Jingyi
+- **Tool:** Claude (claude.ai, Project "SC2002")
+- **Date:** 1 November 2026
+- **Topic:** Understanding the sequence diagram requirements, choosing a use case, setting up GitHub AI history
+- **Note:** Full conversation in order. Lines in [square brackets] describe actions Claude took (reading files, cloning the repo) or visuals that cannot be pasted as text.
+
+---
+
+## Message 1 — Me
+
+Act as my personal SC2002 teaching assistant.
+I have uploaded the official Restaurant Rush group assignment brief and project briefing.
+My assigned responsibility is the UML sequence diagram, and I am a beginner who does not yet understand how to construct one properly.
+First, thoroughly analyse both assignment documents and explain:
+
+1. What exactly is required for the sequence diagram?
+2. What does the assessment rubric expect for full marks?
+3. Which Stage 2 or Stage 3 use cases would be suitable, and why?
+4. What UML concepts must I understand before attempting the diagram?
+5. What information do you need from my group's Java code before accurately constructing it?
+
+Teach me the required concepts progressively, starting from the fundamentals, using beginner-friendly examples and visualisations.
+Do not immediately generate the final diagram. First help me understand the requirements, decide on a suitable use case, and learn how to trace interactions between objects.
+Distinguish clearly between confirmed assignment requirements, assumptions, and your own design recommendations.
+
+my group has uploaded codes and readme files and other documents onto our github repositories, clarify with me any concerns or doubts u have, and tell me if u need any other information or documents to assist me to your best extent
+
+## Message 1 — Claude
+
+[Claude read the Project files SC2002_Group_Project_Briefing.pdf and 17S1_CECZ2002_PPT_Chapter9DesignPrinciples_V1.0.pdf, and tried to list GitHub repositories — no GitHub account was linked.]
+
+I've read both files in your Project. Before the lesson, one important finding: **the official game specification is missing.** The Project has:
+
+- `SC2002_Group_Project_Briefing.pdf`: submission and deliverable requirements (12 slides).
+- `Chapter9DesignPrinciples` slides: SOLID and design principles. They're useful for the class diagrams but don't cover sequence diagrams.
+
+Neither file contains the actual Stage 1, 2 and 3 game rules (what customers, waiters and chefs do, or what each stage adds). There's also no detailed marking rubric. So I can fully explain *what kind of diagram* is required, but I can't yet confirm *which use cases exist*. I mark this clearly below.
+
+### 1. What is required for the sequence diagram
+
+**Confirmed (from the briefing):**
+
+| Requirement | Source |
+|---|---|
+| Exactly **one** sequence diagram, for **one complex use case** from **Stage 2 or Stage 3** (not Stage 1) | Slide 5 |
+| It **must match the code** of the stage it describes | Slide 5 |
+| State the use case's **stage, starting conditions and outcome** | Slide 6 |
+| Show **who calls whom and what each object does** | Slide 6 |
+| Include **relevant guards, alternatives or loops** | Slide 6 |
+| **Explain** how the interactions implement the use case, in the report | Slide 6 |
+| About **3 minutes** of the video presents "selected use case and sequence diagram" | Slide 11 |
+| Due **Sun 15 Nov 2026, 11:59 PM SGT**. That's two weeks from today | Slide 12 |
+
+**Also confirmed, and it affects you right now:** slides 7–8 say every member must upload **all project-related AI prompts and replies, in full and in order**, to their own branch, e.g. `ai-history/stage-2/chat-01.md`. A summary isn't enough. That includes this conversation, so please save it.
+
+### 2. What the rubric expects for full marks
+
+**Confirmed:** the briefing has no point-by-point rubric. Slide 6's title, "A sequence diagram that shows understanding", and its four rows are the closest thing to marking criteria.
+
+**My interpretation (inferred, not official):** a full-marks diagram would most likely:
+1. **Be accurate.** Every lifeline is a real class and every message is a real method in your Stage 2/3 code, with correct names, parameters and returns.
+2. **Be genuinely "complex".** Several collaborating objects plus non-trivial control flow, not a straight line of three calls.
+3. **Use decisions correctly.** `alt`/`opt`/`loop` frames with guards that match real `if`/`while` conditions in the code.
+4. **Be framed.** Stage, preconditions and outcome are stated next to the diagram.
+5. **Be explained.** Report prose links the diagram back to the use case, ideally pointing out the Stage 2/3 feature it shows.
+6. **Stay readable.** The right level of detail: key interactions, not every getter.
+
+👉 Please check NTULearn or the course site for a separate rubric or the full assignment brief. If one exists, it takes priority over my inferences.
+
+### 3. Suitable Stage 2/3 use cases
+
+**I can't confirm specific use cases yet** because I don't have the stage requirements or your code. What I can give you now is how to choose one:
+
+**Recommended criteria (my design advice):**
+- **Shows a Stage 2/3 feature.** This proves the diagram belongs to a later stage. A use case that would look identical in Stage 1 is a weak choice.
+- **Involves 4–7 objects.** Fewer looks trivial; more becomes unreadable.
+- **Has natural decisions.** For example: is a table or chef free? Did the customer run out of patience? Is there enough money or stock? Those give you real `alt`/`loop` frames.
+- **Has a clear start and end**, so you can state the preconditions and outcome.
+- **Is easy to demo in the video.**
+
+**Assumption, based only on your Project description:** your game seems to involve customer arrival → ordering → waiter and chef actions → preparation → serving → eating → payment → result checking. That suggests three candidate shapes:
+
+- **A. One customer's full journey** (arrival → payment). It's a good story but can get long, so you'd scope it to a few turns.
+- **B. Processing one game turn.** The game loop updates every customer, waiter and chef. This naturally includes a `loop` and many `alt`s.
+- **C. A focused Stage 2/3 feature.** For example, whatever new staff role, event or rule Stage 2/3 adds. It's often the best balance of "new" and "manageable".
+
+We'll pick one together once I've seen the spec and the code.
+
+### 4. UML concepts to learn, from the fundamentals
+
+The key idea first: a **class diagram** shows *what exists* (structure). A **sequence diagram** shows *what happens over time* (behaviour): which object asks which other object to do something, and in what order. **Time flows downward.**
+
+Here is every core notation element in one small example. I've used a library system on purpose, so nothing in it is mistaken for your project's classes:
+
+[Inline diagram shown here: a sequence diagram with actor "Member", lifelines ":Library" and "b:Book". Member → Library: borrow(bookId). Library → Book: isAvailable(), dashed return "available: boolean". An alt frame: [available] Library → Book: markBorrowed(); [else] Library self-message showError(). Finally a dashed return "result" from Library to Member. Activation bars are shown on the lifelines.]
+
+How to read each element in the diagram:
+
+| Element | What it means | How it looks |
+|---|---|---|
+| **Actor** | Something outside the system that starts the interaction (the player) | Stick figure |
+| **Lifeline** | One object participating, written `name:ClassName` or `:ClassName` | Box at the top with a dashed line going down |
+| **Activation bar** | The object is currently executing a method | Thin rectangle on the lifeline |
+| **Synchronous message** | A method call; the caller waits for it to finish | Solid line, filled arrowhead |
+| **Return message** | The value handed back | Dashed line |
+| **Self-message** | An object calls its own method (`this.x()`) | Arrow that loops back to the same lifeline |
+| **`alt` frame + guards** | if / else-if / else. Only one section runs | Box split by dashed lines, with `[conditions]` |
+| **`opt` frame** | An `if` with no `else` | Box with one guard |
+| **`loop` frame** | `for` / `while` | Box labelled e.g. `loop [for each customer]` |
+| **Create message** | `new Something()`. The lifeline starts lower down, where the object is created | Dashed arrow pointing at the new object's box |
+
+#### The core skill: tracing Java code into a diagram
+
+This is the part most students get wrong, so here's the illustrative code behind the diagram above:
+
+```java
+class Library {
+    LoanResult borrow(String bookId) {          // ← Member → Library: borrow(bookId)
+        Book b = catalog.find(bookId);
+        if (b.isAvailable()) {                  // ← Library → Book: isAvailable(), then alt [available]
+            b.markBorrowed();                   // ← Library → Book: markBorrowed()
+            return LoanResult.OK;
+        } else {                                // ← [else]
+            showError();                        // ← self-message
+            return LoanResult.FAILED;
+        }
+    }                                           // ← dashed return: result
+}
+```
+
+**Tracing rules:**
+1. Start at the method that the use case triggers.
+2. Each `obj.method()` becomes an arrow from the current class to `obj`'s class.
+3. Follow each call into its method body, then come back.
+4. `if/else` becomes `alt`, `if` alone becomes `opt`, and `for/while` becomes `loop`.
+5. Skip trivial getters and printing unless they matter to the story.
+
+**Common beginner mistakes:**
+- Drawing class names instead of objects.
+- Inventing methods that don't exist in the code.
+- Arrows pointing the wrong way.
+- Guards that don't match the real conditions.
+- Putting everything into one huge diagram.
+
+**Suggested learning path:** ① the notation above → ② trace small snippets by hand → ③ add `alt`/`loop` frames → ④ trace one real method from your code → ⑤ choose the use case → ⑥ draft in PlantUML → ⑦ check the draft against the code and the briefing.
+
+### 5. What I need from your group's code
+
+For the use case we choose, I'll need:
+- **Every class involved:** fields, and who holds a reference to whom. This tells us which objects can call which.
+- **Exact method signatures and bodies** along the call chain, starting from the entry point (probably `main`, then the game loop, then the turn logic).
+- **The real conditions** in the `if`/`while`/`switch` statements: these become your guards.
+- **Where objects are created** (`new`), and any enums or states, e.g. customer status.
+- **The `stage-2` and `stage-3` tags**, plus a note of what changed between them, so the diagram clearly matches one stage.
+- The class diagram for that stage, if a teammate has drafted it, so the two stay consistent.
+
+---
+
+### Questions for you
+
+1. **GitHub access.** I tried to look for your repository, but no GitHub account is linked to this session. Either send me the **owner/repo name** (e.g. `teammate/RestaurantRush`), or connect GitHub in claude.ai settings. If it's private, it needs to be accessible to your account. Alternatively, link your computer and give me access to a local clone.
+2. **Game specification.** Could you upload the full Restaurant Rush brief with the Stage 1/2/3 requirements? You mentioned "both assignment documents", but only the briefing slides are in the Project. Your second file is the Chapter 9 Design Principles lecture.
+3. **Rubric.** Is there a separate marking rubric on NTULearn? If so, please upload it.
+4. **Lecture notes.** Please upload your course's UML / sequence diagram lecture slides, so I follow your lecturer's exact notation.
+5. **Status.** Are the `stage-2`/`stage-3` tags already in the repo, or is Stage 3 still being written? Has anyone already suggested a use case?
+6. **Tool.** Does your group or lecturer require a particular tool (PlantUML, draw.io, Visual Paradigm)?
+
+While you collect those, try this exercise: in the library example, which lines of Java would you need to change to get an `opt` frame instead of an `alt`? And what would the diagram look like after that change? Send me your answer and I'll check it.
+
+---
+
+## Message 2 — Me
+
+[Attached: screenshot of the GitHub page showing "You now have push access to the chelyn2008/Restaurant-game-SC2002 repository", with the repo's file list. Attached file: 17S1_CECZ2002_PPT_Chapter9DesignPrinciples_V1.0.pdf]
+
+i have joined the inv for github, what shld i do next? i have also uploaded the lecture slide pdf teaching sequence diagrams. do u need me to upload all lecture slide documents for both parts1 and 2?
+
+## Message 2 — Claude
+
+[Claude checked the attached PDF (its text is the Chapter 9 Design Principles lecture), cloned chelyn2008/Restaurant-game-SC2002, and read README.md, CHANGES-stage1-to-2.md, CHANGES-stage2-to-3.md, GameEngine.java, Waiter.java, PricingPolicy.java, Host.java, and parts of Restaurant.java, Customer.java, VIPCustomer.java and CriticCustomer.java.]
+
+You're in, and I've cloned and read the repo. Your group's work is well documented, which makes my job much easier. But the PDF you uploaded is **still the Chapter 9 Design Principles deck**, the same file that's already in the Project. Its file properties say "About Sequence Diagram and OO", but all 50 pages are about good and bad design and SOLID, and the word "sequence" never appears. You probably grabbed the wrong file.
+
+### Do you need to upload all the lecture slides?
+
+No. Only these:
+1. **The chapter that teaches sequence (interaction) diagrams.** This is essential, so I match your lecturer's exact notation.
+2. **The class diagram / UML basics chapter.** Useful because your sequence diagram must agree with the class diagrams.
+3. **The official Restaurant Rush assignment brief** with the Stage 1/2/3 game rules, and any rubric. This is still the biggest gap. The repo shows what your group *built*, but only the brief shows what was *required*.
+
+Everything else (Java basics, exceptions and so on) isn't needed for this task.
+
+### What I found in the repo (confirmed from the code)
+
+- The `stage-1`, `stage-2` and `stage-3` tags exist. The `src/` folder on `main` is identical to `stage-3`, so the current code is the Stage 3 code.
+- **Stage 2 adds:** `VIPCustomer` (10% off via `calculateBill`) and `CriticCustomer` (always orders the most expensive dish via `chooseDish`). Both are polymorphic overrides of `Customer`.
+- **Stage 3 adds:** `Host`, `ComboMeal`, `HappyHour` (a `Promotion`) and `PricingPolicy`.
+- The game runs through `GameEngine.playTurn(turn)`. Each turn goes: arrivals → Happy Hour offer and recovery → Host → Waiter → Chef → eating and Cashier → waiting penalties.
+- Invalid manager commands are re-asked in a `do { … } while (!result.success())` loop. That's a real loop you could show.
+
+### Candidate use cases (my recommendation, for you and your group to decide)
+
+**⭐ A. "Waiter takes a customer's order during Happy Hour" (Stage 3). This is my top pick.** The real call chain:
+
+```
+GameEngine.runWaiterTask → ui.askWaiterCommand() → executeWaiterCommand
+ → restaurant.findCustomer(id)
+ → waiter.takeOrder(restaurant, customer, foodChoice, turn)
+     → customer.chooseDish(menu, foodChoice)      ← Critic overrides (Stage 2)
+     → restaurant.getPricingPolicy()
+     → pricing.lockedPrice(customer, item, turn)
+         → customer.calculateBill(item)           ← VIP overrides (Stage 2)
+         → loop [each promotion]: opt [isActive(turn)] applyDiscount(price)   ← Happy Hour (Stage 3)
+     → new Order(...) → customer.placeOrder(order)
+```
+
+It has 6–8 objects, real `alt`, `loop` and `opt` frames, and a "create" message. It shows both Stage 2 polymorphism and a Stage 3 feature, and it's easy to demo. The diagram would show the Happy Hour discount being applied, but Happy Hour *activation* happens earlier in the turn, so it becomes a **starting condition** ("Happy Hour is active; customer is SEATED").
+
+**B. "Play one full turn" (`playTurn`).** This is the most complete option, but it touches about 12 objects. You'd have to leave out lots of detail, which risks the diagram being either unreadable or too shallow.
+
+**C. "Host seats a customer, then the Waiter takes their order in the same turn" (Stage 3).** It shows the new Host-before-Waiter rule and the retry loop. It's simpler than A but has less decision logic.
+
+Before deciding, ask your group whether anyone has already claimed a use case or planned what the video shows (the README's "video timestamps" table is still empty).
+
+### Your next steps
+
+1. **Start your AI-history now.** Create your own branch, e.g. `git checkout -b <yourname>`, and save this conversation in full as `ai-history/stage-3/chat-01.md` (or whichever stage folder your group agrees on). The briefing requires the complete conversation, not a summary. I only have read access, so you'll need to push it yourself.
+2. **Upload the three documents** listed above.
+3. **Build and run Stage 3 once** using the README commands, and play a few turns with Happy Hour switched on. You'll understand the flow much better once you've seen it.
+4. **Open `ClassDiagram/class_stage3.png`.** Every lifeline in your sequence diagram must be a class on that diagram.
+5. **Tell me which use case you prefer** (A, B or C). Then we'll trace it together, line by line, starting with `Waiter.takeOrder`. I'll ask you to predict each arrow before I confirm it.
+
+One question back to you: does your group or lecturer require a specific tool? Your teammates drew the class diagrams in draw.io, so you might want to match that rather than use PlantUML.
+
+---
+
+## Message 3 — Me
+
+[Attached file: 21S1_CE2002_PPT_Chapter7_UML-SequenceDiagram_V1.0.pptx]
+
+i have also uploaded all lecture materials for part2 teaching. i am very bad at computer and have never used github before. how do i proceed?
+
+## Message 3 — Claude
+
+[Claude extracted the text of the Chapter 7 slides, checked the Project file list (Chapter 6, 7, 8, 9 and 10 materials now present), and rendered slides 5–16 as images to read the notation.]
+
+Got it. The sequence diagram lecture (Chapter 7) is the right file this time, and the Project now also has Chapter 6 (class diagrams), Chapter 8 and Chapter 10.
+
+You don't need to learn Git commands for your part. I've already downloaded and read the code here, so the only GitHub job you have is **saving your AI chat history**, and you can do it entirely on the GitHub website.
+
+[Step-by-step card shown here, "Saving your AI chat history to your own GitHub branch, using the website only":
+1. Open your group repo — Sign in to GitHub in your browser and go to github.com/chelyn2008/Restaurant-game-SC2002, the same page as in your screenshot. Nothing you do on this page affects anyone else until you click a green 'Commit' button.
+2. Create your own branch — Click the grey 'main' button near the top left. In the box that appears, type a branch name with your name in it, e.g. 'jingyi-ai-history'. Click 'Create branch: jingyi-ai-history from main'. The button should now show your branch name instead of 'main'. That's how you know you're working on your own copy.
+3. Collect this conversation — Open a plain text editor (Notepad is fine). Using the copy button under each message here, paste every message in order: your prompts and my replies. Put a label before each one, e.g. '**Me:**' and '**Claude:**'. The briefing requires the full conversation, not a summary, so don't skip or shorten anything.
+4. Create the history file — Back on GitHub, check the button still shows your branch name. Click 'Add file' → 'Create new file'. In the file name box, type: ai-history/stage-3/chat-01.md. Each '/' you type automatically creates a folder.
+5. Paste and commit — Paste the conversation into the big editing box. Click the green 'Commit changes…' button. Write a short message like 'Add AI history chat 01'. Make sure 'Commit directly to the jingyi-ai-history branch' is selected, NOT main. Then click 'Commit changes'.
+6. Check it worked — Switch the branch button back to 'main': your ai-history folder should NOT appear there. Switch back to your branch: it should. To add later parts of this chat, open the file on your branch, click the pencil (edit) icon, paste the new messages at the end, and commit again.]
+
+**Three safety rules** while you're on GitHub:
+- Never commit to `main`.
+- Don't edit or delete your teammates' files.
+- Ignore "Pull request" and "Merge" buttons for now.
+
+If anything looks wrong, stop and send me a screenshot. A mistaken commit on your own branch is easy to fix.
+
+Your teammates may have agreed on a branch name format or a stage folder, so check that in your group chat first. I suggested `stage-3` because the use case I'm recommending is from Stage 3.
+
+### What your lecture (Chapter 7) changes about the diagram
+
+Now that I've seen your lecturer's notation, the diagram should follow these slides:
+
+| Slide | Notation your lecturer uses | How it applies to us |
+|---|---|---|
+| 5, 15 | Whole diagram drawn inside an **`sd Name` frame** | e.g. `sd TakeOrderDuringHappyHour` |
+| 12, 15 | **Found message**: a filled dot, then an arrow. The call comes from outside the diagram | A clean way to start at `takeOrder(...)` |
+| 8, 15 | **`result = method(args)`** on the call arrow; dashed return arrows labelled with the value | e.g. `bill = lockedPrice(customer, item, turn)` |
+| 5, 15 | **Self-messages** with a stacked activation bar | e.g. `GameEngine` calling its own `executeWaiterCommand` |
+| 7 | **`new`** with a dashed arrow to the new object's box | `new Order(...)`. Our code really does this |
+| 10–13 | **`opt`, `alt` with `[else]`, `loop [condition]`, `ref`** | All three appear naturally in candidate A |
+| 4–13 | Boundary / control / entity icons on the lifelines | `ConsoleUI` = boundary, `GameEngine` = control, domain classes = entity. This is my suggestion; I'll check Chapter 8 to confirm |
+| 16–18 | "**Diagram to code**": every message must match real, compilable code | Confirms the briefing's rule that the diagram must match the code |
+
+Slide 15's `sd CalculatePrice` example (an `Order` asking other objects for prices and discounts, then computing a total) has almost the same shape as your group's `Waiter.takeOrder → PricingPolicy.lockedPrice` code. That makes **candidate A** ("Waiter takes an order during Happy Hour") even more convincing: you'd be applying exactly the pattern your lecturer taught, to real Stage 2 and Stage 3 code.
+
+### What's still missing
+
+- **The official Restaurant Rush brief** with the Stage 1–3 game rules. I still need it to confirm your group's code matches what was *required*. Ask a teammate; it's usually a PDF on NTULearn.
+- **Whether anyone else has claimed a use case.** A quick message in your group chat will settle it.
+
+### Next step
+
+Once the history file is saved, tell me: shall we lock in candidate A? If yes, our next lesson will trace `Waiter.takeOrder` line by line. I'll show you each piece of real code, you predict the arrow it becomes, and then I'll mark your answer.
+
+---
+
+## Message 4 — Me
+
+[Attached: screenshot of the GitHub "create new file" page, file name "chat-01.md." in folder ai-history/stage-3 on branch jingyi-ai-history]
+
+whats conversation shld i copy paste inside? can u give me the contents correctly so i can copy and paste into the file directly? also check if i did type the file name correct?
+
+## Message 4 — Claude
+
+[Claude's reply to this message, and every later message, will be appended below in the next update of this file.]
