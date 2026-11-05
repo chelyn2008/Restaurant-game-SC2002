@@ -36,13 +36,15 @@ public class ServiceAdvisor {
                         .thenComparingInt(Customer::getArrivalTurn));
     }
 
-    //The staff command that moves this customer one step closer to being served. */
-    public String nextStep(Customer customer) {
+    // The staff member and command that move this customer one step closer to being served,
+    // e.g. "Chef: cook C2". Seating names the Host too when the game has one.
+    public String nextStep(Restaurant restaurant, Customer customer) {
+        String id = customer.getId();
         return switch (customer.getStatus()) {
-            case WAITING -> "seat " + customer.getId();
-            case SEATED -> "order " + customer.getId();
-            case ORDERED -> (customer.getOrder().isReady() ? "serve " : "cook ") + customer.getId();
-            default -> "nothing; " + customer.getId() + " has already been served";
+            case WAITING -> (restaurant.getHost().isPresent() ? "Host or Waiter" : "Waiter") + ": seat " + id;
+            case SEATED -> "Waiter: order " + id;
+            case ORDERED -> customer.getOrder().isReady() ? "Waiter: serve " + id : "Chef: cook " + id;
+            default -> "nothing; " + id + " has already been served";
         };
     }
 }

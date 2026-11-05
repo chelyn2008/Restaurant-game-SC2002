@@ -123,10 +123,19 @@ public class GameEngine {
             if (customer.isWaitingForService()) {
                 ui.showMessage("Warning: " + customer.getId() + " (" + customer.getTypeName() + ", satisfaction "
                         + customer.getSatisfaction() + ", -" + customer.getSatisfactionLossPerTurn()
-                        + " per turn) leaves at the end of turn " + advisor.leavingTurn(customer, turn)
-                        + " unless served.");
+                        + " per turn) " + describeLeaving(customer, turn) + ".");
             }
         }
+    }
+
+    // "leaves at the end of turn 9 unless served", or, when that turn is after the last turn,
+    // that the customer cannot leave before the game ends
+    private String describeLeaving(Customer customer, int turn) {
+        int leavingTurn = advisor.leavingTurn(customer, turn);
+        if (leavingTurn > config.totalTurns()) {
+            return "will not leave before the game ends (turn " + config.totalTurns() + ")";
+        }
+        return "leaves at the end of turn " + leavingTurn + " unless served";
     }
 
     // Answers "hint". A hint never uses up the staff task, whether hints are on or off
@@ -137,8 +146,8 @@ public class GameEngine {
         }
         ui.showMessage(advisor.mostUrgent(restaurant)
                 .map(customer -> "Hint: most urgent is " + customer.getId() + " (" + customer.getTypeName()
-                        + "), who leaves at the end of turn " + advisor.leavingTurn(customer, turn)
-                        + " unless served. Next step: " + advisor.nextStep(customer) + ".")
+                        + "), who " + describeLeaving(customer, turn)
+                        + ". Next step: " + advisor.nextStep(restaurant, customer) + ".")
                 .orElse("Hint: no customer is waiting for service."));
     }
 

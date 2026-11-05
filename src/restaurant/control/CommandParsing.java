@@ -21,9 +21,14 @@ final class CommandParsing {
     /** Accepts "C2", "c2" or "2" and returns "C2" */
     static String customerId(String word) {
         String digits = word.startsWith("c") ? word.substring(1) : word;
+        String notAnId = "'" + word + "' is not a customer id like C1.";
         if (digits.isEmpty() || !digits.chars().allMatch(Character::isDigit)) {
-            throw new IllegalArgumentException("'" + word + "' is not a customer id like C1.");
+            throw new IllegalArgumentException(notAnId);
         }
-        return "C" + Integer.parseInt(digits);
+        try {
+            return "C" + Integer.parseInt(digits);
+        } catch (NumberFormatException e) { // too many digits for an int, e.g. c99999999999
+            throw new IllegalArgumentException(notAnId);
+        }
     }
 }

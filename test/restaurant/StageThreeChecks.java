@@ -371,6 +371,17 @@ public class StageThreeChecks {
         engine.playTurn(9);
         check(customer(engine, "C1").getStatus() == CustomerStatus.LEFT, "the Critic leaves at the end of turn 9, as warned");
 
+        // A Regular arriving on turn 16 would only reach 0 on turn 28, after the game ends.
+        ScriptedUI late = new ScriptedUI();
+        GameEngine lateGame = new GameEngine(config(new ArrivalSchedule(List.of(
+                new ArrivalSchedule.Arrival(16, RegularCustomer::new)))).withHints(), late, new FixedFoodChoice("Salad"));
+        for (int turn = 1; turn <= 16; turn++) {
+            lateGame.playTurn(turn);
+        }
+        check(late.hasMessageContaining("C1 (Regular, satisfaction 100, -8 per turn) will not leave before the game ends (turn 18)")
+                        && !late.hasMessageContaining("turn 28"),
+                "turn 16: a customer who cannot reach 0 by turn 18 is shown as safe, not 'leaves at the end of turn 28'");
+
         // The Critic arrives second but is more urgent; the hint does not use up the Host's task.
         ScriptedUI ui = new ScriptedUI(
                 "no", "wait", "wait", "wait",                   // turn 1: C1 (Regular) arrives
@@ -379,11 +390,22 @@ public class StageThreeChecks {
                 new FixedFoodChoice("Salad"));
         hinted.playTurn(1);
         hinted.playTurn(2);
-        check(ui.hasMessageContaining("Hint: most urgent is C2 (Critic)") && ui.hasMessageContaining("Next step: seat C2"),
-                "hint picks the Critic C2 over the earlier Regular C1 and suggests seating them");
+        check(ui.hasMessageContaining("Hint: most urgent is C2 (Critic)") && ui.hasMessageContaining("Next step: Host or Waiter: seat C2"),
+                "hint picks the Critic C2 over the earlier Regular C1 and suggests the Host or Waiter seats them");
         check(customer(hinted, "C2").getStatus() == CustomerStatus.SEATED && ui.hasMessageContaining("Host seats C2"),
                 "after the hint the Host can still seat C2 in the same turn");
-        check(ui.hasMessageContaining("Next step: order C2"), "the Waiter's hint then suggests taking C2's order");
+        check(ui.hasMessageContaining("Next step: Waiter: order C2"), "the Waiter's hint then suggests the Waiter takes C2's order");
+
+        // The hint names who does the next step, so a Chef prompt never shows an unlabelled "seat".
+        ScriptedUI cook = new ScriptedUI("no", "seat C1", "order C1", "hint", "wait");
+        GameEngine kitchen = new GameEngine(config(arrivals(RegularCustomer::new)).withHints(), cook, new FixedFoodChoice("Pasta"));
+        kitchen.playTurn(1);
+        check(cook.hasMessageContaining("Next step: Chef: cook C1"), "after the order, the hint at the Chef prompt says 'Chef: cook C1'");
+        Restaurant noHost = new Restaurant(Menu.standard(), 2);
+        Customer queued = new RegularCustomer("C1", 1);
+        noHost.admitCustomer(queued);
+        check(advisor.nextStep(noHost, queued).equals("Waiter: seat C1"),
+                "in a game without a Host (Stages 1-2 with --hints) seating names only the Waiter");
 
         ScriptedUI off = new ScriptedUI("no", "hint", "seat C1", "wait", "wait");
         GameEngine noHints = new GameEngine(config(arrivals(RegularCustomer::new)), off, new FixedFoodChoice("Salad"));
@@ -391,6 +413,13 @@ public class StageThreeChecks {
         check(off.hasMessageContaining("hints are off") && customer(noHints, "C1").getStatus() == CustomerStatus.SEATED
                         && off.getMessages().stream().noneMatch(message -> message.startsWith("Warning:")),
                 "without --hints: no warnings, hint is refused with a reason and the task is kept");
+
+        ScriptedUI longId = new ScriptedUI("no", "seat c99999999999", "seat C1", "wait", "wait");
+        GameEngine idCheck = new GameEngine(config(arrivals(RegularCustomer::new)), longId, new FixedFoodChoice("Salad"));
+        idCheck.playTurn(1);
+        check(longId.hasMessageContaining("'c99999999999' is not a customer id like C1.")
+                        && customer(idCheck, "C1").getStatus() == CustomerStatus.SEATED,
+                "an id too long for an int ('c99999999999') gives a clear reason, and the Host can still seat C1");
 
         GameEngine replay = replayWithHints("stage3-victory");
         check(replay != null && replay.getRestaurant().getRevenueCents() == 8640 && replay.getRestaurant().getPaidCount() == 4,

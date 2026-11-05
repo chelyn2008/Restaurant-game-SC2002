@@ -155,7 +155,8 @@ Part of Stage 3, switched off by default, so the required rules and every saved 
 - **Changed classes:** `GameConfig` (+`hintsEnabled`, `withHints()`), `GameEngine` (shows warnings,
   answers `hint`), the three command records and `CommandParsing` (+`HINT`), `ConsoleUI` (one banner
   line when on), `Main` (`--hints`).
-- **Limit:** the warning ignores possible Happy Hour recovery, so it errs on the safe side.
+- **Limit:** the warning ignores possible Happy Hour recovery, so it errs on the safe side. A customer
+  who could only reach 0 after the last turn is shown as "will not leave before the game ends".
 
 ## Trade-offs
 

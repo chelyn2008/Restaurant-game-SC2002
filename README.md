@@ -99,15 +99,30 @@ An optional helper for the manager, added in Stage 3 and **off by default**. Tur
 
 - **Leave warnings:** at the start of every turn, each waiting customer shows when they will leave
   if not served, e.g. `Warning: C1 (Critic, satisfaction 100, -12 per turn) leaves at the end of turn 9 unless served.`
+  If that turn would be after turn 18, the warning says the customer
+  `will not leave before the game ends (turn 18)` instead.
 - **`hint` command:** type `hint` at any Host, Waiter or Chef prompt to see the most urgent customer
-  and their next step, e.g. `Hint: most urgent is C2 (Critic) ... Next step: seat C2.` A hint does not
+  and their next step, e.g. `Hint: most urgent is C2 (Critic) ... Next step: Host or Waiter: seat C2.`
+  The next step names who can do it: `Host or Waiter: seat`, `Waiter: order`, `Chef: cook` or
+  `Waiter: serve` (without a Host, as in Stages 1-2, seating names only the Waiter). A hint does not
   use up the staff member's task.
+
+**How the leaving turn is calculated:** a customer waiting for food loses satisfaction at the end of
+every turn (Regular 8, VIP 5, Critic 12) and leaves at 0. So
+
+- turns left = satisfaction ÷ loss per turn, rounded up (the current turn counts as the first)
+- leaving turn = current turn + turns left − 1
+
+Example: on turn 4 a Critic at 64 has 64 ÷ 12 = 5.33, so 6 turns left, and leaves at the end of
+turn 4 + 6 − 1 = 9. A Regular at 60 on turn 18 has 8 turns left (turn 25), which is after the game
+ends, so it is shown as "will not leave before the game ends". Happy Hour recovery is not counted,
+so the warning is on the safe side.
 
 **Design:** the calculation is in a new domain class, `ServiceAdvisor`, not in the UI. It asks each
 customer for `getSatisfactionLossPerTurn()`, so a Regular (8), VIP (5) and Critic (12) get different
 warnings with no type checks (polymorphism). It only reads the game state, so it cannot change any
 rule. Without `--hints` the game and every saved run are exactly as before; all checks still pass,
-including 9 new checks for this feature in `StageThreeChecks`. More detail:
+including 13 new checks for this feature in `StageThreeChecks`. More detail:
 [DESIGN-NOTES.md](DESIGN-NOTES.md) and [CHANGES-stage2-to-3.md](CHANGES-stage2-to-3.md).
 
 ## Stage 1 → 2

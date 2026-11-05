@@ -206,7 +206,7 @@ classDiagram
 
 **`PricingPolicy`**: `-promotions: List<Promotion>` {readOnly}; `+PricingPolicy(promotions: List<Promotion>)`, `+lockedPrice(customer: Customer, item: MenuItem, turn: int): int`, `+describeDiscounts(customer: Customer, item: MenuItem, turn: int): String`.
 
-**`ServiceAdvisor`** *(extra feature, `--hints`)*: no attributes; `+turnsUntilLeaving(customer: Customer): int`, `+leavingTurn(customer: Customer, turn: int): int`, `+mostUrgent(restaurant: Restaurant): Optional<Customer>`, `+nextStep(customer: Customer): String`. Only reads the game state.
+**`ServiceAdvisor`** *(extra feature, `--hints`)*: no attributes; `+turnsUntilLeaving(customer: Customer): int`, `+leavingTurn(customer: Customer, turn: int): int`, `+mostUrgent(restaurant: Restaurant): Optional<Customer>`, `+nextStep(restaurant: Restaurant, customer: Customer): String`. Only reads the game state.
 
 **`FoodChoiceStrategy`** *(interface)*: `+choose(customer: Customer, menu: Menu): MenuItem`.
 
@@ -239,7 +239,7 @@ package-private methods of each other, `Order` and `Restaurant`.)
 | `-restaurant: Restaurant` {readOnly} | `+getRestaurant(): Restaurant` |
 | `-arrivals: ArrivalSchedule` {readOnly} | `-offerHappyHour(happyHour: HappyHour, turn: int): void`, `-reportRecovery(recovered: List<Customer>): void` |
 | `-victoryCondition: VictoryCondition` {readOnly} | `-runHostTask(host: Host, turn: int): void`, `-runWaiterTask(turn: int): void`, `-runChefTask(turn: int): void` |
-| `-advisor: ServiceAdvisor` {readOnly} | `-showLeaveWarnings(turn: int): void`, `-showHint(turn: int): void` |
+| `-advisor: ServiceAdvisor` {readOnly} | `-showLeaveWarnings(turn: int): void`, `-showHint(turn: int): void`, `-describeLeaving(customer: Customer, turn: int): String` |
 | | `-executeHostCommand(host: Host, command: HostCommand): ActionResult`, `-executeWaiterCommand(command: WaiterCommand, turn: int): ActionResult`, `-executeChefCommand(command: ChefCommand, turn: int): ActionResult`, `-report(role: String, result: ActionResult): void` |
 
 **`GameConfig`** *(record)*: `+stage: int`, `+totalTurns: int`, `+tableCount: int`, `+arrivalSchedule: ArrivalSchedule`, `+menu: Menu`, `+hostEnabled: boolean`, `+happyHourEnabled: boolean`, `+minPaidCustomers: int`, `+minRevenueCents: int`, `+minAverageSatisfaction: int`, `+seed: long`, `+hintsEnabled: boolean`, `+DEFAULT_SEED: long = 2002` *static*; `+baseSetting(seed: long): GameConfig` *static* (Stage 1), `+baseSetting(seed: long, arrivalSchedule: ArrivalSchedule): GameConfig` *static* (Stage 2), `+stageThree(seed: long): GameConfig` *static*, `+stageThree(seed: long, arrivalSchedule: ArrivalSchedule): GameConfig` *static*, `+forStage(stage: int, seed: long): GameConfig` *static*, `+withHints(): GameConfig`.

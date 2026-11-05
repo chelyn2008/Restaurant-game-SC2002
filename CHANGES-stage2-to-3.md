@@ -52,13 +52,14 @@ default**: without `--hints` the game, its output and every saved run are exactl
 
 | File | Change | Why |
 |------|--------|-----|
-| `domain/ServiceAdvisor.java` (new) | `turnsUntilLeaving`, `leavingTurn`, `mostUrgent`, `nextStep` | The calculation is a game rule (it mirrors the abandonment rule), so it belongs in the domain, not the UI. It calls `Customer.getSatisfactionLossPerTurn()`, so each customer type gives its own answer with no type checks. |
+| `domain/ServiceAdvisor.java` (new) | `turnsUntilLeaving`, `leavingTurn`, `mostUrgent`, `nextStep` (names the staff member, e.g. "Chef: cook C2"; seating names the Host only when the game has one) | The calculation is a game rule (it mirrors the abandonment rule), so it belongs in the domain, not the UI. It calls `Customer.getSatisfactionLossPerTurn()`, so each customer type gives its own answer with no type checks. |
 | `control/GameConfig.java` | New component `hintsEnabled` (false in every stage) and `withHints()` | The feature is switched on per game, like the Host and Happy Hour. |
-| `control/GameEngine.java` | Shows a warning per waiting customer after the start-of-turn display; the Host/Waiter/Chef loops answer `hint` and ask again without using the task; `runHostTask` now also takes the turn | Same "ask again, task not used" rule as for invalid choices. Uses the existing `GameUI.showMessage`, so `GameUI` is unchanged. |
+| `control/GameEngine.java` | Shows a warning per waiting customer after the start-of-turn display (if the leaving turn is after turn 18, it says the customer "will not leave before the game ends" instead); the Host/Waiter/Chef loops answer `hint` and ask again without using the task; `runHostTask` now also takes the turn | Same "ask again, task not used" rule as for invalid choices. Uses the existing `GameUI.showMessage`, so `GameUI` is unchanged. |
 | `control/HostCommand.java`, `WaiterCommand.java`, `ChefCommand.java`, `CommandParsing.java` | New `HINT` action, parsed from the single word `hint` | `hint` can be typed at any staff prompt. The usage messages are unchanged. |
 | `ui/ConsoleUI.java` | One banner line, only when hints are on | Display only. |
 | `Main.java` | `--hints` option | Lets the player switch the feature on. |
-| `test/restaurant/StageThreeChecks.java` | New section `extraLeaveWarningsAndHints` (9 checks) | See TESTING.md. |
+| `control/CommandParsing.java` | Also: an id too long for an `int` (e.g. `c99999999999`) now gives "'c99999999999' is not a customer id like C1." instead of Java's raw "For input string" message | Small input-handling fix found while testing; it was already rejected and re-asked, only the reason was unclear. |
+| `test/restaurant/StageThreeChecks.java` | New section `extraLeaveWarningsAndHints` (13 checks) | See TESTING.md. |
 
 ## Stage 3 rules as implemented
 
@@ -79,8 +80,8 @@ default**: without `--hints` the game, its output and every saved run are exactl
 
 ## What still works
 
-- `StageOneChecks` (52) and `StageTwoChecks` (38) pass unchanged; `StageThreeChecks` passes 57
-  (48 for the required Stage 3 rules, 9 for the extra feature).
+- `StageOneChecks` (52) and `StageTwoChecks` (38) pass unchanged; `StageThreeChecks` passes 61
+  (48 for the required Stage 3 rules, 13 for the extra feature and the input fix).
 - `--stage 2` replays both Stage 2 scripts with exactly the same turns, choices and results as the
   Stage 2 build. The welcome banner was restyled in Stage 3 (wider title, blank lines between
   sections), so the two Stage 2 logs in `runs/` were re-recorded; the Stage 2 originals are kept at
