@@ -17,9 +17,9 @@ public class Menu {
     // The base-setting menu: Salad $9.00 (1 unit), Burger $15.00 (1 unit), Pasta $18.00 (2 units)
     public static Menu standard() {
         return new Menu(List.of(
-                new MenuItem("Salad", 900, 1),
-                new MenuItem("Burger", 1500, 1),
-                new MenuItem("Pasta", 1800, 2)));
+                new MenuItem(" Salad", 900, 1),
+                new MenuItem(" Burger", 1500, 1),
+                new MenuItem(" Pasta", 1800, 2)));
     }
 
     /*
