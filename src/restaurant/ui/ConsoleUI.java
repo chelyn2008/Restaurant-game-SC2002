@@ -69,6 +69,10 @@ public class ConsoleUI implements GameUI {
             out.println("           - " + HappyHour.DISCOUNT_PERCENT + "% off orders taken");
             out.println("           - waiting customers recover " + HappyHour.RECOVERY_POINTS + " satisfaction at turn start");
         }
+        if (config.hintsEnabled()) {
+            out.println("Hints: on. Each turn warns when waiting customers will leave; type hint at any staff prompt"
+                    + " for the most urgent customer (it does not use up the task).");
+        }
     }
 
     @Override

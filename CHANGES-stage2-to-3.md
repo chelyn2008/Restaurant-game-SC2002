@@ -17,6 +17,7 @@ https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
 | `src/restaurant/domain/PricingPolicy.java` | Computes the price locked into an order: customer discount first (VIP), then each active promotion. |
 | `src/restaurant/control/HostCommand.java` | The manager's Host choice: `seat <id>` or `wait`. |
 | `test/restaurant/StageThreeChecks.java` | Stage 3 automated checks (see TESTING.md). |
+| `src/restaurant/domain/ServiceAdvisor.java` | **Extra feature** (`--hints`): turns until each waiting customer leaves, the most urgent customer, and their next step. Only reads the game state. |
 | `runs/stage3-victory.txt` / `.log`, `runs/stage3-defeat.txt` / `.log` | Reproducible Stage 3 runs (same seed, one different choice). |
 | `CHANGES-stage2-to-3.md`, `CLASS-DIAGRAM.md` | This file; the final class list for the class diagram. |
 
@@ -44,6 +45,21 @@ and, where needed, an import of `restaurant.domain.menu`: `Order`, `Table`, `Sta
 change for combos (it already works in preparation units), and the Cashier none for Happy Hour (it
 already collects the price locked in the order).
 
+## Extra feature: leave warnings and hints (`--hints`)
+
+Added on top of the Stage 3 requirements, as allowed by section 4.4 of the brief. It is **off by
+default**: without `--hints` the game, its output and every saved run are exactly as before.
+
+| File | Change | Why |
+|------|--------|-----|
+| `domain/ServiceAdvisor.java` (new) | `turnsUntilLeaving`, `leavingTurn`, `mostUrgent`, `nextStep` | The calculation is a game rule (it mirrors the abandonment rule), so it belongs in the domain, not the UI. It calls `Customer.getSatisfactionLossPerTurn()`, so each customer type gives its own answer with no type checks. |
+| `control/GameConfig.java` | New component `hintsEnabled` (false in every stage) and `withHints()` | The feature is switched on per game, like the Host and Happy Hour. |
+| `control/GameEngine.java` | Shows a warning per waiting customer after the start-of-turn display; the Host/Waiter/Chef loops answer `hint` and ask again without using the task; `runHostTask` now also takes the turn | Same "ask again, task not used" rule as for invalid choices. Uses the existing `GameUI.showMessage`, so `GameUI` is unchanged. |
+| `control/HostCommand.java`, `WaiterCommand.java`, `ChefCommand.java`, `CommandParsing.java` | New `HINT` action, parsed from the single word `hint` | `hint` can be typed at any staff prompt. The usage messages are unchanged. |
+| `ui/ConsoleUI.java` | One banner line, only when hints are on | Display only. |
+| `Main.java` | `--hints` option | Lets the player switch the feature on. |
+| `test/restaurant/StageThreeChecks.java` | New section `extraLeaveWarningsAndHints` (9 checks) | See TESTING.md. |
+
 ## Stage 3 rules as implemented
 
 - **Turn start order:** (1) arrivals → (2) Happy Hour offer, only while unused → (3) on an active
@@ -63,7 +79,8 @@ already collects the price locked in the order).
 
 ## What still works
 
-- `StageOneChecks` (52) and `StageTwoChecks` (38) pass unchanged.
+- `StageOneChecks` (52) and `StageTwoChecks` (38) pass unchanged; `StageThreeChecks` passes 57
+  (48 for the required Stage 3 rules, 9 for the extra feature).
 - `--stage 2` replays both Stage 2 scripts with exactly the same turns, choices and results as the
   Stage 2 build. The welcome banner was restyled in Stage 3 (wider title, blank lines between
   sections), so the two Stage 2 logs in `runs/` were re-recorded; the Stage 2 originals are kept at

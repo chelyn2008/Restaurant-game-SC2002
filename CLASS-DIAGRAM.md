@@ -35,6 +35,7 @@ Visibility: `+` public, `-` private, `#` protected, `~` package-private. Static 
 | `Restaurant` | `PricingPolicy` | 1 → 1 | `pricingPolicy` |
 | `GameEngine` | `Restaurant` | 1 → 1 | `restaurant` |
 | `GameEngine` | `VictoryCondition` | 1 → 1 | `victoryCondition` |
+| `GameEngine` | `ServiceAdvisor` | 1 → 1 | `advisor` (extra feature; only used with `--hints`) |
 | `ArrivalSchedule` | `ArrivalSchedule.Arrival` | 1 → 0..* (6 in the base setting) | `arrivals` |
 | `Customer` | `Order` | 1 → 0..1 | `order` (created by `Waiter.takeOrder`) |
 
@@ -66,6 +67,7 @@ Visibility: `+` public, `-` private, `#` protected, `~` package-private. Static 
 - `GameEngine` → `HostCommand`, `WaiterCommand`, `ChefCommand`, `ActionResult`, `GameResult`, `Customer`, `Host`, `HappyHour`.
 - `GameUI` / `ConsoleUI` → `Restaurant`, `GameConfig`, `Menu`, `GameResult`, `HostCommand`, `WaiterCommand`, `ChefCommand`, `HappyHour`.
 - `VictoryCondition` → `Restaurant`, `GameResult`. `PricingPolicy` → `Customer`, `MenuItem`.
+- `ServiceAdvisor` → `Customer` (calls `getSatisfactionLossPerTurn()`), `Restaurant`, `CustomerStatus`.
 - `HostCommand`, `WaiterCommand`, `ChefCommand` → `CommandParsing`. `Money` is used by many classes for display.
 
 ### Overview (Mermaid; GitHub renders it)
@@ -106,6 +108,9 @@ classDiagram
     Customer "0..1" -- "0..1" Table
     GameEngine *-- "1" Restaurant
     GameEngine *-- "1" VictoryCondition
+    GameEngine *-- "1" ServiceAdvisor
+    ServiceAdvisor ..> Customer
+    ServiceAdvisor ..> Restaurant
     GameEngine --> "1" GameConfig
     GameEngine --> "1" GameUI
     GameEngine --> "1" FoodChoiceStrategy
@@ -201,6 +206,8 @@ classDiagram
 
 **`PricingPolicy`**: `-promotions: List<Promotion>` {readOnly}; `+PricingPolicy(promotions: List<Promotion>)`, `+lockedPrice(customer: Customer, item: MenuItem, turn: int): int`, `+describeDiscounts(customer: Customer, item: MenuItem, turn: int): String`.
 
+**`ServiceAdvisor`** *(extra feature, `--hints`)*: no attributes; `+turnsUntilLeaving(customer: Customer): int`, `+leavingTurn(customer: Customer, turn: int): int`, `+mostUrgent(restaurant: Restaurant): Optional<Customer>`, `+nextStep(customer: Customer): String`. Only reads the game state.
+
 **`FoodChoiceStrategy`** *(interface)*: `+choose(customer: Customer, menu: Menu): MenuItem`.
 
 **`SeededRandomFoodChoice`** implements `FoodChoiceStrategy`: `-random: Random` {readOnly}; `+SeededRandomFoodChoice(seed: long)`, `+choose(customer: Customer, menu: Menu): MenuItem`.
@@ -231,10 +238,11 @@ package-private methods of each other, `Order` and `Restaurant`.)
 | `-foodChoice: FoodChoiceStrategy` {readOnly} | `+playTurn(turn: int): void` |
 | `-restaurant: Restaurant` {readOnly} | `+getRestaurant(): Restaurant` |
 | `-arrivals: ArrivalSchedule` {readOnly} | `-offerHappyHour(happyHour: HappyHour, turn: int): void`, `-reportRecovery(recovered: List<Customer>): void` |
-| `-victoryCondition: VictoryCondition` {readOnly} | `-runHostTask(host: Host): void`, `-runWaiterTask(turn: int): void`, `-runChefTask(turn: int): void` |
+| `-victoryCondition: VictoryCondition` {readOnly} | `-runHostTask(host: Host, turn: int): void`, `-runWaiterTask(turn: int): void`, `-runChefTask(turn: int): void` |
+| `-advisor: ServiceAdvisor` {readOnly} | `-showLeaveWarnings(turn: int): void`, `-showHint(turn: int): void` |
 | | `-executeHostCommand(host: Host, command: HostCommand): ActionResult`, `-executeWaiterCommand(command: WaiterCommand, turn: int): ActionResult`, `-executeChefCommand(command: ChefCommand, turn: int): ActionResult`, `-report(role: String, result: ActionResult): void` |
 
-**`GameConfig`** *(record)*: `+stage: int`, `+totalTurns: int`, `+tableCount: int`, `+arrivalSchedule: ArrivalSchedule`, `+menu: Menu`, `+hostEnabled: boolean`, `+happyHourEnabled: boolean`, `+minPaidCustomers: int`, `+minRevenueCents: int`, `+minAverageSatisfaction: int`, `+seed: long`, `+DEFAULT_SEED: long = 2002` *static*; `+baseSetting(seed: long): GameConfig` *static* (Stage 1), `+baseSetting(seed: long, arrivalSchedule: ArrivalSchedule): GameConfig` *static* (Stage 2), `+stageThree(seed: long): GameConfig` *static*, `+stageThree(seed: long, arrivalSchedule: ArrivalSchedule): GameConfig` *static*, `+forStage(stage: int, seed: long): GameConfig` *static*.
+**`GameConfig`** *(record)*: `+stage: int`, `+totalTurns: int`, `+tableCount: int`, `+arrivalSchedule: ArrivalSchedule`, `+menu: Menu`, `+hostEnabled: boolean`, `+happyHourEnabled: boolean`, `+minPaidCustomers: int`, `+minRevenueCents: int`, `+minAverageSatisfaction: int`, `+seed: long`, `+hintsEnabled: boolean`, `+DEFAULT_SEED: long = 2002` *static*; `+baseSetting(seed: long): GameConfig` *static* (Stage 1), `+baseSetting(seed: long, arrivalSchedule: ArrivalSchedule): GameConfig` *static* (Stage 2), `+stageThree(seed: long): GameConfig` *static*, `+stageThree(seed: long, arrivalSchedule: ArrivalSchedule): GameConfig` *static*, `+forStage(stage: int, seed: long): GameConfig` *static*, `+withHints(): GameConfig`.
 
 **`ArrivalSchedule`**: `-arrivals: List<Arrival>` {readOnly}; `+ArrivalSchedule(arrivals: List<Arrival>)`, `+allRegular(): ArrivalSchedule` *static*, `+stageTwoMix(): ArrivalSchedule` *static*, `+getArrivals(): List<Arrival>`, `+customerArrivingOn(turn: int): Optional<Customer>`, `+describe(): String`.
 
@@ -246,13 +254,13 @@ package-private methods of each other, `Order` and `Restaurant`.)
 
 **`GameResult`** *(record)*: `+victory: boolean`, `+targetLines: List<String>`.
 
-**`HostCommand`** *(record)*: `+action: HostCommand.Action`, `+customerId: String`, `+WAIT: HostCommand` *static*; `+parse(text: String): HostCommand` *static*. Nested enum `Action { SEAT, WAIT }`.
+**`HostCommand`** *(record)*: `+action: HostCommand.Action`, `+customerId: String`, `+WAIT: HostCommand` *static*, `+HINT: HostCommand` *static*; `+parse(text: String): HostCommand` *static*. Nested enum `Action { SEAT, WAIT, HINT }`.
 
-**`WaiterCommand`** *(record)*: `+action: WaiterCommand.Action`, `+customerId: String`, `+WAIT: WaiterCommand` *static*; `+parse(text: String): WaiterCommand` *static*. Nested enum `Action { SEAT, ORDER, SERVE, WAIT }`.
+**`WaiterCommand`** *(record)*: `+action: WaiterCommand.Action`, `+customerId: String`, `+WAIT: WaiterCommand` *static*, `+HINT: WaiterCommand` *static*; `+parse(text: String): WaiterCommand` *static*. Nested enum `Action { SEAT, ORDER, SERVE, WAIT, HINT }`.
 
-**`ChefCommand`** *(record)*: `+action: ChefCommand.Action`, `+customerId: String`, `+WAIT: ChefCommand` *static*; `+parse(text: String): ChefCommand` *static*. Nested enum `Action { COOK, WAIT }`.
+**`ChefCommand`** *(record)*: `+action: ChefCommand.Action`, `+customerId: String`, `+WAIT: ChefCommand` *static*, `+HINT: ChefCommand` *static*; `+parse(text: String): ChefCommand` *static*. Nested enum `Action { COOK, WAIT, HINT }`.
 
-**`CommandParsing`** *(package-private final utility)*: `-CommandParsing()`, `~words(text: String): String[]` *static*, `~customerId(word: String): String` *static*.
+**`CommandParsing`** *(package-private final utility)*: `-CommandParsing()`, `~words(text: String): String[]` *static*, `~isHint(words: String[]): boolean` *static*, `~customerId(word: String): String` *static*.
 
 ### `restaurant.ui` (boundary)
 
@@ -274,7 +282,10 @@ package-private methods of each other, `Order` and `Restaurant`.)
   operations called by `Waiter`, `Host`, `Chef`, `Cashier` and `Restaurant`; no public setters.
   `HappyHour` keeps `activatedOnTurn` private and enforces once-per-game inside `activate`.
 - **Polymorphism:** `getSatisfactionLossPerTurn()`, `calculateBill()`, `chooseDish()` and
-  `getTypeName()` overridden by the three customer types; `PricingPolicy` calls
+  `getTypeName()` overridden by the three customer types; `ServiceAdvisor.turnsUntilLeaving()` calls
+  `getSatisfactionLossPerTurn()`, so the leave warning differs for Regular, VIP and Critic with no type checks; `PricingPolicy` calls
   `Promotion.applyDiscount()`; `GameEngine` calls `GameUI` and `FoodChoiceStrategy`.
 - **Composition:** `Restaurant` ◆ `Table`, `Waiter`, `Chef`, `Cashier`, `Host`, `HappyHour`,
-  `PricingPolicy`; `GameEngine` ◆ `Restaurant`, `VictoryCondition`.
+  `PricingPolicy`; `GameEngine` ◆ `Restaurant`, `VictoryCondition`, `ServiceAdvisor`.
+- **Extra feature (label it on the Stage 3 diagram):** `ServiceAdvisor`, `GameConfig.hintsEnabled`,
+  the `HINT` command actions. Off by default; it only reads state, so no required rule changes.

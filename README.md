@@ -48,6 +48,7 @@ No output means it built successfully.
 | Stage 1 | `java -cp out restaurant.Main --stage 1` |
 | Stage 2 | `java -cp out restaurant.Main --stage 2` |
 | Stage 3 | `java -cp out restaurant.Main --stage 3` |
+| Stage 3 with hints (extra feature) | `java -cp out restaurant.Main --stage 3 --hints` |
 
 Each turn, type one command for each staff member when asked, then press Enter
 (e.g. `seat C1`, `order C1`, `serve C1`, `cook C1` or `wait`). The game shows which
@@ -125,6 +126,7 @@ https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
 | `src/restaurant/domain/PricingPolicy.java` | Computes the locked price: customer discount first, then active promotions |
 | `src/restaurant/control/HostCommand.java` | The manager's Host choice: `seat <id>` or `wait` |
 | `test/restaurant/StageThreeChecks.java` | Stage 3 automated checks |
+| `src/restaurant/domain/ServiceAdvisor.java` | **Extra feature** (`--hints`, off by default): when each waiting customer will leave, and the most urgent customer's next step |
 | `runs/stage3-victory.txt` / `.log`, `runs/stage3-defeat.txt` / `.log` | Reproducible Stage 3 victory and defeat runs (same seed, one different choice) |
 | `CHANGES-stage2-to-3.md`, `CLASS-DIAGRAM.md` | Change notes; full class list for the class diagram |
 
@@ -142,6 +144,7 @@ https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
 | `ui/GameUI.java`, `ui/ConsoleUI.java` | Ask for Happy Hour and the Host's task; show Happy Hour status; restyled banner | The engine needs two new decisions; display only |
 | `Main.java` | `--stage 1\|2\|3` replaces `--schedule` | Selects a whole stage, not just the arrivals |
 | `test/restaurant/ScriptedUI.java`, `GreedyUI.java` | Implement the new `GameUI` methods | Test UIs must match the interface |
+| **Extra feature (`--hints`):** `GameConfig`, `GameEngine`, `HostCommand`, `WaiterCommand`, `ChefCommand`, `CommandParsing`, `ConsoleUI`, `Main` | `hintsEnabled` + `withHints()`; engine shows leave warnings and answers `hint` without using the task; `HINT` command action; one banner line when on; `--hints` option | Optional advice for the manager. Off by default, so every required rule, saved run and earlier check is unchanged |
 | `runs/stage2-*.log` | Re-recorded | Only the banner changed; every turn and result is identical to the Stage 2 logs |
 | `README.md`, `DESIGN-NOTES.md`, `TESTING.md` | Updated for Stage 3 | Documentation |
 

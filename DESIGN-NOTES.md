@@ -35,6 +35,7 @@ What changed in each stage: [CHANGES-stage1-to-2.md](CHANGES-stage1-to-2.md),
 | `HappyHour` | Entity | The Stage 3 promotion. Owns its state: once per game, active for two turns, 20% off; defines the 15-point recovery. |
 | `PricingPolicy` | Entity (policy) | The single place where the locked price is computed: customer discount first, then each active promotion. |
 | `Restaurant` | Entity (aggregate) | Composed of tables, queue, Waiter, Chef, Cashier, optional Host, optional Happy Hour, pricing policy; holds the menu; keeps revenue; applies eating, waiting and Happy Hour recovery rules. |
+| `ServiceAdvisor` | Entity (advice) | Extra feature (`--hints`): turns until each waiting customer leaves, the most urgent customer and their next step. Only reads state. |
 | `ActionResult` | Value | Success flag plus message or failure reason. |
 | `FoodChoiceStrategy` / `SeededRandomFoodChoice` | Strategy | The food-choice rule; seeded random for reproducible runs. |
 | `Money` | Utility | Formats integer cents as dollars. |
@@ -89,6 +90,8 @@ What changed in each stage: [CHANGES-stage1-to-2.md](CHANGES-stage1-to-2.md),
 - Customer hooks: loss per turn (8/5/12), bill (VIP), dish choice (Critic) and type name, called by
   `Restaurant`, `Waiter` and `PricingPolicy` through `Customer` references.
 - `PricingPolicy` calls `Promotion.isActive` / `applyDiscount` without knowing it is a `HappyHour`.
+- `ServiceAdvisor.turnsUntilLeaving` calls `getSatisfactionLossPerTurn()`, so the extra leave warning
+  is 13 turns for a Regular, 20 for a VIP and 9 for a Critic at full satisfaction, with no type checks.
 - `ComboMeal` is used wherever a `MenuItem` is expected (`Order.getItem().getPrepUnits()` gives 3 for
   Salad + Pasta, so `Chef.prepare` needs no change).
 - `GameEngine` → `GameUI` (`ConsoleUI`, `ScriptedUI`, `GreedyUI`) and `FoodChoiceStrategy`.
@@ -97,7 +100,7 @@ What changed in each stage: [CHANGES-stage1-to-2.md](CHANGES-stage1-to-2.md),
 **Composition**
 - `Restaurant` creates and owns its `Table`s, `Waiter`, `Chef`, `Cashier`, the optional `Host` and
   `HappyHour`, and the `PricingPolicy`; it holds the `Menu`.
-- `GameEngine` owns the `Restaurant` and the `VictoryCondition`.
+- `GameEngine` owns the `Restaurant`, the `VictoryCondition` and the `ServiceAdvisor`.
 - `ComboMeal` is built from two `MenuItem`s; `ArrivalSchedule` from `Arrival`s.
 
 ## SOLID (only where genuinely reflected)
@@ -137,6 +140,22 @@ What changed in each stage: [CHANGES-stage1-to-2.md](CHANGES-stage1-to-2.md),
 - **Stages stay runnable:** `--stage 1|2|3` selects the stage's features; Stage 3 is the default.
 - Earlier decisions still hold: any queued customer may be seated (lowest free table); a READY but
   unserved order is cancelled if its customer leaves; Cashier ties go to the earlier arrival.
+
+## Extra feature: leave warnings and hints (`--hints`)
+
+Part of Stage 3, switched off by default, so the required rules and every saved run are unchanged.
+- **What it does:** each turn lists when every waiting customer will leave if not served, e.g.
+  `C2 (Critic, satisfaction 28, -12 per turn) leaves at the end of turn 9 unless served`. Typing `hint`
+  at any staff prompt names the most urgent customer and their next step (`seat`, `order`, `cook` or
+  `serve`). A hint never uses up the task, like an invalid choice.
+- **Design:** the calculation lives in a new domain class, `ServiceAdvisor`, not in the UI. It works
+  through `Customer.getSatisfactionLossPerTurn()`, so a future customer type gets correct warnings
+  with no change to the advisor. It only reads state, so it cannot break a rule. The engine shows the
+  text through the existing `GameUI.showMessage`, so `GameUI` did not change.
+- **Changed classes:** `GameConfig` (+`hintsEnabled`, `withHints()`), `GameEngine` (shows warnings,
+  answers `hint`), the three command records and `CommandParsing` (+`HINT`), `ConsoleUI` (one banner
+  line when on), `Main` (`--hints`).
+- **Limit:** the warning ignores possible Happy Hour recovery, so it errs on the safe side.
 
 ## Trade-offs
 

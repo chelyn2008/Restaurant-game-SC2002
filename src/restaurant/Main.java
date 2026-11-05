@@ -7,15 +7,16 @@ import restaurant.ui.ConsoleUI;
 
 /**
  * Starts the game with the base setting.
- * Usage: java -cp out restaurant.Main [--stage 1|2|3] [--seed N] [--echo]
+ * Usage: java -cp out restaurant.Main [--stage 1|2|3] [--seed N] [--echo] [--hints]
  */
 public class Main {
-    private static final String USAGE = "Usage: java -cp out restaurant.Main [--stage 1|2|3] [--seed N] [--echo]";
+    private static final String USAGE = "Usage: java -cp out restaurant.Main [--stage 1|2|3] [--seed N] [--echo] [--hints]";
 
     public static void main(String[] args) {
         long seed = GameConfig.DEFAULT_SEED;
         int stage = 3;
         boolean echo = System.console() == null; // input is probably redirected from a file
+        boolean hints = false;
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "--seed" -> {
@@ -38,11 +39,15 @@ public class Main {
                     }
                 }
                 case "--echo" -> echo = true;
+                case "--hints" -> hints = true;
                 default -> usageAndExit("Unknown argument '" + args[i] + "'.");
             }
         }
 
         GameConfig config = GameConfig.forStage(stage, seed);
+        if (hints) {
+            config = config.withHints();
+        }
         ConsoleUI ui = new ConsoleUI(System.in, System.out, echo);
         new GameEngine(config, ui, new SeededRandomFoodChoice(seed)).run();
     }

@@ -10,6 +10,7 @@ import restaurant.domain.FoodChoiceStrategy;
 import restaurant.domain.HappyHour;
 import restaurant.domain.Host;
 import restaurant.domain.Restaurant;
+import restaurant.domain.ServiceAdvisor;
 import restaurant.domain.Waiter;
 import restaurant.ui.GameUI;
 
@@ -25,6 +26,7 @@ public class GameEngine {
     private final Restaurant restaurant;
     private final ArrivalSchedule arrivals;
     private final VictoryCondition victoryCondition;
+    private final ServiceAdvisor advisor = new ServiceAdvisor();
 
     public GameEngine(GameConfig config, GameUI ui, FoodChoiceStrategy foodChoice) {
         this.config = config;
@@ -67,9 +69,12 @@ public class GameEngine {
                 restaurant.getHost().map(host -> host.availableTasks(restaurant)).orElse(List.of()),
                 restaurant.getWaiter().availableTasks(restaurant, turn),
                 restaurant.getChef().availableTasks(restaurant));
+        if (config.hintsEnabled()) {
+            showLeaveWarnings(turn);
+        }
 
         // Steps 2 and 3: manager choices; the Host acts first, then the Waiter, then the Chef
-        restaurant.getHost().ifPresent(this::runHostTask);
+        restaurant.getHost().ifPresent(host -> runHostTask(host, turn));
         runWaiterTask(turn);
         runChefTask(turn);
 
@@ -112,30 +117,76 @@ public class GameEngine {
                 + " (max " + Customer.MAX_SATISFACTION + "): " + now + ".");
     }
 
-    /** Asks until the manager gives a valid Host choice; invalid choices do not use the task. */
-    private void runHostTask(Host host) {
-        ActionResult result;
-        do {
-            result = executeHostCommand(host, ui.askHostCommand());
-            report("Host", result);
-        } while (!result.success());
+    /** Extra feature (--hints): when each waiting customer leaves if they are still not served. */
+    private void showLeaveWarnings(int turn) {
+        for (Customer customer : restaurant.getCustomers()) {
+            if (customer.isWaitingForService()) {
+                ui.showMessage("Warning: " + customer.getId() + " (" + customer.getTypeName() + ", satisfaction "
+                        + customer.getSatisfaction() + ", -" + customer.getSatisfactionLossPerTurn()
+                        + " per turn) leaves at the end of turn " + advisor.leavingTurn(customer, turn)
+                        + " unless served.");
+            }
+        }
     }
 
-    /** Asks until the manager gives a valid Waiter choice; invalid choices do not use the task. */
+    /** Answers "hint". A hint never uses up the staff task, whether hints are on or off. */
+    private void showHint(int turn) {
+        if (!config.hintsEnabled()) {
+            ui.showMessage("Invalid choice: hints are off; start the game with --hints to use them. Choose again.");
+            return;
+        }
+        ui.showMessage(advisor.mostUrgent(restaurant)
+                .map(customer -> "Hint: most urgent is " + customer.getId() + " (" + customer.getTypeName()
+                        + "), who leaves at the end of turn " + advisor.leavingTurn(customer, turn)
+                        + " unless served. Next step: " + advisor.nextStep(customer) + ".")
+                .orElse("Hint: no customer is waiting for service."));
+    }
+
+    /** Asks until the manager gives a valid Host choice; invalid choices and hints do not use the task. */
+    private void runHostTask(Host host, int turn) {
+        while (true) {
+            HostCommand command = ui.askHostCommand();
+            if (command.action() == HostCommand.Action.HINT) {
+                showHint(turn);
+                continue;
+            }
+            ActionResult result = executeHostCommand(host, command);
+            report("Host", result);
+            if (result.success()) {
+                return;
+            }
+        }
+    }
+
+    /** Asks until the manager gives a valid Waiter choice; invalid choices and hints do not use the task. */
     private void runWaiterTask(int turn) {
-        ActionResult result;
-        do {
-            result = executeWaiterCommand(ui.askWaiterCommand(), turn);
+        while (true) {
+            WaiterCommand command = ui.askWaiterCommand();
+            if (command.action() == WaiterCommand.Action.HINT) {
+                showHint(turn);
+                continue;
+            }
+            ActionResult result = executeWaiterCommand(command, turn);
             report("Waiter", result);
-        } while (!result.success());
+            if (result.success()) {
+                return;
+            }
+        }
     }
 
     private void runChefTask(int turn) {
-        ActionResult result;
-        do {
-            result = executeChefCommand(ui.askChefCommand(), turn);
+        while (true) {
+            ChefCommand command = ui.askChefCommand();
+            if (command.action() == ChefCommand.Action.HINT) {
+                showHint(turn);
+                continue;
+            }
+            ActionResult result = executeChefCommand(command, turn);
             report("Chef", result);
-        } while (!result.success());
+            if (result.success()) {
+                return;
+            }
+        }
     }
 
     private ActionResult executeHostCommand(Host host, HostCommand command) {
@@ -163,6 +214,7 @@ public class GameEngine {
             case ORDER -> waiter.takeOrder(restaurant, customer, foodChoice, turn);
             case SERVE -> waiter.serve(customer, turn);
             case WAIT -> waiter.waitThisTurn();
+            case HINT -> throw new IllegalStateException("A hint is handled before any staff task.");
         };
     }
 

@@ -4,7 +4,7 @@
 javac --release 17 -d out-test $(find src test -name "*.java")
 java -cp out-test restaurant.StageOneChecks     # 52 checks passed, 0 failed
 java -cp out-test restaurant.StageTwoChecks     # 38 checks passed, 0 failed
-java -cp out-test restaurant.StageThreeChecks   # 48 checks passed, 0 failed
+java -cp out-test restaurant.StageThreeChecks   # 57 checks passed, 0 failed
 ```
 
 Plain Java, no test library. Run from the project root (some checks read `runs/` and `src/`). Each
@@ -39,6 +39,7 @@ All runs replay with `java -cp out restaurant.Main --stage N --echo < runs/<scri
 | 8 | Price locked after Happy Hour | `priceStaysLockedAfterHappyHour` | A VIP orders a Burger on turn 1 during Happy Hour ($10.80 shown), pays on turn 4 after it has ended: the Cashier collects $10.80. |
 | 9 | Base setting and stage switches | `sameBaseSettingAndFeatureSwitches` | Stage 3: 18 turns, 2 tables, six arrivals, same targets, Host + Happy Hour + combos; `--stage 1` and `--stage 2` have none of them. |
 | 10 | Stage 3 runs reproduce | `stageThreeRunsReproduce` | Replays both Stage 3 scripts against their logs; VIP Burger $10.80 vs $13.50; Critic 43 vs 28 at payment; C1's Salad + Pasta combo. |
+| 11 | Extra feature: leave warnings and hints | `extraLeaveWarningsAndHints` | At 100 a Regular lasts 13 turns, a VIP 20, a Critic 9; an ignored Critic is warned on turn 1 to leave at the end of turn 9 and really leaves then; `hint` picks the Critic over an earlier Regular, suggests `seat C2` then `order C2`, and does not use up the Host's task; without `--hints` there are no warnings and `hint` is refused with a reason; `stage3-victory` replayed with `--hints` gives the same result (4 paid, $86.40). |
 
 ## Earlier stages re-checked on the Stage 3 code
 

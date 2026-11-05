@@ -17,18 +17,19 @@ public record GameConfig(int stage,
                          int minPaidCustomers,
                          int minRevenueCents,
                          int minAverageSatisfaction,
-                         long seed) {
+                         long seed,
+                         boolean hintsEnabled) {
 
     public static final long DEFAULT_SEED = 2002L;
 
     /** Stage 1: six Regular customers, base menu, no Host, no Happy Hour */
     public static GameConfig baseSetting(long seed) {
-        return new GameConfig(1, 18, 2, ArrivalSchedule.allRegular(), Menu.standard(), false, false, 4, 4500, 60, seed);
+        return new GameConfig(1, 18, 2, ArrivalSchedule.allRegular(), Menu.standard(), false, false, 4, 4500, 60, seed, false);
     }
 
     /** Stage 2 rules with the given arrivals: base menu, no Host, no Happy Hour */
     public static GameConfig baseSetting(long seed, ArrivalSchedule arrivalSchedule) {
-        return new GameConfig(2, 18, 2, arrivalSchedule, Menu.standard(), false, false, 4, 4500, 60, seed);
+        return new GameConfig(2, 18, 2, arrivalSchedule, Menu.standard(), false, false, 4, 4500, 60, seed, false);
     }
 
     /** Stage 3: the Stage 2 arrivals, the menu with combos, a Host and Happy Hour */
@@ -37,7 +38,13 @@ public record GameConfig(int stage,
     }
 
     public static GameConfig stageThree(long seed, ArrivalSchedule arrivalSchedule) {
-        return new GameConfig(3, 18, 2, arrivalSchedule, Menu.withCombos(), true, true, 4, 4500, 60, seed);
+        return new GameConfig(3, 18, 2, arrivalSchedule, Menu.withCombos(), true, true, 4, 4500, 60, seed, false);
+    }
+
+    /** Extra feature: the same game with leave warnings and the hint command (--hints) */
+    public GameConfig withHints() {
+        return new GameConfig(stage, totalTurns, tableCount, arrivalSchedule, menu, hostEnabled, happyHourEnabled,
+                minPaidCustomers, minRevenueCents, minAverageSatisfaction, seed, true);
     }
 
     /** The game for stage 1, 2 or 3, as selected with --stage */

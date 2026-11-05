@@ -27,6 +27,7 @@ import restaurant.domain.PricingPolicy;
 import restaurant.domain.RegularCustomer;
 import restaurant.domain.Restaurant;
 import restaurant.domain.SeededRandomFoodChoice;
+import restaurant.domain.ServiceAdvisor;
 import restaurant.domain.VIPCustomer;
 import restaurant.domain.menu.ComboMeal;
 import restaurant.domain.menu.Menu;
@@ -57,6 +58,7 @@ public class StageThreeChecks {
         priceStaysLockedAfterHappyHour();
         sameBaseSettingAndFeatureSwitches();
         stageThreeRunsReproduce();
+        extraLeaveWarningsAndHints();
 
         System.out.println();
         System.out.println(passed + " checks passed, " + failed + " failed.");
@@ -340,6 +342,70 @@ public class StageThreeChecks {
             return engine;
         } catch (IOException e) {
             check(false, "could not read " + input + " or " + log + " (run from the project root): " + e.getMessage());
+            return null;
+        }
+    }
+
+    /** Extra feature (--hints): leave warnings and the hint command. */
+    private static void extraLeaveWarningsAndHints() {
+        section("Extra feature: leave warnings and hints (--hints)");
+        ServiceAdvisor advisor = new ServiceAdvisor();
+        Customer regular = new RegularCustomer("C1", 1);
+        Customer vip = new VIPCustomer("C2", 1);
+        Customer critic = new CriticCustomer("C3", 1);
+        check(advisor.turnsUntilLeaving(regular) == 13 && advisor.turnsUntilLeaving(vip) == 20
+                        && advisor.turnsUntilLeaving(critic) == 9,
+                "at satisfaction 100 a Regular lasts 13 turns, a VIP 20, a Critic 9 (each from its own loss per turn)");
+
+        // The warning must agree with the real abandonment rule: an ignored Critic arriving on turn 1.
+        ScriptedUI ignored = new ScriptedUI();
+        GameEngine engine = new GameEngine(config(arrivals(CriticCustomer::new)).withHints(), ignored,
+                new FixedFoodChoice("Salad"));
+        engine.playTurn(1);
+        check(ignored.hasMessageContaining("C1 (Critic, satisfaction 100, -12 per turn) leaves at the end of turn 9"),
+                "turn 1 warning: the Critic leaves at the end of turn 9");
+        for (int turn = 2; turn <= 8; turn++) {
+            engine.playTurn(turn);
+        }
+        check(customer(engine, "C1").getStatus() == CustomerStatus.WAITING, "the Critic is still waiting after turn 8");
+        engine.playTurn(9);
+        check(customer(engine, "C1").getStatus() == CustomerStatus.LEFT, "the Critic leaves at the end of turn 9, as warned");
+
+        // The Critic arrives second but is more urgent; the hint does not use up the Host's task.
+        ScriptedUI ui = new ScriptedUI(
+                "no", "wait", "wait", "wait",                   // turn 1: C1 (Regular) arrives
+                "no", "hint", "seat C2", "hint", "wait", "wait"); // turn 2: C2 (Critic) arrives
+        GameEngine hinted = new GameEngine(config(arrivals(RegularCustomer::new, CriticCustomer::new)).withHints(), ui,
+                new FixedFoodChoice("Salad"));
+        hinted.playTurn(1);
+        hinted.playTurn(2);
+        check(ui.hasMessageContaining("Hint: most urgent is C2 (Critic)") && ui.hasMessageContaining("Next step: seat C2"),
+                "hint picks the Critic C2 over the earlier Regular C1 and suggests seating them");
+        check(customer(hinted, "C2").getStatus() == CustomerStatus.SEATED && ui.hasMessageContaining("Host seats C2"),
+                "after the hint the Host can still seat C2 in the same turn");
+        check(ui.hasMessageContaining("Next step: order C2"), "the Waiter's hint then suggests taking C2's order");
+
+        ScriptedUI off = new ScriptedUI("no", "hint", "seat C1", "wait", "wait");
+        GameEngine noHints = new GameEngine(config(arrivals(RegularCustomer::new)), off, new FixedFoodChoice("Salad"));
+        noHints.playTurn(1);
+        check(off.hasMessageContaining("hints are off") && customer(noHints, "C1").getStatus() == CustomerStatus.SEATED
+                        && off.getMessages().stream().noneMatch(message -> message.startsWith("Warning:")),
+                "without --hints: no warnings, hint is refused with a reason and the task is kept");
+
+        GameEngine replay = replayWithHints("stage3-victory");
+        check(replay != null && replay.getRestaurant().getRevenueCents() == 8640 && replay.getRestaurant().getPaidCount() == 4,
+                "stage3-victory replayed with --hints: same result (4 paid, $86.40); hints never change the game");
+    }
+
+    private static GameEngine replayWithHints(String name) {
+        try (InputStream in = Files.newInputStream(Path.of("runs", name + ".txt"))) {
+            PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
+            GameConfig config = GameConfig.stageThree(GameConfig.DEFAULT_SEED).withHints();
+            GameEngine engine = new GameEngine(config, new ConsoleUI(in, out, true), new SeededRandomFoodChoice(config.seed()));
+            engine.run();
+            return engine;
+        } catch (IOException e) {
+            check(false, "could not read runs/" + name + ".txt (run from the project root): " + e.getMessage());
             return null;
         }
     }

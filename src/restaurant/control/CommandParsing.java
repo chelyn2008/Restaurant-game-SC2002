@@ -13,6 +13,11 @@ final class CommandParsing {
         return trimmed.split("\\s+");
     }
 
+    /** True for the single word "hint" (extra feature: ask for advice without using the task) */
+    static boolean isHint(String[] words) {
+        return words.length == 1 && words[0].equals("hint");
+    }
+
     /** Accepts "C2", "c2" or "2" and returns "C2" */
     static String customerId(String word) {
         String digits = word.startsWith("c") ? word.substring(1) : word;

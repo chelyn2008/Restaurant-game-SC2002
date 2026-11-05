@@ -3,15 +3,19 @@ package restaurant.control;
 
 public record ChefCommand(Action action, String customerId) {
 
-    public enum Action { COOK, WAIT }
+    public enum Action { COOK, WAIT, HINT }
 
     public static final ChefCommand WAIT = new ChefCommand(Action.WAIT, null);
+    public static final ChefCommand HINT = new ChefCommand(Action.HINT, null);
 
     /** Parses typed text. Throws IllegalArgumentException with a message if the text is not a valid command. */
     public static ChefCommand parse(String text) {
         String[] words = CommandParsing.words(text);
         if (words.length == 1 && words[0].equals("wait")) {
             return WAIT;
+        }
+        if (CommandParsing.isHint(words)) {
+            return HINT;
         }
         if (words.length != 2 || !words[0].equals("cook")) {
             throw new IllegalArgumentException("Chef commands are: cook <id>, wait.");
