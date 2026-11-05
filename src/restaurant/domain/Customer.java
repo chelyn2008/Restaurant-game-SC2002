@@ -126,12 +126,12 @@ public abstract class Customer {
         return status;
     }
 
-    /** The customer's table, or null if not seated 
+    // The customer's table, or null if not seated 
     public Table getTable() {
         return table;
     }
 
-    /** The customer's order, or null if none has been placed 
+    // The customer's order, or null if none has been placed 
     public Order getOrder() {
         return order;
     }
