@@ -13,7 +13,7 @@ that stage's features.
 |-------|-----|--------|------|---------------------|
 | 1 | `stage-1` | `373d83b` | Regular customers, menu, Waiter, Chef, Cashier, full turn sequence, Victory and Defeat | Yes; no VIP, Critic, Host, combo or Happy Hour classes |
 | 2 | `stage-2` | `30a5f0d` | VIP and Critic customers, configurable arrival schedule | Yes; no Host, combo or Happy Hour classes |
-| 3 | `stage-3` | `354402e` | Host, ComboMeal, Happy Hour (with PricingPolicy), `--stage` option | Yes |
+| 3 | `stage-3` | `3ceb226` | Host, ComboMeal, Happy Hour (with PricingPolicy), `--stage` option, extra feature: leave warnings and hints (`--hints`) | Yes |
 
 Compare links:
 
@@ -26,7 +26,7 @@ Commits in each stage:
 |-------|---------|
 | 1 | `392f663` domain entities · `6a3033d` staff and Restaurant · `993ef5b` GameEngine, config, commands, victory check · `16d72ee` ConsoleUI and Main · `0146318` Stage 1 checks · `5b20f31` victory/defeat runs · `373d83b` documentation |
 | 2 | `04591be` VIPCustomer and CriticCustomer · `25655a7` configurable arrival schedule · `1dc4866` Stage 2 runs · `df15873` Stage 2 checks · `30a5f0d` documentation |
-| 3 | `b7d79a4` ComboMeal and combo menu · `9a2471f` Host, Happy Hour, PricingPolicy · `df9663b` wiring and `--stage` option · `b4606cf` Stage 3 runs · `c13fbed` Stage 3 checks · `837776f` documentation · `dfbf4a5` menu package and display tidy-up · `0e29b85` README update · `354402e` restore the missing `domain/menu` files · then the README update this tag points to |
+| 3 | `b7d79a4` ComboMeal and combo menu · `9a2471f` Host, Happy Hour, PricingPolicy · `df9663b` wiring and `--stage` option · `b4606cf` Stage 3 runs · `c13fbed` Stage 3 checks · `837776f` documentation · `dfbf4a5` menu package and display tidy-up · `0e29b85` README update · `354402e` restore the missing `domain/menu` files · `5251795` extra feature (leave warnings and hints) · `3ceb226` merge with the class diagrams (this tag) |
 
 ## Class diagrams
 
@@ -91,6 +91,24 @@ Using Git Bash, macOS or Linux instead of PowerShell? Build with
 
 Seed and input details for every run are in [TESTING.md](TESTING.md). To see the code exactly as
 it was at an earlier stage, use its git tag, e.g. `git checkout stage-1` (then build and run as above).
+
+## Extra feature: leave warnings and hints (`--hints`)
+
+An optional helper for the manager, added in Stage 3 and **off by default**. Turn it on with
+`java -cp out restaurant.Main --stage 3 --hints`.
+
+- **Leave warnings:** at the start of every turn, each waiting customer shows when they will leave
+  if not served, e.g. `Warning: C1 (Critic, satisfaction 100, -12 per turn) leaves at the end of turn 9 unless served.`
+- **`hint` command:** type `hint` at any Host, Waiter or Chef prompt to see the most urgent customer
+  and their next step, e.g. `Hint: most urgent is C2 (Critic) ... Next step: seat C2.` A hint does not
+  use up the staff member's task.
+
+**Design:** the calculation is in a new domain class, `ServiceAdvisor`, not in the UI. It asks each
+customer for `getSatisfactionLossPerTurn()`, so a Regular (8), VIP (5) and Critic (12) get different
+warnings with no type checks (polymorphism). It only reads the game state, so it cannot change any
+rule. Without `--hints` the game and every saved run are exactly as before; all checks still pass,
+including 9 new checks for this feature in `StageThreeChecks`. More detail:
+[DESIGN-NOTES.md](DESIGN-NOTES.md) and [CHANGES-stage2-to-3.md](CHANGES-stage2-to-3.md).
 
 ## Stage 1 → 2
 
