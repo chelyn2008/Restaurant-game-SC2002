@@ -6,7 +6,7 @@ import java.util.OptionalDouble;
 import restaurant.domain.Money;
 import restaurant.domain.Restaurant;
 
-/** Checks the three targets after the last turn: paid customers, revenue and average satisfaction */
+// Checks the three targets after the last turn: paid customers, revenue and average satisfaction 
 public class VictoryCondition {
     private final int minPaidCustomers;
     private final int minRevenueCents;

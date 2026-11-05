@@ -2,9 +2,9 @@ package restaurant.domain;
 
 import java.util.Comparator;
 
-/**
- * The Cashier works automatically: each turn it takes payment from at most one
- * customer who became READY_TO_PAY on an earlier turn, oldest first.
+/*
+ The Cashier works automatically: each turn it takes payment from at most one
+ customer who became READY_TO_PAY on an earlier turn, oldest first.
  */
 public class Cashier extends Staff {
 
@@ -12,7 +12,7 @@ public class Cashier extends Staff {
         super("Cashier");
     }
 
-    /** Collects one payment if someone can pay; fails (with a reason) if no one can. */
+    //Collects one payment if someone can pay; fails (with a reason) if no one can
     public ActionResult collectPayment(Restaurant restaurant, int turn) {
         if (!isAvailable()) {
             return ActionResult.fail(busyReason());
@@ -33,7 +33,7 @@ public class Cashier extends Staff {
                 + " (satisfaction " + next.getSatisfactionAtPayment() + " recorded). Table " + tableNumber + " is free.");
     }
 
-    /** A customer who became READY_TO_PAY this turn pays next turn at the earliest. */
+    // A customer who became READY_TO_PAY this turn pays next turn at the earliest
     private boolean canPay(Customer customer, int turn) {
         return customer.getStatus() == CustomerStatus.READY_TO_PAY && customer.getReadyToPayOnTurn() < turn;
     }

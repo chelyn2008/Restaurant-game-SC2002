@@ -14,7 +14,7 @@ public class Menu {
         this.items = List.copyOf(items);
     }
 
-    /** The base-setting menu: Salad $9.00 (1 unit), Burger $15.00 (1 unit), Pasta $18.00 (2 units). */
+    // The base-setting menu: Salad $9.00 (1 unit), Burger $15.00 (1 unit), Pasta $18.00 (2 units)
     public static Menu standard() {
         return new Menu(List.of(
                 new MenuItem("Salad", 900, 1),
@@ -22,9 +22,9 @@ public class Menu {
                 new MenuItem("Pasta", 1800, 2)));
     }
 
-    /**
-     * The Stage 3 menu: combo of two different dishes
-     * (Salad + Burger $21.60, Salad + Pasta $24.30, Burger + Pasta $29.70)
+    /*
+     The Stage 3 menu: combo of two different dishes
+     (Salad + Burger $21.60, Salad + Pasta $24.30, Burger + Pasta $29.70)
      */
     public static Menu withCombos() {
         List<MenuItem> items = new ArrayList<>(standard().getItems());
@@ -41,7 +41,7 @@ public class Menu {
         return items;
     }
 
-    /** Returns the item with the given name (case-insensitive), or null if there is none. */
+    // Returns the item with the given name (case-insensitive), or null if there is none
     public MenuItem findItem(String name) {
         for (MenuItem item : items) {
             if (item.getName().equalsIgnoreCase(name)) {

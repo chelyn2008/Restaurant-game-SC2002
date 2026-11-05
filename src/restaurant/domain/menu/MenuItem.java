@@ -2,7 +2,7 @@ package restaurant.domain.menu;
 
 import restaurant.domain.Money;
 
-/** A dish on the menu: its name, price (in cents) and how many preparation units it needs */
+// A dish on the menu: its name, price (in cents) and how many preparation units it needs 
 public class MenuItem {
     private final String name;
     private final int priceCents;

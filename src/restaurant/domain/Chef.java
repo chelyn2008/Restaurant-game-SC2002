@@ -25,7 +25,7 @@ public class Chef extends Staff {
         return ActionResult.ok("prepares " + customer.getId() + "'s " + order.getItem().getName() + " (" + progress + ").");
     }
 
-    /** The orders the Chef could work on right now, written as commands, e.g. "cook C1". */
+    // The orders the Chef could work on right now, written as commands, e.g. "cook C1"
     public List<String> availableTasks(Restaurant restaurant) {
         List<String> tasks = new ArrayList<>();
         for (Customer customer : restaurant.getCustomers()) {

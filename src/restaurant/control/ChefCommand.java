@@ -8,7 +8,7 @@ public record ChefCommand(Action action, String customerId) {
     public static final ChefCommand WAIT = new ChefCommand(Action.WAIT, null);
     public static final ChefCommand HINT = new ChefCommand(Action.HINT, null);
 
-    /** Parses typed text. Throws IllegalArgumentException with a message if the text is not a valid command. */
+    // Parses typed text. Throws IllegalArgumentException with a message if the text is not a valid command
     public static ChefCommand parse(String text) {
         String[] words = CommandParsing.words(text);
         if (words.length == 1 && words[0].equals("wait")) {

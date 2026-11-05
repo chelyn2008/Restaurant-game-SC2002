@@ -7,7 +7,7 @@ public record WaiterCommand(Action action, String customerId) {
     public static final WaiterCommand WAIT = new WaiterCommand(Action.WAIT, null);
     public static final WaiterCommand HINT = new WaiterCommand(Action.HINT, null);
 
-    /** Parses typed text. Throws IllegalArgumentException with a message if the text is not a valid command */
+    // Parses typed text. Throws IllegalArgumentException with a message if the text is not a valid command 
     public static WaiterCommand parse(String text) {
         String[] words = CommandParsing.words(text);
         if (words.length == 1 && words[0].equals("wait")) {

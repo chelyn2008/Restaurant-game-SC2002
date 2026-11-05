@@ -2,7 +2,6 @@ package restaurant.control;
 
 import java.util.List;
 import java.util.StringJoiner;
-
 import restaurant.domain.ActionResult;
 import restaurant.domain.Chef;
 import restaurant.domain.Customer;
@@ -15,9 +14,9 @@ import restaurant.domain.Waiter;
 import restaurant.ui.GameUI;
 
 /**
- * Runs the game: every turn goes through the six steps in order, and the game
- * always lasts the full number of turns. The engine talks to the player only
- * through the {@link GameUI} interface.
+ Runs the game: every turn goes through the six steps in order, and the game
+ always lasts the full number of turns. The engine talks to the player only
+ through the {@link GameUI} interface.
  */
 public class GameEngine {
     private final GameConfig config;
@@ -38,7 +37,7 @@ public class GameEngine {
         this.victoryCondition = new VictoryCondition(config);
     }
 
-    /** Plays every turn and returns the final result. */
+    // Plays every turn and returns the final result
     public GameResult run() {
         ui.showWelcome(config, restaurant.getMenu());
         for (int turn = 1; turn <= config.totalTurns(); turn++) {
@@ -49,7 +48,7 @@ public class GameEngine {
         return result;
     }
 
-    /** Plays one turn (steps 1-5). */
+    // Plays one turn (steps 1-5)
     public void playTurn(int turn) {
         restaurant.startNewTurn();
         ui.showTurnHeader(turn, config.totalTurns());
@@ -117,7 +116,8 @@ public class GameEngine {
                 + " (max " + Customer.MAX_SATISFACTION + "): " + now + ".");
     }
 
-    /** Extra feature (--hints): when each waiting customer leaves if they are still not served. */
+    // Extra feature (--hints): 
+    // when each waiting customer leaves if they are still not served
     private void showLeaveWarnings(int turn) {
         for (Customer customer : restaurant.getCustomers()) {
             if (customer.isWaitingForService()) {
@@ -129,7 +129,7 @@ public class GameEngine {
         }
     }
 
-    /** Answers "hint". A hint never uses up the staff task, whether hints are on or off. */
+    // Answers "hint". A hint never uses up the staff task, whether hints are on or off
     private void showHint(int turn) {
         if (!config.hintsEnabled()) {
             ui.showMessage("Invalid choice: hints are off; start the game with --hints to use them. Choose again.");
@@ -142,7 +142,7 @@ public class GameEngine {
                 .orElse("Hint: no customer is waiting for service."));
     }
 
-    /** Asks until the manager gives a valid Host choice; invalid choices and hints do not use the task. */
+    // Asks until the manager gives a valid Host choice; invalid choices and hints do not use the task
     private void runHostTask(Host host, int turn) {
         while (true) {
             HostCommand command = ui.askHostCommand();
@@ -158,7 +158,7 @@ public class GameEngine {
         }
     }
 
-    /** Asks until the manager gives a valid Waiter choice; invalid choices and hints do not use the task. */
+    // Asks until the manager gives a valid Waiter choice; invalid choices and hints do not use the task
     private void runWaiterTask(int turn) {
         while (true) {
             WaiterCommand command = ui.askWaiterCommand();
