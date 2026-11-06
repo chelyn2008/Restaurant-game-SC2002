@@ -1,6 +1,7 @@
 # AI chat history: final requirement check and review (Stage 3)
+By Goh Cai Ying
 
-Exported from a Claude Code session (Claude Opus). Prompts, replies and tool actions are
+Exported from a Claude Code session (Claude Opus 5.5 High). Prompts, replies and tool actions are
 in their original order; tool output is shortened where it was very long.
 
 ---
