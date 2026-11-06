@@ -633,7 +633,7 @@ Files are in /mnt/user-data/outputs:
 
 https://github.com/chelyn2008/Restaurant-game-SC2002.git
 
-这是我的组github，已有的东西有达到你需要的信息吗，我要用draw.io做修改所以请给我drawio的file，如果可以了，一步一步指导我如何上传至github，还需要什么东西直接和我说
+这是我的组github，已有的东西有达到你需要的信息吗，我要用draw.io做修改所以请给我drawio的file，如果可以了，指导我如何上传至github，还需要什么东西直接和我说
 
 **Claude:**
 
