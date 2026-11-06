@@ -208,3 +208,13 @@ https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
 | 5 | A Stage 3 feature | |
 | 6 | One victory and one defeat | |
 | 7 | The stage tag comparisons and the diagrams | |
+
+## AI use history
+
+Each member's full AI conversations (prompts, replies and follow-ups, in order) are on their own
+branch in this repository, under `ai-history/stage-N/chat-NN.md`.
+
+| Member | Branch | Chats |
+|--------|--------|-------|
+| Jingyi | [`jingyi-ai-history`](https://github.com/chelyn2008/Restaurant-game-SC2002/tree/jingyi-ai-history/ai-history) | [Stage 3, chat 01](https://github.com/chelyn2008/Restaurant-game-SC2002/blob/jingyi-ai-history/ai-history/stage-3/chat-01.md): sequence diagram requirements and use case |
+| Caiying | [`caiying-ai-history`](https://github.com/chelyn2008/Restaurant-game-SC2002/tree/caiying-ai-history/ai-history) | [Stage 3, chat 01](https://github.com/chelyn2008/Restaurant-game-SC2002/blob/caiying-ai-history/ai-history/stage-3/chat-01.md): final requirement check, code review and fixes |
