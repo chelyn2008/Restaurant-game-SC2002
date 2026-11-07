@@ -13,7 +13,7 @@ that stage's features.
 |-------|-----|--------|------|---------------------|
 | 1 | `stage-1` | `373d83b` | Regular customers, menu, Waiter, Chef, Cashier, full turn sequence, Victory and Defeat | Yes; no VIP, Critic, Host, combo or Happy Hour classes |
 | 2 | `stage-2` | `30a5f0d` | VIP and Critic customers, configurable arrival schedule | Yes; no Host, combo or Happy Hour classes |
-| 3 | `stage-3` | `f9a6f01` | Host, ComboMeal, Happy Hour (with PricingPolicy), `--stage` option, extra feature: leave warnings and hints (`--hints`) | Yes |
+| 3 | `stage-3` | `7747f26` | Host, ComboMeal, Happy Hour (with PricingPolicy), `--stage` option, extra feature: leave warnings and hints (`--hints`) | Yes |
 
 Compare links:
 
@@ -26,7 +26,7 @@ Commits in each stage:
 |-------|---------|
 | 1 | `392f663` domain entities · `6a3033d` staff and Restaurant · `993ef5b` GameEngine, config, commands, victory check · `16d72ee` ConsoleUI and Main · `0146318` Stage 1 checks · `5b20f31` victory/defeat runs · `373d83b` documentation |
 | 2 | `04591be` VIPCustomer and CriticCustomer · `25655a7` configurable arrival schedule · `1dc4866` Stage 2 runs · `df15873` Stage 2 checks · `30a5f0d` documentation |
-| 3 | `b7d79a4` ComboMeal and combo menu · `9a2471f` Host, Happy Hour, PricingPolicy · `df9663b` wiring and `--stage` option · `b4606cf` Stage 3 runs · `c13fbed` Stage 3 checks · `837776f` documentation · `dfbf4a5` menu package and display tidy-up · `0e29b85` README update · `354402e` restore the missing `domain/menu` files · `5251795` extra feature (leave warnings and hints) · `3ceb226` merge with the class diagrams · `1e0e6e1`, `53b0c40`, `5994220` README and comment updates · `2a58eac` clearer customer-id error, staff-named hints, end-of-game warning · `ef2e465`, `f552daf` class diagrams updated for the extra feature · `f9a6f01` console output restored to match the saved runs (this tag) |
+| 3 | `b7d79a4` ComboMeal and combo menu · `9a2471f` Host, Happy Hour, PricingPolicy · `df9663b` wiring and `--stage` option · `b4606cf` Stage 3 runs · `c13fbed` Stage 3 checks · `837776f` documentation · `dfbf4a5` menu package and display tidy-up · `0e29b85` README update · `354402e` restore the missing `domain/menu` files · `5251795` extra feature (leave warnings and hints) · `3ceb226` merge with the class diagrams · `1e0e6e1`, `53b0c40`, `5994220` README and comment updates · `2a58eac` clearer customer-id error, staff-named hints, end-of-game warning · `ef2e465`, `f552daf` class diagrams updated for the extra feature · `f9a6f01` console output restored to match the saved runs · `7747f26` sequence diagram (this tag) |
 
 ## Class diagrams
 
