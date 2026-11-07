@@ -205,6 +205,8 @@ https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
 | `test/restaurant/ScriptedUI.java`, `GreedyUI.java` | Implement the new `GameUI` methods | Test UIs must match the interface |
 | **Extra feature (`--hints`):** `GameConfig`, `GameEngine`, `HostCommand`, `WaiterCommand`, `ChefCommand`, `CommandParsing`, `ConsoleUI`, `Main` | `hintsEnabled` + `withHints()`; engine shows leave warnings and answers `hint` without using the task; `HINT` command action; one banner line when on; `--hints` option | Optional advice for the manager. Off by default, so every required rule, saved run and earlier check is unchanged |
 | `runs/stage2-*.log` | Re-recorded | Only the banner changed; every turn and result is identical to the Stage 2 logs |
+| `control/GameEngine.java` (display) | After the Host or Waiter acts, shows e.g. `Chef can now: cook C1` if that action opened a new task (through the existing `showMessage`) | The start-of-turn list could look out of date; no rule or interface changed |
+| `runs/*.log` (all six) | Re-recorded again for the "can now" lines | 42 lines added, none removed or changed: same turns, choices and results |
 | `README.md`, `DESIGN-NOTES.md`, `TESTING.md` | Updated for Stage 3 | Documentation |
 
 **Deleted files:** none 

@@ -58,6 +58,7 @@ public class StageThreeChecks {
         priceStaysLockedAfterHappyHour();
         sameBaseSettingAndFeatureSwitches();
         stageThreeRunsReproduce();
+        updatedTasksShownDuringTurn();
         extraLeaveWarningsAndHints();
 
         System.out.println();
@@ -344,6 +345,23 @@ public class StageThreeChecks {
             check(false, "could not read " + input + " or " + log + " (run from the project root): " + e.getMessage());
             return null;
         }
+    }
+
+    /** After the Host or Waiter acts, the next staff member's changed tasks are shown again. */
+    private static void updatedTasksShownDuringTurn() {
+        section("Tasks opened during the turn are shown again");
+        ScriptedUI ui = new ScriptedUI("no", "seat C1", "order C1", "cook C1"); // turn 1: Host, Waiter, Chef
+        GameEngine engine = new GameEngine(config(arrivals(RegularCustomer::new)), ui, new FixedFoodChoice("Salad"));
+        engine.playTurn(1);
+        check(ui.hasMessageContaining("Waiter can now: order C1"), "after the Host seats C1: 'Waiter can now: order C1'");
+        check(ui.hasMessageContaining("Chef can now: cook C1") && ui.hasMessageContaining("Chef finishes C1's Salad"),
+                "after the Waiter takes the order: 'Chef can now: cook C1', and the Chef cooks it the same turn");
+
+        ScriptedUI quiet = new ScriptedUI("no", "wait", "wait", "wait");
+        GameEngine idle = new GameEngine(config(arrivals(RegularCustomer::new)), quiet, new FixedFoodChoice("Salad"));
+        idle.playTurn(1);
+        check(quiet.getMessages().stream().noneMatch(message -> message.contains("can now")),
+                "when nobody's action changes the next staff member's tasks, no extra line is shown");
     }
 
     /** Extra feature (--hints): leave warnings and the hint command. */

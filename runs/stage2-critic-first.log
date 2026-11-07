@@ -83,6 +83,7 @@ Waiter can: order C1 | order C2 | wait
 Chef can:   wait
 Waiter> order C2
   Waiter takes C2's order. C2 chooses Pasta $18.00 (2 prep units).
+  Chef can now: cook C2 | wait
 Chef> cook C2
   Chef prepares C2's Pasta (1/2).
 --- End of turn 5 ---
@@ -98,6 +99,7 @@ Waiter can: order C1 | wait
 Chef can:   cook C2 | wait
 Waiter> order C1
   Waiter takes C1's order. C1 chooses Burger $15.00 (1 prep unit).
+  Chef can now: cook C1 | cook C2 | wait
 Chef> cook C2
   Chef finishes C2's Pasta (2/2): READY.
 --- End of turn 6 ---
@@ -179,6 +181,7 @@ Waiter can: order C3 | seat C4 | wait
 Chef can:   wait
 Waiter> order C3
   Waiter takes C3's order. C3 chooses Burger $15.00 (1 prep unit). VIP bill: $13.50.
+  Chef can now: cook C3 | wait
 Chef> cook C3
   Chef finishes C3's Burger (1/1): READY.
 --- End of turn 11 ---
@@ -226,6 +229,7 @@ Waiter can: order C4 | wait
 Chef can:   wait
 Waiter> order C4
   Waiter takes C4's order. C4 chooses Salad $9.00 (1 prep unit).
+  Chef can now: cook C4 | wait
 Chef> cook C4
   Chef finishes C4's Salad (1/1): READY.
   Cashier collects $13.50 from C3 (satisfaction 75 recorded). Table 2 is free.
@@ -274,6 +278,7 @@ Waiter can: order C5 | wait
 Chef can:   wait
 Waiter> order C5
   Waiter takes C5's order. C5 chooses Burger $15.00 (1 prep unit).
+  Chef can now: cook C5 | wait
 Chef> cook C5
   Chef finishes C5's Burger (1/1): READY.
   Cashier collects $9.00 from C4 (satisfaction 60 recorded). Table 1 is free.

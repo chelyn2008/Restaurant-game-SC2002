@@ -110,6 +110,7 @@ Waiter can: order C1 | order C2 | wait
 Chef can:   wait
 Waiter> order C1
   Waiter takes C1's order. C1 chooses Burger $15.00 (1 prep unit).
+  Chef can now: cook C1 | wait
 Chef> cook C1
   Chef finishes C1's Burger (1/1): READY.
 --- End of turn 7 ---
@@ -250,6 +251,7 @@ Waiter can: order C2 | order C3 | wait
 Chef can:   wait
 Waiter> order C2
   Waiter takes C2's order. C2 chooses Burger $15.00 (1 prep unit).
+  Chef can now: cook C2 | wait
 Chef> cook C2
   Chef finishes C2's Burger (1/1): READY.
   C2 reaches satisfaction 0 and leaves without paying.

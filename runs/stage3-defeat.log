@@ -34,6 +34,7 @@ Host> seat C2
   Invalid choice: There is no customer C2. The Host's task is not used; choose again.
 Host> seat C1
   Host seats C1 at Table 1.
+  Waiter can now: order C1 | wait
 Waiter> wait
   Waiter waits this turn.
 Chef> wait
@@ -95,8 +96,10 @@ Waiter can: order C1 | seat C2 | wait
 Chef can:   wait
 Host> seat C2
   Host seats C2 at Table 2.
+  Waiter can now: order C1 | order C2 | wait
 Waiter> order C1
   Waiter takes C1's order. C1 chooses Salad + Pasta Combo $24.30 (3 prep units).
+  Chef can now: cook C1 | wait
 Chef> cook C1
   Chef prepares C1's Salad + Pasta Combo (1/3).
 --- End of turn 4 ---
@@ -117,6 +120,7 @@ Host> wait
   Host waits this turn.
 Waiter> order C2
   Waiter takes C2's order. C2 chooses Burger + Pasta Combo $29.70 (3 prep units).
+  Chef can now: cook C1 | cook C2 | wait
 Chef> cook C1
   Chef prepares C1's Salad + Pasta Combo (2/3).
 --- End of turn 5 ---
@@ -219,6 +223,7 @@ Waiter can: serve C2 | seat C3 | seat C4 | wait
 Chef can:   wait
 Host> seat C3
   Host seats C3 at Table 1.
+  Waiter can now: serve C2 | order C3 | wait
 Waiter> serve C2
   Waiter serves C2's Burger + Pasta Combo.
 Chef> wait
@@ -241,6 +246,7 @@ Host> wait
   Host waits this turn.
 Waiter> order C3
   Waiter takes C3's order. C3 chooses Burger $15.00 (1 prep unit). VIP bill: $13.50.
+  Chef can now: cook C3 | wait
 Chef> cook C3
   Chef finishes C3's Burger (1/1): READY.
   C2 finishes eating and is READY_TO_PAY.
@@ -282,8 +288,10 @@ Waiter can: seat C4 | seat C5 | wait
 Chef can:   wait
 Host> seat C4
   Host seats C4 at Table 2.
+  Waiter can now: order C4 | wait
 Waiter> order C4
   Waiter takes C4's order. C4 chooses Salad + Burger Combo $21.60 (2 prep units).
+  Chef can now: cook C4 | wait
 Chef> cook C4
   Chef prepares C4's Salad + Burger Combo (1/2).
   C3 finishes eating and is READY_TO_PAY.
@@ -324,6 +332,7 @@ Waiter can: serve C4 | seat C5 | wait
 Chef can:   wait
 Host> seat C5
   Host seats C5 at Table 1.
+  Waiter can now: serve C4 | order C5 | wait
 Waiter> serve C4
   Waiter serves C4's Salad + Burger Combo.
 Chef> wait
@@ -347,6 +356,7 @@ Host> wait
   Host waits this turn.
 Waiter> order C5
   Waiter takes C5's order. C5 chooses Salad + Pasta Combo $24.30 (3 prep units).
+  Chef can now: cook C5 | wait
 Chef> cook C5
   Chef prepares C5's Salad + Pasta Combo (1/3).
   C4 finishes eating and is READY_TO_PAY.
@@ -387,8 +397,10 @@ Waiter can: seat C6 | wait
 Chef can:   cook C5 | wait
 Host> seat C6
   Host seats C6 at Table 2.
+  Waiter can now: order C6 | wait
 Waiter> order C6
   Waiter takes C6's order. C6 chooses Pasta $18.00 (2 prep units).
+  Chef can now: cook C5 | cook C6 | wait
 Chef> cook C5
   Chef finishes C5's Salad + Pasta Combo (3/3): READY.
 --- End of turn 18 ---

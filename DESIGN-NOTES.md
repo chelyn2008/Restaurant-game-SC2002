@@ -126,7 +126,9 @@ What changed in each stage: [CHANGES-stage1-to-2.md](CHANGES-stage1-to-2.md),
 
 ## Decisions where the brief left a choice
 
-- **Host vs Waiter order:** the Host acts first, then the Waiter, then the Chef.
+- **Host vs Waiter order:** the Host acts first, then the Waiter, then the Chef (the brief only fixes
+  Waiter before Chef). When an earlier action opens a new task for the next staff member, the display
+  shows the changed list again (e.g. `Chef can now: cook C1`).
 - **Happy Hour timing:** offered after arrivals while unused; recovery applies on each active turn
   before the display; activated on turn *t*, it is active on *t* and *t+1* (turn 18 only if activated on 18).
 - **Happy Hour recovery applies to** WAITING, SEATED and ORDERED customers (waiting for a table or

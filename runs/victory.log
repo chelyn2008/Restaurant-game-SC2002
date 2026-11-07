@@ -35,6 +35,7 @@ Waiter> serve C1
   Invalid choice: C1 has no order waiting to be served (status SEATED). The Waiter's task is not used; choose again.
 Waiter> order C1
   Waiter takes C1's order. C1 chooses Burger $15.00 (1 prep unit).
+  Chef can now: cook C1 | wait
 Chef> cook C1
   Chef finishes C1's Burger (1/1): READY.
 --- End of turn 2 ---
@@ -82,6 +83,7 @@ Waiter can: order C2 | wait
 Chef can:   wait
 Waiter> order C2
   Waiter takes C2's order. C2 chooses Burger $15.00 (1 prep unit).
+  Chef can now: cook C2 | wait
 Chef> cook C2
   Chef finishes C2's Burger (1/1): READY.
   Cashier collects $15.00 from C1 (satisfaction 84 recorded). Table 1 is free.
@@ -130,6 +132,7 @@ Waiter can: order C3 | wait
 Chef can:   wait
 Waiter> order C3
   Waiter takes C3's order. C3 chooses Salad $9.00 (1 prep unit).
+  Chef can now: cook C3 | wait
 Chef> cook C3
   Chef finishes C3's Salad (1/1): READY.
   Cashier collects $15.00 from C2 (satisfaction 84 recorded). Table 2 is free.
@@ -178,6 +181,7 @@ Waiter can: order C4 | wait
 Chef can:   wait
 Waiter> order C4
   Waiter takes C4's order. C4 chooses Burger $15.00 (1 prep unit).
+  Chef can now: cook C4 | wait
 Chef> cook C4
   Chef finishes C4's Burger (1/1): READY.
   Cashier collects $9.00 from C3 (satisfaction 84 recorded). Table 1 is free.
@@ -226,6 +230,7 @@ Waiter can: order C5 | wait
 Chef can:   wait
 Waiter> order C5
   Waiter takes C5's order. C5 chooses Pasta $18.00 (2 prep units).
+  Chef can now: cook C5 | wait
 Chef> cook C5
   Chef prepares C5's Pasta (1/2).
   Cashier collects $15.00 from C4 (satisfaction 84 recorded). Table 2 is free.
@@ -289,6 +294,7 @@ Waiter can: order C6 | wait
 Chef can:   wait
 Waiter> order C6
   Waiter takes C6's order. C6 chooses Salad $9.00 (1 prep unit).
+  Chef can now: cook C6 | wait
 Chef> cook C6
   Chef finishes C6's Salad (1/1): READY.
   Cashier collects $18.00 from C5 (satisfaction 76 recorded). Table 1 is free.

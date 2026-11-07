@@ -45,6 +45,21 @@ and, where needed, an import of `restaurant.domain.menu`: `Order`, `Table`, `Sta
 change for combos (it already works in preparation units), and the Cashier none for Happy Hour (it
 already collects the price locked in the order).
 
+## Display improvement: tasks shown again during the turn
+
+The start-of-turn display lists what each staff member can do, but the Host acts before the Waiter
+and the Waiter before the Chef, so an earlier action can open a new task (the Host seats C1, so the
+Waiter can now take C1's order; the Waiter takes an order, so the Chef can now cook it, as section 3.2
+allows). Those commands were always accepted, because every command is checked against the current
+state, but the earlier list did not show them. Now the changed list is printed just before the next
+prompt, e.g. `Chef can now: cook C1 | wait`. Nothing is printed when the list did not change.
+
+| File | Change | Why |
+|------|--------|-----|
+| `control/GameEngine.java` | `playTurn` keeps the start-of-turn lists; after the Host and the Waiter act, it asks the next staff member's `availableTasks` again and, if the list changed, sends it through the existing `GameUI.showMessage` | The lists still come from the domain classes, so no rule changed. No new method or interface change, so the class diagrams are unaffected (trade-off: the short "only if changed" check appears twice in `playTurn`). |
+| `runs/*.log` (all six) | Re-recorded | Only the new "can now" lines were added (42 lines, none removed). |
+| `test/restaurant/StageThreeChecks.java` | New section `updatedTasksShownDuringTurn` (3 checks) | See TESTING.md. |
+
 ## Extra feature: leave warnings and hints (`--hints`)
 
 Added on top of the Stage 3 requirements, as allowed by section 4.4 of the brief. It is **off by
@@ -80,8 +95,9 @@ default**: without `--hints` the game, its output and every saved run are exactl
 
 ## What still works
 
-- `StageOneChecks` (52) and `StageTwoChecks` (38) pass unchanged; `StageThreeChecks` passes 61
-  (48 for the required Stage 3 rules, 13 for the extra feature and the input fix).
+- `StageOneChecks` (52) and `StageTwoChecks` (38) pass unchanged; `StageThreeChecks` passes 64
+  (48 for the required Stage 3 rules, 13 for the extra feature and the input fix, 3 for the
+  "can now" display). All six saved logs were re-recorded for the "can now" lines only.
 - `--stage 2` replays both Stage 2 scripts with exactly the same turns, choices and results as the
   Stage 2 build. The welcome banner was restyled in Stage 3 (wider title, blank lines between
   sections), so the two Stage 2 logs in `runs/` were re-recorded; the Stage 2 originals are kept at

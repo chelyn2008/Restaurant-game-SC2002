@@ -64,17 +64,28 @@ public class GameEngine {
         restaurant.getHappyHour().filter(HappyHour::isAvailable).ifPresent(happyHour -> offerHappyHour(happyHour, turn));
         reportRecovery(restaurant.applyHappyHourRecovery(turn));
 
+        List<String> waiterTasks = restaurant.getWaiter().availableTasks(restaurant, turn);
+        List<String> chefTasks = restaurant.getChef().availableTasks(restaurant);
         ui.showTurnStart(restaurant, turn,
                 restaurant.getHost().map(host -> host.availableTasks(restaurant)).orElse(List.of()),
-                restaurant.getWaiter().availableTasks(restaurant, turn),
-                restaurant.getChef().availableTasks(restaurant));
+                waiterTasks, chefTasks);
         if (config.hintsEnabled()) {
             showLeaveWarnings(turn);
         }
 
-        // Steps 2 and 3: manager choices; the Host acts first, then the Waiter, then the Chef
+        // Steps 2 and 3: manager choices; the Host acts first, then the Waiter, then the Chef.
+        // An earlier action can open a new task for the next one (Host seats -> Waiter can order;
+        // Waiter takes an order -> Chef can cook it), so the changed list is shown again.
         restaurant.getHost().ifPresent(host -> runHostTask(host, turn));
+        List<String> waiterTasksNow = restaurant.getWaiter().availableTasks(restaurant, turn);
+        if (!waiterTasksNow.equals(waiterTasks)) {
+            ui.showMessage("Waiter can now: " + String.join(" | ", waiterTasksNow) + (waiterTasksNow.isEmpty() ? "wait" : " | wait"));
+        }
         runWaiterTask(turn);
+        List<String> chefTasksNow = restaurant.getChef().availableTasks(restaurant);
+        if (!chefTasksNow.equals(chefTasks)) {
+            ui.showMessage("Chef can now: " + String.join(" | ", chefTasksNow) + (chefTasksNow.isEmpty() ? "wait" : " | wait"));
+        }
         runChefTask(turn);
 
         // Step 4: eating, then the automatic Cashier
@@ -96,7 +107,6 @@ public class GameEngine {
     public Restaurant getRestaurant() {
         return restaurant;
     }
-
     private void offerHappyHour(HappyHour happyHour, int turn) {
         if (ui.askHappyHour()) {
             ActionResult result = happyHour.activate(turn);
