@@ -74,11 +74,15 @@ No output means it built successfully.
 | Stage 1 | `git checkout stage-1` | 
 | Stage 2 | `git checkout stage-2` |
 | Stage 3 | `git checkout stage-3` |
-| Stage 3 with hints (extra feature) | `java -cp out restaurant.Main --stage 3 --hints` |
 
-To run the game after switching the branch
+To run the game after switching the branch 
 ```powershell
 java -cp out restaurant.Main
+```
+
+For stage 3 with hints, run this after switching to the 3rd stage
+```powershell
+java -cp out restaurant.Main --stage 3 --hints
 ```
 
 Each turn, type one command for each staff member when asked, then press Enter
