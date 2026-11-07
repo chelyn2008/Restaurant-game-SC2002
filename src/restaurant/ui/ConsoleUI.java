@@ -24,7 +24,7 @@ import restaurant.domain.menu.Menu;
 import restaurant.domain.menu.MenuItem;
 
 /**
-  Command-line interface
+ * Command-line interface
  */
 public class ConsoleUI implements GameUI {
     private final BufferedReader in;
@@ -43,7 +43,7 @@ public class ConsoleUI implements GameUI {
 
     @Override
     public void showWelcome(GameConfig config, Menu menu) {
-        out.println("============================     Restaurant Rush (Stage " + config.stage() + ")    ============================");
+        out.println("====== Restaurant Rush (Stage " + config.stage() + ") ======");
         out.println("Seed: " + config.seed() + " | Turns: " + config.totalTurns() + " | Tables: " + config.tableCount());
         out.println("Arrivals: " + config.arrivalSchedule().describe());
         out.println("Menu:");
@@ -52,9 +52,9 @@ public class ConsoleUI implements GameUI {
         }
         out.println();
 
-        out.println("Goal after turn " + config.totalTurns() + ":  at least " + config.minPaidCustomers()
-                + " paid customers | revenue at least " + Money.format(config.minRevenueCents())
-                + "  | average satisfaction of paid customers at least " + config.minAverageSatisfaction() + ".");
+        out.println("Goal after turn " + config.totalTurns() + ": at least " + config.minPaidCustomers()
+                + " paid customers, revenue at least " + Money.format(config.minRevenueCents())
+                + ", average satisfaction of paid customers at least " + config.minAverageSatisfaction() + ".");
         out.println();
 
         out.println("Waiter commands: seat <id> | order <id> | serve <id> | wait");
@@ -65,20 +65,20 @@ public class ConsoleUI implements GameUI {
         out.println();
 
         if (config.happyHourEnabled()) {
-            out.println("Happy Hour: once per game, answer yes at the start of a turn. It lasts that turn and the next.");
+            out.println("Happy Hour: once per game, answer yes at the start of a turn. It lasts that turn and the next:");
             out.println("           - " + HappyHour.DISCOUNT_PERCENT + "% off orders taken");
             out.println("           - waiting customers recover " + HappyHour.RECOVERY_POINTS + " satisfaction at turn start");
         }
         if (config.hintsEnabled()) {
-            out.println("Hints: ON. Each turn warns when waiting customers will leave; type hint at any staff prompt"
-                    + " for the most urgent customer ");
+            out.println("Hints: on. Each turn warns when waiting customers will leave; type hint at any staff prompt"
+                    + " for the most urgent customer (it does not use up the task).");
         }
     }
 
     @Override
     public void showTurnHeader(int turn, int totalTurns) {
         out.println();
-        out.println("=======================  TURN " + turn + " / " + totalTurns + "   =======================");
+        out.println("==================== TURN " + turn + " / " + totalTurns + " ====================");
     }
 
     @Override
@@ -110,7 +110,6 @@ public class ConsoleUI implements GameUI {
         }
         out.println("Waiter can: " + joinTasks(waiterTasks));
         out.println("Chef can:   " + joinTasks(chefTasks));
-        out.println();
     }
 
     @Override
@@ -188,7 +187,6 @@ public class ConsoleUI implements GameUI {
 
     @Override
     public void showTurnResults(int turn, int totalTurns, Restaurant restaurant) {
-        out.println();
         out.println("--- End of turn " + turn + " ---");
         out.println("Served: " + restaurant.getServedCount()
                 + " | Unhappy departures: " + restaurant.getUnhappyDepartures()
@@ -208,7 +206,7 @@ public class ConsoleUI implements GameUI {
     @Override
     public void showFinalResult(GameResult result, Restaurant restaurant) {
         out.println();
-        out.println("=========================     FINAL RESULT: " + (result.victory() ? "VICTORY" : "DEFEAT") + "    =========================");
+        out.println("==================== FINAL RESULT: " + (result.victory() ? "VICTORY" : "DEFEAT") + " ====================");
         for (String line : result.targetLines()) {
             out.println(line);
         }

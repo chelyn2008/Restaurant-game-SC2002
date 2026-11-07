@@ -121,7 +121,6 @@ public class GameEngine {
     private void showLeaveWarnings(int turn) {
         for (Customer customer : restaurant.getCustomers()) {
             if (customer.isWaitingForService()) {
-                
                 ui.showMessage("Warning: " + customer.getId() + " (" + customer.getTypeName() + ", satisfaction "
                         + customer.getSatisfaction() + ", -" + customer.getSatisfactionLossPerTurn()
                         + " per turn) " + describeLeaving(customer, turn) + ".");
