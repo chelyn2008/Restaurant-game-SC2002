@@ -42,6 +42,18 @@ use the same layout, so a class added in Stage 2 or 3 fills a space that was emp
 
 A text list of every class, attribute and operation is in [CLASS-DIAGRAM.md](CLASS-DIAGRAM.md).
 
+## Sequence diagram
+
+One complete Stage 3 scenario, drawn in draw.io, matching the code at tag `stage-3`. A VIP customer
+(C3) arrives, the manager switches on Happy Hour, and the order is priced with the VIP discount
+first and then Happy Hour. The scenario follows the dish from READY to SERVED, then eating, payment
+and the Victory or Defeat check after turn 18. It also shows the `--hints` extra feature. Guards and
+`alt` / `loop` / `opt` frames show the manager's decisions and the invalid-choice retries.
+
+| Pages | Diagram | draw.io source |
+|-------|---------|----------------|
+| 1. Turn start (arrival, Happy Hour, recovery) · 2. Leave warnings · 3. Host seats C3, `hint` · 4. Waiter: order and serve · 5. Chef, eating, payment, waiting · 6. Result check | [PDF](SequenceDiagram/Sequence_Diagram_Stage3_with_hints.pdf) | [Sequence_Diagram_Stage3_with_hints.drawio](SequenceDiagram/Sequence_Diagram_Stage3_with_hints.drawio) |
+
 ## How to run the game
 
 You need Java 17 or newer. Open a terminal (e.g. PowerShell in VS Code) **in the project folder**
