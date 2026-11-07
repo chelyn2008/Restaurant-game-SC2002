@@ -47,47 +47,63 @@ A text list of every class, attribute and operation is in [CLASS-DIAGRAM.md](CLA
 One complete Stage 3 scenario, drawn in draw.io, matching the code at tag `stage-3`. A VIP customer
 (C3) arrives, the manager switches on Happy Hour, and the order is priced with the VIP discount
 first and then Happy Hour. The scenario follows the dish from READY to SERVED, then eating, payment
-and the Victory or Defeat check after turn 18. It also shows the `--hints` extra feature. Guards and
-`alt` / `loop` / `opt` frames show the manager's decisions and the invalid-choice retries.
+and the Victory or Defeat check after turn 18. It also shows the `--hints` extra feature and the
+"can now" lines (a staff member's tasks shown again when an earlier action opened a new one). Guards
+and `alt` / `loop` / `opt` frames show the manager's decisions and the invalid-choice retries.
 
-| Pages | Diagram | draw.io source |
-|-------|---------|----------------|
-| 1. Turn start (arrival, Happy Hour, recovery) · 2. Leave warnings · 3. Host seats C3, `hint` · 4. Waiter: order and serve · 5. Chef, eating, payment, waiting · 6. Result check | [PDF](SequenceDiagram/Sequence_Diagram_Stage3_with_hints.pdf) | [Sequence_Diagram_Stage3_with_hints.drawio](SequenceDiagram/Sequence_Diagram_Stage3_with_hints.drawio) |
+| Page | Content | Messages |
+|------|---------|----------|
+| 1 | Turn start: C3 arrives, Happy Hour decision and recovery | 1–9 |
+| 2 | Leave warnings (`--hints` extra feature) | 10–14 |
+| 3 | Host seats C3, with the `hint` command | 15–25 |
+| 4 | "Waiter can now" line; Waiter takes the order (VIP + Happy Hour price $10.80), later serves it | 25a–38 |
+| 5 | "Chef can now" line; Chef cooks, eating, payment, waiting and abandonment | 38a–51 |
+| 6 | Result check after turn 18: Victory or Defeat | 52–56 |
+
+Files: [PDF](SequenceDiagram/Sequence_Diagram_Stage3_with_hints%20%281%29.pdf) ·
+[draw.io source](SequenceDiagram/Sequence_Diagram_Stage3_with_hints%20%281%29.drawio)
 
 ## How to run the game
 
 You need Java 17 or newer. Open a terminal (e.g. PowerShell in VS Code) **in the project folder**
-and type the commands below.
+and type the commands below. The final code (`stage-3` or `main`) plays **all three stages**,
+so you only need to switch and build once.
 
-### Step 1: Build (once)
+### Step 1: Switch to the final code
+
+```powershell
+git checkout main
+```
+
+### Step 2: Build (after switching)
 
 ```powershell
 javac --release 17 -d out (Get-ChildItem -Recurse src -Filter "*.java").FullName
 ```
 
-No output means it built successfully.
+No output means it built successfully. Always build **after** switching, because Java runs the
+compiled files in `out`, not the `.java` files.
 
-### Step 2: Play a stage
+### Step 3: Play a stage
 
-| Stage | Switch branch |
-|-------|---------------|
-| Stage 1 | `git checkout stage-1` | 
-| Stage 2 | `git checkout stage-2` |
-| Stage 3 | `git checkout stage-3` |
-
-To run the game after switching the branch 
-```powershell
-java -cp out restaurant.Main
-```
-
-For stage 3 with hints, run this after switching to the 3rd stage
-```powershell
-java -cp out restaurant.Main --stage 3 --hints
-```
+| Stage | Type this |
+|-------|-----------|
+| Stage 1 | `java -cp out restaurant.Main --stage 1` |
+| Stage 2 | `java -cp out restaurant.Main --stage 2` |
+| Stage 3 | `java -cp out restaurant.Main --stage 3` |
+| Stage 3 with hints (extra feature) | `java -cp out restaurant.Main --stage 3 --hints` |
 
 Each turn, type one command for each staff member when asked, then press Enter
 (e.g. `seat C1`, `order C1`, `serve C1`, `cook C1` or `wait`). The game shows which
-commands are allowed every turn.
+commands are allowed at the start of every turn. If an earlier staff member's action opens a new
+task during the turn, it is shown again before the next prompt, in every stage, e.g.:
+
+```
+Waiter> order C1
+  Waiter takes C1's order. C1 chooses Burger $15.00 (1 prep unit).
+  Chef can now: cook C1 | wait
+Chef> cook C1
+```
 
 ### Optional: replay the saved victory and defeat runs
 
@@ -110,8 +126,13 @@ Using Git Bash, macOS or Linux instead of PowerShell? Build with
 `javac --release 17 -d out $(find src -name "*.java")` and replay with
 `java -cp out restaurant.Main --stage 1 --echo < runs/victory.txt`.
 
-Seed and input details for every run are in [TESTING.md](TESTING.md). To see the code exactly as
-it was at an earlier stage, use its git tag, e.g. `git checkout stage-1` (then build and run as above).
+Seed and input details for every run are in [TESTING.md](TESTING.md).
+
+**Original code of an earlier stage (for comparing stages only):** `git checkout stage-1` or
+`git checkout stage-2` gives the code exactly as it was at that stage, before later improvements
+such as the "can now" lines. Rebuild after switching, then run `java -cp out restaurant.Main` (the
+`--stage` option only exists from Stage 3). To play, use the final code as in Steps 1-3, and return
+with `git checkout main` when done.
 
 ## Extra feature: leave warnings and hints (`--hints`)
 
