@@ -53,6 +53,8 @@ Waiter can now take C1's order; the Waiter takes an order, so the Chef can now c
 allows). Those commands were always accepted, because every command is checked against the current
 state, but the earlier list did not show them. Now the changed list is printed just before the next
 prompt, e.g. `Chef can now: cook C1 | wait`. Nothing is printed when the list did not change.
+Because the turn loop is shared by every stage, `--stage 1` and `--stage 2` games show these lines
+too (after the Waiter takes an order); no rule changes.
 
 | File | Change | Why |
 |------|--------|-----|
@@ -102,8 +104,9 @@ default**: without `--hints` the game, its output and every saved run are exactl
   Stage 2 build. The welcome banner was restyled in Stage 3 (wider title, blank lines between
   sections), so the two Stage 2 logs in `runs/` were re-recorded; the Stage 2 originals are kept at
   the `stage-2` tag, and comparing them shows only those banner lines differ.
-- `--stage 1` replays both Stage 1 scripts: identical from turn 1 to the final result (only the
-  banner lines before turn 1 differ).
+- `--stage 1` replays both Stage 1 scripts with exactly the same turns, choices and results as the
+  Stage 1 build. Compared with the logs at the `stage-1` tag, only the banner lines before turn 1
+  differ and the new `Chef can now: ...` lines are added (6 in the victory run, 2 in the defeat run).
 - Invalid choices (including Host choices and Happy Hour answers) explain why and do not use up the
   task; rules stay in the domain; money is integer cents; customer behaviour is still dispatched
   through `Customer` subclasses with no type checks (the Stage 2 source scan still passes).

@@ -52,7 +52,7 @@ All runs replay with `java -cp out restaurant.Main --stage N --echo < runs/<scri
   and result is the same.
 - By hand: `--stage 2` replays of the Stage 2 scripts show no `diff` against `runs/`; `--stage 1`
   replays of the Stage 1 scripts differ only in the banner lines before turn 1.
-- **"can now" lines:** in Stage 3 the display shows a staff member's tasks again when the Host's or
+- **"can now" lines:** in this build (any `--stage`) the display shows a staff member's tasks again when the Host's or
   Waiter's action changed them (e.g. `Chef can now: cook C1 | wait`). All six logs were re-recorded
   for this; `git diff` of the logs shows 42 lines added and **none removed or changed**, so every
   turn, choice and result is the same as before. The Stage 1 logs keep the banner recorded by the
