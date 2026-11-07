@@ -62,19 +62,24 @@ and type the commands below.
 ### Step 1: Build (once)
 
 ```powershell
-javac --release 17 -d out (Get-ChildItem -Recurse src -Filter *.java).FullName
+javac --release 17 -d out (Get-ChildItem -Recurse src -Filter "*.java").FullName
 ```
 
 No output means it built successfully.
 
 ### Step 2: Play a stage
 
-| Stage | Type this |
-|-------|-----------|
-| Stage 1 | `java -cp out restaurant.Main --stage 1` |
-| Stage 2 | `java -cp out restaurant.Main --stage 2` |
-| Stage 3 | `java -cp out restaurant.Main --stage 3` |
+| Stage | Switch branch |
+|-------|---------------|
+| Stage 1 | `git checkout stage-1` | 
+| Stage 2 | `git checkout stage-2` |
+| Stage 3 | `git checkout stage-3` |
 | Stage 3 with hints (extra feature) | `java -cp out restaurant.Main --stage 3 --hints` |
+
+To run the game after switching the branch
+```powershell
+java -cp out restaurant.Main
+```
 
 Each turn, type one command for each staff member when asked, then press Enter
 (e.g. `seat C1`, `order C1`, `serve C1`, `cook C1` or `wait`). The game shows which
