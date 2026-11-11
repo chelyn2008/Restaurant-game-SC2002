@@ -8,7 +8,10 @@
 ## Exchange 1
 
 ### User
-_Attached: SC2002_Group_Project_Briefing(2).pdf, SC2002_Restaurant_Group_Assignment(2).docx, Restaurant-game-2002.zip_
+Attached:
+- [Project briefing](../files/SC2002_Group_Project_Briefing.pdf)
+- [Assignment specification](../files/SC2002_Restaurant_Rush_Group_Assignment.docx)
+- [Project code](../files/Restaurant-game-SC2002.zip)
 
 help me find out what i need to put in my report
 
@@ -150,7 +153,8 @@ Put the GitHub comparisons and checks of earlier behaviour alongside the relevan
 ## Exchange 5
 
 ### User
-_Attached: image.png_
+Attached:
+- [Screenshot](../files/image(20261111-081020).png)
 
 the ones in bold are my current headers, do you think theyre okay
 
@@ -837,7 +841,8 @@ Separately, the briefing asks each member to upload their **full AI conversation
 ## Exchange 15
 
 ### User
-_Attached: image(2).png_
+Attached:
+- [Screenshot](../files/image(20261111-091028).png)
 
 wdym within our own branch? should i put this chat in
 
