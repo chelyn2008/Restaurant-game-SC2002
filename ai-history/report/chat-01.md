@@ -8,6 +8,7 @@
 ## Exchange 1
 
 ### User
+_Attached: SC2002_Group_Project_Briefing(2).pdf, SC2002_Restaurant_Group_Assignment(2).docx, Restaurant-game-2002.zip_
 help me find out what i need to put in my report
 
 ### ChatGPT
@@ -148,6 +149,7 @@ Put the GitHub comparisons and checks of earlier behaviour alongside the relevan
 ## Exchange 4
 
 ### User
+_Attached: image.png_
 the ones in bold are my current headers, do you think theyre okay
 
 ### ChatGPT
@@ -210,6 +212,8 @@ Leave the cover page and “Table of Contents” heading unnumbered.
 ## Exchange 6
 
 ### User
+_Selected: 4.3 Trade-offs, Limitations and Alternative Design
+　4.4 Extra Feature: Leave Warnings and Hints_
 what is the difference between these 2
 
 ### ChatGPT
