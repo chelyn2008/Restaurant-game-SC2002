@@ -9,6 +9,7 @@
 
 ### User
 _Attached: SC2002_Group_Project_Briefing(2).pdf, SC2002_Restaurant_Group_Assignment(2).docx, Restaurant-game-2002.zip_
+
 help me find out what i need to put in my report
 
 ### ChatGPT
@@ -128,7 +129,7 @@ Use this structure for your **Restaurant Rush report**:
 
 You can keep **“How player choices change the result” inside functional evidence**, and **trade-offs inside design discussion**—they do not need separate chapters.
 
-## Exchange 3
+## Exchange 4
 
 ### User
 should this 2 be under the same main header
@@ -146,10 +147,11 @@ Yes, you can group both under **“3. UML Diagrams and Design Evolution”**:
 
 Put the GitHub comparisons and checks of earlier behaviour alongside the relevant stage transition. **The requirements specify the content, so you can organise the headings this way.**
 
-## Exchange 4
+## Exchange 5
 
 ### User
 _Attached: image.png_
+
 the ones in bold are my current headers, do you think theyre okay
 
 ### ChatGPT
@@ -179,7 +181,7 @@ Your hierarchy would then be:
 
 Combine your two existing extra-feature headings into **“Extra Feature: Leave Warnings and Hints”**, and remove the editing reminder before submission.
 
-## Exchange 5
+## Exchange 6
 
 ### User
 should i number the headings
@@ -209,11 +211,12 @@ In Word, use **Heading 1, Heading 2 and Heading 3**, then apply a **multilevel l
 
 Leave the cover page and “Table of Contents” heading unnumbered.
 
-## Exchange 6
+## Exchange 7
 
 ### User
 _Selected: 4.3 Trade-offs, Limitations and Alternative Design
 　4.4 Extra Feature: Leave Warnings and Hints_
+ 
 what is the difference between these 2
 
 ### ChatGPT
@@ -228,7 +231,7 @@ They serve different purposes:
 
 They can overlap slightly. For example, the warning’s limitation—it ignores future Happy Hour recovery—can be explained in **4.4**, without repeating it in 4.3.
 
-## Exchange 7
+## Exchange 8
 
 ### User
 but what if we didnt have an alternative approach, should i just come up with one?
@@ -246,7 +249,7 @@ Present it honestly as **“An alternative to the implemented design would be…
 
 Your existing `DESIGN-NOTES.md` already describes this alternative, so check it with your teammates before using wording that implies it was considered during development.
 
-## Exchange 8
+## Exchange 9
 
 ### User
 should my introduction just be a short overview
@@ -261,7 +264,7 @@ Yes—**one or two short paragraphs is enough**. Include:
 
 Keep detailed rules, class explanations and design decisions in the later sections.
 
-## Exchange 9
+## Exchange 10
 
 ### User
 how should i start?
@@ -273,7 +276,7 @@ Restaurant Rush is a Java command-line, turn-based restaurant management game in
 
 Then add the **18-turn victory conditions**, followed by a brief sentence explaining the **three development stages**.
 
-## Exchange 10
+## Exchange 11
 
 ### User
 okay, explain what my entire code does so that i can write my report better
@@ -768,7 +771,7 @@ I couldn’t rerun the checks here because this environment has no `javac`; this
 
 For writing, focus on **what each object owns, what it is allowed to change, and which other objects it asks for help**. That explains your design more clearly than listing methods one by one.
 
-## Exchange 10
+## Exchange 12
 
 ### User
 should this be in the introduction or the system architecture
@@ -783,3 +786,127 @@ You can summarise them in one sentence:
 The exact arrival turns can go in your **functional evidence/test settings** if needed.
 
 In **System Architecture**, explain how `GameConfig` stores these settings and how `GameEngine` uses them to coordinate the game.
+
+## Exchange 13
+
+### User 
+should i have page break per numbered header
+
+### ChatGPT
+**For your main numbered headings, yes—a new page is a sensible choice.** For example, start Sections 1, 2, 3 and so on on separate pages.
+
+For subsections such as **3.1 Class Diagrams** or **4.1 OOP Concepts**, continue on the same page unless the diagram or content needs more space.
+
+If a main section is very short, it’s also fine to share a page to avoid excessive blank space. **This is a formatting choice, not an assignment requirement.**
+
+In Word, use **Ctrl + Enter** for a page break instead of pressing Enter repeatedly.
+
+## Exchange 14
+
+### User
+what is the github evidence if all we did was push to main
+
+### ChatGPT
+**GitHub evidence means showing how your code changed between stages.** Pushing everything to `main` is fine—separate development branches aren’t required.
+
+What matters is whether the commit history contains these snapshots:
+
+| Evidence | What it shows |
+|---|---|
+| `stage-1` tag | A runnable baseline with only Stage 1 features |
+| `stage-2` tag | A runnable version adding VIP and Critic |
+| `stage-3` tag | The final runnable version |
+| Stage comparison links | Which files changed between those snapshots |
+| Your explanation | Why classes were added/modified and how earlier behaviour was checked |
+
+**Your uploaded README already lists all three stage tags, commit IDs and comparison links.** However, I haven’t verified that those tags exist on GitHub or that their code matches the descriptions.
+
+You can check locally with:
+
+```powershell
+git tag
+git log --oneline --decorate
+```
+
+If you pushed incrementally, earlier commits may already provide the required snapshots—you can tag the appropriate commits and push the tags.
+
+**If you only committed the complete final game**, that alone won’t demonstrate the three historical stages. Also, running the final code with `--stage 1` doesn’t replace a genuine Stage 1 snapshot, because the final source still contains later-stage features.
+
+Separately, the briefing asks each member to upload their **full AI conversation history to their own branch**, so that requirement still applies even if all development happened on `main`.
+
+## Exchange 15
+
+### User
+_Attached: image(2).png_
+
+wdym within our own branch? should i put this chat in
+
+### ChatGPT
+**Yes—include this chat**, because it helped you understand the code and prepare the project report. Include your other project-related AI chats too, with **your prompts, AI replies and follow-ups in order**, rather than just a summary.
+
+**“Your own branch” means a named branch within the same group repository**, for example:
+
+| Branch | Contents |
+|---|---|
+| `main` | Your group’s project code and submission materials |
+| `chelyn-ai-history` | Your AI conversation records |
+| Other members’ personal branches | Their respective AI conversation records |
+
+You can create yours through GitHub:
+
+1. Open your group repository.
+2. Click the branch dropdown currently showing **`main`**.
+3. Type **`chelyn-ai-history`** and select **Create branch**.
+4. On that branch, create a file such as `ai-history/report/chat-01.md`.
+5. Paste this conversation into it, clearly labelling **User** and **Assistant**, then commit it to that branch.
+6. Add a link to your AI-history folder in the **README on `main`**.
+
+The slide’s stage folders are examples. A **`report` folder** clearly describes this conversation; use stage folders for chats about particular stages.
+
+You can create this branch now even though your coding was done on `main`—it records your AI use and doesn’t imply you developed the code separately.
+
+## Exchange 16
+
+### User
+how should i format my markdown
+
+### ChatGPT
+Use a simple format with a title, context, and **numbered exchanges in chronological order**. You can copy this into your `.md` file:
+
+```markdown
+# SC2002 AI Conversation — Report Preparation
+
+- Member: Chelyn
+- AI tool: ChatGPT
+- Date: 11 November 2026
+- Purpose: Understanding the project code and preparing the report
+
+## Exchange 1
+
+### User
+help me find out what i need to put in my report
+
+### ChatGPT
+[Paste the full response here.]
+
+## Exchange 2
+
+### User
+[Paste your next message here.]
+
+### ChatGPT
+[Paste the full response here.]
+```
+
+**Keep the complete wording**, including follow-up questions and corrections. Preserve tables, lists and code blocks from the responses.
+
+For messages involving an attachment, note its filename. Save relevant screenshots alongside the Markdown file and embed them like this:
+
+```markdown
+### User
+the ones in bold are my current headers, do you think theyre okay
+
+![Report headings](images/report-headings.png)
+```
+
+A suitable filename is **`ai-history/report/chat-01.md`**. The exchange numbering is just for readability; the important requirement is the full conversation in order.
