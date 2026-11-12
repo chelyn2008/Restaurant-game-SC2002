@@ -243,23 +243,28 @@ https://github.com/chelyn2008/Restaurant-game-SC2002/compare/stage-2...stage-3
 
 ## Video timestamps
 
-| # | Segment | Time |
-|---|---------|------|
-| 1 | The game launching from the submitted project | |
-| 2 | Meaningful manager choices, including a decision where staff are constrained | |
-| 3 | A dish going READY → SERVED → payment | |
-| 4 | A VIP or Critic behaviour | |
-| 5 | A Stage 3 feature | |
-| 6 | One victory and one defeat | |
-| 7 | The stage tag comparisons and the diagrams | |
+The ranges below are arranged chronologically from 0:00 using the planned times in the video plan.
+Confirm them against the final edit and adjust if the actual timings differ.
+
+| Time | Presenter | Segment | 
+|------|-----------|---------|
+| 0:00–2:00 | Cai Ying | The game launching from the submitted project | 
+| 2:00–2:25 | Cai Ying | A dish going READY → SERVED → payment | 
+| 2:25–3:25 | Chelyn | Meaningful manager choices, including a decision where staff are constrained | 
+| 3:25–3:40 | Chelyn | A VIP or Critic behaviour | 
+| 3:40–4:25 |      | A Stage 3 feature |
+| 4:25–6:00 | Ziqi | Stage comparisons, class diagrams | 
+| :00– :00 | Jingyi | Sequence diagrams , One victory and one defeat | 
+| :00– :00 | All| Individual contibutions and key learning |
 
 ## AI use history
 
 Each member's full AI conversations (prompts, replies and follow-ups, in order) are on their own
-branch in this repository, under `ai-history/stage-N/chat-NN.md`.
+branch in this repository under `ai-history/`; the links below point to the individual chats.
 
 | Member | Branch | Chats |
 |--------|--------|-------|
 | Jingyi | [`jingyi-ai-history`](https://github.com/chelyn2008/Restaurant-game-SC2002/tree/jingyi-ai-history/ai-history) | [Stage 3, chat 01](https://github.com/chelyn2008/Restaurant-game-SC2002/blob/jingyi-ai-history/ai-history/stage-3/chat-01.md): sequence diagram requirements and use case |
 | Caiying | [`caiying-ai-history`](https://github.com/chelyn2008/Restaurant-game-SC2002/tree/caiying-ai-history/ai-history) | [Stage 3, chat 01](https://github.com/chelyn2008/Restaurant-game-SC2002/blob/caiying-ai-history/ai-history/stage-3/chat-01.md): final requirement check, code review and fixes |
 | Ziqi | [`ziqi-ai-history`](https://github.com/chelyn2008/Restaurant-game-SC2002/tree/ziqi-ai-history/ai-history) | [Stage 3, chat 01](https://github.com/chelyn2008/Restaurant-game-SC2002/blob/ziqi-ai-history/ai-history/stage-3/chat-01.md): UML class diagrams (Stages 1–3), the --hints update, class diagram walkthrough and fixes |
+| Chelyn | [`chelyn-ai-history`](https://github.com/chelyn2008/Restaurant-game-SC2002/tree/chelyn-ai-history/ai-history) | [Report preparation, chat 01](https://github.com/chelyn2008/Restaurant-game-SC2002/blob/chelyn-ai-history/ai-history/report/chat-01.md): report requirements, structure, code overview and design discussion · [Code understanding, chat 02](https://github.com/chelyn2008/Restaurant-game-SC2002/blob/chelyn-ai-history/ai-history/report/chat-02.md): `GameUI` and `ConsoleUI` |
