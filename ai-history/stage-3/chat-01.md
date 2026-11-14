@@ -541,11 +541,3 @@ It follows VIP customer C3 through one Stage 3 game, played with the inputs in `
 When you're ready, I can do any of these next: write the explanation paragraph for the report, make a one-page "how to explain this diagram" study sheet for the video, or give you the next AI-history block to paste. I'd suggest the study sheet first.
 
 ---
-
-## Message 8 — Me
-
-can u tell me what i have to do next. spoonfeed me all the things i need to do to get my project done with no errors and fully accurate with no risk of getting penalized or marked down in any possible way
-
-## Message 8 — Claude
-
-[Claude's reply to this message, and every later message, will be appended below in the next update of this file.]
