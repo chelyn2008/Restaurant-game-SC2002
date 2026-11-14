@@ -2,7 +2,7 @@
 
 - **Member:** Jingyi
 - **Tool:** Claude (claude.ai, Project "SC2002")
-- **Date:** 14 November 2026 (correct this if you ran the chat on a different day)
+- **Date:** 10 November 2026 
 - **Topic:** Updating the Stage 3 sequence diagram (.drawio) to match a new display step in `GameEngine.playTurn`
 - **Note:** Lines in [square brackets] describe actions Claude took or files it sent that cannot be pasted as text. The prompt and reply below are copied as they appeared in the chat.
 
